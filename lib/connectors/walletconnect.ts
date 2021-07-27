@@ -47,6 +47,7 @@ export default class WalletConnectConnector {
     library.pollingInterval = 12000;
 
     useWeb3Store.setState({
+      connector: this,
       chainId: chainId,
       account: account,
       library: library,
@@ -111,14 +112,6 @@ export default class WalletConnectConnector {
   };
 }
 
-export async function connectWithWalletConnect() {
-  const connector = new WalletConnectConnector({
-    supportedChainIds: [4],
-  });
-
-  await connector.activate();
-
-  useWeb3Store.setState({
-    connector: connector,
-  });
-}
+export const walletconnect = new WalletConnectConnector({
+  supportedChainIds: [4],
+});

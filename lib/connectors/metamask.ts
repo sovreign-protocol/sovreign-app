@@ -68,6 +68,7 @@ export default class MetaMaskConnector {
     library.pollingInterval = 12000;
 
     useWeb3Store.setState({
+      connector: this,
       chainId: chainId,
       account: account,
       library: library,
@@ -128,16 +129,32 @@ export default class MetaMaskConnector {
       );
     }
   };
+
+  public isAuthorized = async () => {
+    if (!window.ethereum) {
+      return false;
+    }
+
+    try {
+      const provider = (await detectEthereumProvider()) as EIP1193Provider;
+
+      return await provider
+        .request({
+          method: "eth_requestAccounts",
+        })
+        .then((accounts: string[]) => {
+          if (accounts.length > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+    } catch {
+      return false;
+    }
+  };
 }
 
-export async function connectWithMetaMask() {
-  const connector = new MetaMaskConnector({
-    supportedChainIds: [4],
-  });
-
-  await connector.activate();
-
-  useWeb3Store.setState({
-    connector: connector,
-  });
-}
+export const injected = new MetaMaskConnector({
+  supportedChainIds: [4],
+});

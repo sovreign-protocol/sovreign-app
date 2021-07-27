@@ -4,15 +4,20 @@ import type { Web3Provider } from "@ethersproject/providers";
 import omit from "lodash.omit";
 import create from "zustand";
 
-type State = {
+export type State = {
   account?: string;
   chainId?: number;
   connector?: MetaMaskConnector | WalletConnectConnector;
   library?: Web3Provider;
+  active: boolean;
   reset: () => void;
 };
 
-const useWeb3Store = create<State>((set) => ({
+const useWeb3Store = create<State>((set, get) => ({
+  active:
+    get()?.connector !== undefined &&
+    get()?.chainId !== undefined &&
+    get()?.account !== undefined,
   reset: () =>
     set(
       (state) => omit(state, ["account", "chainId", "connector", "library"]),
