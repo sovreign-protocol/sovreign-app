@@ -1,4 +1,5 @@
 import type MetaMaskConnector from "@/lib/connectors/metamask";
+import type WalletConnectConnector from "@/lib/connectors/walletconnect";
 import type { Web3Provider } from "@ethersproject/providers";
 import omit from "lodash.omit";
 import create from "zustand";
@@ -6,7 +7,7 @@ import create from "zustand";
 type State = {
   account?: string;
   chainId?: number;
-  connector?: MetaMaskConnector;
+  connector?: MetaMaskConnector | WalletConnectConnector;
   library?: Web3Provider;
   reset: () => void;
 };

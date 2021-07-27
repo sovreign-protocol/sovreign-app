@@ -129,3 +129,15 @@ export default class MetaMaskConnector {
     }
   };
 }
+
+export async function connectWithMetaMask() {
+  const connector = new MetaMaskConnector({
+    supportedChainIds: [4],
+  });
+
+  await connector.activate();
+
+  useWeb3Store.setState({
+    connector: connector,
+  });
+}

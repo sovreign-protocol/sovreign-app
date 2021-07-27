@@ -110,3 +110,15 @@ export default class WalletConnectConnector {
     (this.wc as any).removeListener("disconnect", this.handleDisconnect);
   };
 }
+
+export async function connectWithWalletConnect() {
+  const connector = new WalletConnectConnector({
+    supportedChainIds: [4],
+  });
+
+  await connector.activate();
+
+  useWeb3Store.setState({
+    connector: connector,
+  });
+}
