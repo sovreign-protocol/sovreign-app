@@ -1,3 +1,4 @@
+import { TOKEN_NAMES_BY_ADDRESS } from "@/constants";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
 import usePoolRouter from "../contracts/usePoolRouter";
@@ -5,7 +6,14 @@ import usePoolRouter from "../contracts/usePoolRouter";
 const getPoolTokens = (contract: Contract) => async () => {
   const values: string[] = await contract.getPoolTokens();
 
-  return values;
+  const formatted = values
+    .map((addr) => addr.toLowerCase())
+    .map((address) => ({
+      address: address,
+      name: TOKEN_NAMES_BY_ADDRESS[address],
+    }));
+
+  return formatted;
 };
 
 export default function useGetPoolTokens() {

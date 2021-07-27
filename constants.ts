@@ -4,7 +4,7 @@ export const INFURA_ID = "TODO";
 
 type Networks = 1 | 4;
 
-type ContractNames = "PoolRouter" | "SOV_ERC20";
+type ContractNames = "PoolRouter" | "WrappingRewards" | "SOV_ERC20";
 
 type TokenNames = "SOV";
 
@@ -20,6 +20,10 @@ export const CONTRACT_ADDRESSES: Record<
     1: "TODO",
     4: "0x2cfde3d46b0e075a5a2f06f5f276853b95098171",
   },
+  WrappingRewards: {
+    1: "TODO",
+    4: "TODO",
+  },
 };
 
 export const TOKEN_ADDRESSES: Record<TokenNames, Record<Networks, string>> = {
@@ -27,4 +31,10 @@ export const TOKEN_ADDRESSES: Record<TokenNames, Record<Networks, string>> = {
     1: "TODO",
     4: "0x2cfde3d46b0e075a5a2f06f5f276853b95098171",
   },
+};
+
+export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
+  "0xad36b2c064cc743daca00a134efc845dfd073f3c": "DAI",
+  "0x354f3750d24c294c511027bd0ecb66047338f887": "USDC",
+  "0xcfed3caef5870cf7a95ce6d9ec86b2570db238bc": "WBTC",
 };

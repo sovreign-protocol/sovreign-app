@@ -1,9 +1,13 @@
+import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useBlockNumber from "@/hooks/useBlockNumber";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
+import { parseUnits } from "@ethersproject/units";
 import Head from "next/head";
+import { FormEvent } from "react";
 
 function Home() {
   useEagerConnect();
@@ -18,8 +22,34 @@ function Home() {
     }
   }
 
-  const { data: poolTokenAddresses } = useGetPoolTokens();
+  const { data: poolTokens } = useGetPoolTokens();
   const { data: tokenBalance } = useTokenBalance(account);
+  const { data: blockNumber } = useBlockNumber();
+
+  const contract = usePoolRouter();
+
+  async function deposit() {}
+
+  async function onSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const values = event.target as typeof event.target & {
+      token: { value: string };
+      amount: { value: string };
+      slippage: { value: string };
+    };
+
+    try {
+      await contract.deposit(
+        values.token.value,
+        parseUnits(values.amount.value, "wei"),
+        parseUnits("1", "wei"),
+        1000
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="p-5">
@@ -39,7 +69,11 @@ function Home() {
               </li>
               <li>
                 <p>SOV Balance</p>
-                <p>{tokenBalance?.toString()}</p>
+                <p>{tokenBalance?.toNumber()?.toFixed(4)}</p>
+              </li>
+              <li>
+                <p>Block Number</p>
+                <p>{blockNumber}</p>
               </li>
             </ul>
           ) : (
@@ -52,7 +86,7 @@ function Home() {
         <div>
           <h2 className="mb-4 text-lg font-bold">Deposit</h2>
 
-          <form method="POST" className="space-y-4">
+          <form onSubmit={onSubmit} method="POST" className="space-y-4">
             <div>
               <label className="block" htmlFor="token">
                 Select a token
@@ -60,9 +94,9 @@ function Home() {
 
               <select name="token" id="token">
                 <option value="">Select a token</option>
-                {poolTokenAddresses?.map((tokenAddress) => (
-                  <option key={tokenAddress} value={tokenAddress}>
-                    {tokenAddress}
+                {poolTokens?.map((token) => (
+                  <option key={token.address} value={token.address}>
+                    {token.name}
                   </option>
                 ))}
               </select>
@@ -79,6 +113,8 @@ function Home() {
                 inputMode="decimal"
                 maxLength={79}
                 minLength={1}
+                name="amount"
+                id="amount"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
                 spellCheck="false"
@@ -98,6 +134,8 @@ function Home() {
                   autoComplete="off"
                   autoCorrect="off"
                   inputMode="decimal"
+                  id="slippage"
+                  name="slippage"
                   maxLength={4}
                   minLength={1}
                   pattern="^[0-9]*[.,]?[0-9]*$"
@@ -109,6 +147,8 @@ function Home() {
                 <span>%</span>
               </div>
             </div>
+
+            <button type="submit">Deposit</button>
           </form>
         </div>
       </main>
