@@ -1,8 +1,9 @@
-import useGetTokens from "@/hooks/view/useGetTokens";
+import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
+import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
 import Head from "next/head";
-import { useEagerConnect } from "@/hooks/useEagerConnect";
 
 function Home() {
   useEagerConnect();
@@ -17,7 +18,8 @@ function Home() {
     }
   }
 
-  const { data: basketTokens } = useGetTokens();
+  const { data: poolTokenAddresses } = useGetPoolTokens();
+  const { data: tokenBalance } = useTokenBalance(account);
 
   return (
     <div className="p-5">
@@ -30,7 +32,16 @@ function Home() {
       <nav className="mb-8">
         <div>
           {account ? (
-            <p>Connected Address: {account}</p>
+            <ul>
+              <li>
+                <p>Connected Address</p>
+                <p>{account}</p>
+              </li>
+              <li>
+                <p>SOV Balance</p>
+                <p>{tokenBalance?.toString()}</p>
+              </li>
+            </ul>
           ) : (
             <button onClick={connect}>Connect Wallet</button>
           )}
@@ -49,7 +60,7 @@ function Home() {
 
               <select name="token" id="token">
                 <option value="">Select a token</option>
-                {basketTokens?.map((tokenAddress) => (
+                {poolTokenAddresses?.map((tokenAddress) => (
                   <option key={tokenAddress} value={tokenAddress}>
                     {tokenAddress}
                   </option>
