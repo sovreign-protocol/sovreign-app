@@ -4,7 +4,7 @@ export const INFURA_ID = "TODO";
 
 type Networks = 1 | 4;
 
-type ContractNames = "BasketBalancer" | "PoolRouter" | "SOV_ERC20";
+type ContractNames = "PoolRouter" | "SOV_ERC20";
 
 type TokenNames = "SOV";
 
@@ -12,10 +12,6 @@ export const CONTRACT_ADDRESSES: Record<
   ContractNames,
   Record<Networks, string>
 > = {
-  BasketBalancer: {
-    1: "TODO",
-    4: "0x38c2FA98Ba56fBF553821f55084737181A4c6635",
-  },
   PoolRouter: {
     1: "TODO",
     4: "0x5a6C7629dB81BEf850a9d181A50F1a35CaEFbc9b",
