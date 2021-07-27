@@ -2,8 +2,11 @@ import useGetTokens from "@/hooks/view/useGetTokens";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import { injected } from "@/lib/connectors/metamask";
 import Head from "next/head";
+import { useEagerConnect } from "@/hooks/useEagerConnect";
 
 function Home() {
+  useEagerConnect();
+
   const account = useWeb3Store((state) => state.account);
 
   async function connect() {

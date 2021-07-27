@@ -1,5 +1,5 @@
 import { injected } from "@/lib/connectors/metamask";
-import isMobile from "ismobilejs";
+import isMobile from "@/utils/isMobile";
 import { useEffect, useState } from "react";
 import useWeb3Store, { State } from "./useWeb3Store";
 
@@ -18,7 +18,7 @@ export function useEagerConnect() {
             setTried(true);
           });
         } else {
-          if (isMobile(window.navigator).phone && window.ethereum) {
+          if (isMobile && window.ethereum) {
             injected.activate().catch(() => {
               setTried(true);
             });
