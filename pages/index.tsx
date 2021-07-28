@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESSES, MaxUint256 } from "@/constants";
+import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
 import useBlockNumber from "@/hooks/useBlockNumber";
@@ -8,7 +8,9 @@ import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
-import { parseEther, parseUnits } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
+import type { TransactionResponse } from "@ethersproject/providers";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import Head from "next/head";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -31,25 +33,18 @@ function Home() {
 
   const poolRouter = usePoolRouter();
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault();
+  async function getMinPoolAmountOut(
+    tokenAddress: string,
+    amountToDeposit: string,
+    slippage: string
+  ) {
+    const poolAmountOut: BigNumber = await poolRouter.getSovAmountOutSingle(
+      tokenAddress,
+      parseUnits(amountToDeposit),
+      slippage ? slippage : 1
+    );
 
-    const values = event.target as typeof event.target & {
-      token: { value: string };
-      amount: { value: string };
-      slippage: { value: string };
-    };
-
-    try {
-      await poolRouter.deposit(
-        values.token.value,
-        parseEther(values.amount.value),
-        parseUnits("1", "wei"),
-        1000
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    return poolAmountOut.mul(100 - Number(slippage)).div(100);
   }
 
   const [tokenAddress, tokenAddressSet] = useState<string>("");
@@ -62,31 +57,60 @@ function Home() {
 
   const { data: tokenBalance } = useTokenBalance(account, tokenAddress);
 
-  const { data: sovTokenBalance } = useTokenBalance(
-    account,
-    CONTRACT_ADDRESSES.SOV_ERC20[chainId]
-  );
+  const { data: sovTokenBalance, mutate: sovTokenBalanceMutate } =
+    useTokenBalance(account, TOKEN_ADDRESSES.SOV[chainId]);
 
-  const { data: tokenAllowance } = useTokenAllowanceForPoolRouter(
-    tokenAddress,
-    account
-  );
+  const { data: tokenAllowance, mutate: tokenAllowanceMutate } =
+    useTokenAllowanceForPoolRouter(tokenAddress, account);
 
   const needsApproval =
     !!tokenAllowance && !!depositAmount
-      ? tokenAllowance.lt(depositAmount)
+      ? tokenAllowance.lt(parseUnits(depositAmount))
       : undefined;
 
   const erc20Contract = useERC20(tokenAddress);
 
+  async function onSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const values = event.target as typeof event.target & {
+      token: { value: string };
+      amount: { value: string };
+      slippage: { value: string };
+    };
+
+    try {
+      const minPoolAmountOut = await getMinPoolAmountOut(
+        values.token.value,
+        values.amount.value,
+        values.slippage.value
+      );
+
+      const tx: TransactionResponse = await poolRouter.deposit(
+        values.token.value,
+        parseUnits(values.amount.value),
+        minPoolAmountOut,
+        BigNumber.from(10000)
+      );
+
+      await tx.wait();
+
+      await sovTokenBalanceMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function approve() {
     try {
-      const result: boolean = await erc20Contract.approve(
+      const tx: TransactionResponse = await erc20Contract.approve(
         CONTRACT_ADDRESSES.PoolRouter[chainId],
         MaxUint256
       );
 
-      console.log(result);
+      await tx.wait();
+
+      await tokenAllowanceMutate();
     } catch (error) {
       console.error(error);
     }
@@ -114,7 +138,7 @@ function Home() {
               </li>
               <li>
                 <p>SOV Balance</p>
-                <p>{sovTokenBalance.toString()}</p>
+                <p>{formatUnits(sovTokenBalance ?? 0)}</p>
               </li>
             </ul>
           ) : (
@@ -152,12 +176,7 @@ function Home() {
             {tokenAddress && tokenBalance && (
               <div>
                 <p>
-                  <span>Balance:</span> <span>{tokenBalance?.toString()}</span>
-                </p>
-
-                <p>
-                  <span>Allowance:</span>{" "}
-                  <span>{tokenAllowance?.toString()}</span>
+                  <span>Balance:</span> <span>{formatUnits(tokenBalance)}</span>
                 </p>
               </div>
             )}
@@ -196,15 +215,15 @@ function Home() {
                 <input
                   autoComplete="off"
                   autoCorrect="off"
-                  inputMode="decimal"
+                  inputMode="numeric"
                   id="slippage"
                   name="slippage"
-                  maxLength={4}
-                  minLength={1}
-                  pattern="^[0-9]*[.,]?[0-9]*$"
-                  placeholder="0.10"
+                  min={0}
+                  max={99}
+                  step={1}
+                  placeholder="1"
                   spellCheck="false"
-                  type="text"
+                  type="number"
                 />
 
                 <span>%</span>
