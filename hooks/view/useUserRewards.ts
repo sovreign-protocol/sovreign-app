@@ -5,15 +5,31 @@ import useWrappingRewards from "../contracts/useWrappingRewards";
 
 const getUserRewards =
   (contract: Contract) => async (_: string, address: string) => {
+    const lastEpochHarvested: BigNumber =
+      await contract.userLastEpochIdHarvested();
+
     const epoch: BigNumber = await contract.getCurrentEpoch();
 
-    const epochStake: BigNumber = await contract.getEpochStake(address, epoch);
-
-    const poolSize: BigNumber = await contract.getPoolSize(epoch);
+    const epochsToHarvest = epoch.sub(lastEpochHarvested).toNumber();
 
     const getRewardsForEpoch: BigNumber = await contract.getRewardsForEpoch();
 
-    return getRewardsForEpoch.mul(epochStake.div(poolSize));
+    const epochRewardsArray = await Promise.all(
+      [...new Array(epochsToHarvest)].map(async (_, index) => {
+        const epochToCheck = index + 1;
+
+        const epochStake: BigNumber = await contract.getEpochStake(
+          address,
+          epochToCheck
+        );
+
+        const poolSize: BigNumber = await contract.getPoolSize(epochToCheck);
+
+        return getRewardsForEpoch.mul(epochStake).div(poolSize);
+      })
+    );
+
+    return epochRewardsArray.reduce((prev, cur) => prev.add(cur));
   };
 
 export default function useUserRewards(address: string) {

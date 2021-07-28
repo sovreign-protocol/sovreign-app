@@ -1,13 +1,14 @@
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useBlockNumber from "@/hooks/useBlockNumber";
-import useUserRewards from "@/hooks/view/useUserRewards";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
+import useUserRewards from "@/hooks/view/useUserRewards";
 import { injected } from "@/lib/connectors/metamask";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
@@ -32,7 +33,8 @@ function Home() {
   const { data: poolTokens } = useGetPoolTokens();
   const { data: blockNumber } = useBlockNumber();
 
-  const { data: userRewards } = useUserRewards(account);
+  const { data: userRewards, mutate: userRewardsMutate } =
+    useUserRewards(account);
 
   const poolRouter = usePoolRouter();
 
@@ -119,6 +121,18 @@ function Home() {
     }
   }
 
+  const wrappingRewards = useWrappingRewards();
+
+  async function harvest() {
+    try {
+      const tx: TransactionResponse = await wrappingRewards.massHarvest();
+
+      await tx.wait();
+
+      await userRewardsMutate();
+    } catch (error) {}
+  }
+
   return (
     <div className="p-5">
       <Head>
@@ -146,6 +160,10 @@ function Home() {
               <li>
                 <p>User Rewards</p>
                 <p>{formatUnits(userRewards ?? 0)}</p>
+
+                {userRewards?.gt(0) && (
+                  <button onClick={harvest}>Harvest</button>
+                )}
               </li>
             </ul>
           ) : (
