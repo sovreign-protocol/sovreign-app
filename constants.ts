@@ -4,7 +4,7 @@ export const INFURA_ID = "TODO";
 
 type Networks = 1 | 4;
 
-type ContractNames = "PoolRouter" | "WrappingRewards";
+type ContractNames = "PoolRouter" | "WrappingRewards" | "ReignFacet";
 
 type TokenNames = "SOV" | "REIGN";
 
@@ -19,6 +19,10 @@ export const CONTRACT_ADDRESSES: Record<
   WrappingRewards: {
     1: "TODO",
     4: "0x20CF7b7F003A32Fa7169ecEeB435ee1af5eE6ED1",
+  },
+  ReignFacet: {
+    1: "TODO",
+    4: "0xc31cb4f82f178ea0377492144035c48de119a4f8",
   },
 };
 
