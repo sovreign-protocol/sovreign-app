@@ -2,6 +2,7 @@ import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
 import useBlockNumber from "@/hooks/useBlockNumber";
+import useUserRewards from "@/hooks/view/useUserRewards";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
@@ -30,6 +31,8 @@ function Home() {
 
   const { data: poolTokens } = useGetPoolTokens();
   const { data: blockNumber } = useBlockNumber();
+
+  const { data: userRewards } = useUserRewards(account);
 
   const poolRouter = usePoolRouter();
 
@@ -139,6 +142,10 @@ function Home() {
               <li>
                 <p>SOV Balance</p>
                 <p>{formatUnits(sovTokenBalance ?? 0)}</p>
+              </li>
+              <li>
+                <p>User Rewards</p>
+                <p>{formatUnits(userRewards ?? 0)}</p>
               </li>
             </ul>
           ) : (
