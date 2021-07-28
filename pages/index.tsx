@@ -1,18 +1,22 @@
+import { CONTRACT_ADDRESSES, MaxUint256 } from "@/constants";
+import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
 import useBlockNumber from "@/hooks/useBlockNumber";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
-import { parseUnits } from "@ethersproject/units";
+import { parseEther, parseUnits } from "@ethersproject/units";
 import Head from "next/head";
-import { FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 function Home() {
   useEagerConnect();
 
   const account = useWeb3Store((state) => state.account);
+  const chainId = useWeb3Store((state) => state.chainId);
 
   async function connect() {
     try {
@@ -23,12 +27,9 @@ function Home() {
   }
 
   const { data: poolTokens } = useGetPoolTokens();
-  const { data: tokenBalance } = useTokenBalance(account);
   const { data: blockNumber } = useBlockNumber();
 
-  const contract = usePoolRouter();
-
-  async function deposit() {}
+  const poolRouter = usePoolRouter();
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -40,12 +41,52 @@ function Home() {
     };
 
     try {
-      await contract.deposit(
+      await poolRouter.deposit(
         values.token.value,
-        parseUnits(values.amount.value, "wei"),
+        parseEther(values.amount.value),
         parseUnits("1", "wei"),
         1000
       );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const [tokenAddress, tokenAddressSet] = useState<string>("");
+  const tokenAddressOnChange = (event: ChangeEvent<HTMLSelectElement>) =>
+    tokenAddressSet(event.currentTarget.value);
+
+  const [depositAmount, depositAmountSet] = useState<string>("");
+  const depositAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
+    depositAmountSet(event.currentTarget.value);
+
+  const { data: tokenBalance } = useTokenBalance(account, tokenAddress);
+
+  const { data: sovTokenBalance } = useTokenBalance(
+    account,
+    CONTRACT_ADDRESSES.SOV_ERC20[chainId]
+  );
+
+  const { data: tokenAllowance } = useTokenAllowanceForPoolRouter(
+    tokenAddress,
+    account
+  );
+
+  const needsApproval =
+    !!tokenAllowance && !!depositAmount
+      ? tokenAllowance.lt(depositAmount)
+      : undefined;
+
+  const erc20Contract = useERC20(tokenAddress);
+
+  async function approve() {
+    try {
+      const result: boolean = await erc20Contract.approve(
+        CONTRACT_ADDRESSES.PoolRouter[chainId],
+        MaxUint256
+      );
+
+      console.log(result);
     } catch (error) {
       console.error(error);
     }
@@ -68,12 +109,12 @@ function Home() {
                 <p>{account}</p>
               </li>
               <li>
-                <p>SOV Balance</p>
-                <p>{tokenBalance?.toNumber()?.toFixed(4)}</p>
-              </li>
-              <li>
                 <p>Block Number</p>
                 <p>{blockNumber}</p>
+              </li>
+              <li>
+                <p>SOV Balance</p>
+                <p>{sovTokenBalance.toString()}</p>
               </li>
             </ul>
           ) : (
@@ -92,7 +133,13 @@ function Home() {
                 Select a token
               </label>
 
-              <select name="token" id="token">
+              <select
+                value={tokenAddress}
+                onChange={tokenAddressOnChange}
+                name="token"
+                id="token"
+                required
+              >
                 <option value="">Select a token</option>
                 {poolTokens?.map((token) => (
                   <option key={token.address} value={token.address}>
@@ -101,6 +148,19 @@ function Home() {
                 ))}
               </select>
             </div>
+
+            {tokenAddress && tokenBalance && (
+              <div>
+                <p>
+                  <span>Balance:</span> <span>{tokenBalance?.toString()}</span>
+                </p>
+
+                <p>
+                  <span>Allowance:</span>{" "}
+                  <span>{tokenAllowance?.toString()}</span>
+                </p>
+              </div>
+            )}
 
             <div>
               <label className="block" htmlFor="amount">
@@ -114,7 +174,10 @@ function Home() {
                 maxLength={79}
                 minLength={1}
                 name="amount"
+                required
                 id="amount"
+                value={depositAmount}
+                onChange={depositAmountOnChange}
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0.0"
                 spellCheck="false"
@@ -148,7 +211,19 @@ function Home() {
               </div>
             </div>
 
-            <button type="submit">Deposit</button>
+            {needsApproval && (
+              <div>
+                <p>Needs Token Approval</p>
+
+                <button onClick={approve} type="button">
+                  Approve Sovreign To Spend Your Token
+                </button>
+              </div>
+            )}
+
+            <button type="submit" disabled={needsApproval}>
+              Deposit
+            </button>
           </form>
         </div>
       </main>

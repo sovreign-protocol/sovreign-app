@@ -38,3 +38,5 @@ export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
   "0x354f3750d24c294c511027bd0ecb66047338f887": "USDC",
   "0xcfed3caef5870cf7a95ce6d9ec86b2570db238bc": "WBTC",
 };
+
+export const MaxUint256 = Number.MAX_SAFE_INTEGER;

@@ -11,13 +11,16 @@ const getTokenBalance =
     return value;
   };
 
-export default function useTokenBalance(address: string) {
-  const contract = useERC20();
+export default function useTokenBalance(address: string, tokenAddress: string) {
+  const contract = useERC20(tokenAddress);
 
-  const shouldFetch = !!contract && typeof address === "string";
+  const shouldFetch =
+    !!contract &&
+    typeof address === "string" &&
+    typeof tokenAddress === "string";
 
   const result = useSWR(
-    shouldFetch ? ["TokenBalance", address] : null,
+    shouldFetch ? ["TokenBalance", address, tokenAddress] : null,
     getTokenBalance(contract)
   );
 

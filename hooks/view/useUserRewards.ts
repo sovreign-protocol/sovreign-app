@@ -1,7 +1,7 @@
-import useWrappingRewards from "../contracts/useWrappingRewards";
-import useSWR from "swr";
-import type { Contract } from "@ethersproject/contracts";
 import type { BigNumber } from "@ethersproject/bignumber";
+import type { Contract } from "@ethersproject/contracts";
+import useSWR from "swr";
+import useWrappingRewards from "../contracts/useWrappingRewards";
 
 const getUserRewards =
   (contract: Contract) => async (_: string, address: string) => {
