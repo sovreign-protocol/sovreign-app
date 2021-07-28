@@ -18,7 +18,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   WrappingRewards: {
     1: "TODO",
-    4: "TODO",
+    4: "0x855dD13AbAb0e891952Fd973634cefBb1c5AAbAC",
   },
 };
 
