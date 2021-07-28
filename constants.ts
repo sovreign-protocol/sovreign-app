@@ -6,7 +6,7 @@ type Networks = 1 | 4;
 
 type ContractNames = "PoolRouter" | "WrappingRewards";
 
-type TokenNames = "SOV";
+type TokenNames = "SOV" | "REIGN";
 
 export const CONTRACT_ADDRESSES: Record<
   ContractNames,
@@ -26,6 +26,10 @@ export const TOKEN_ADDRESSES: Record<TokenNames, Record<Networks, string>> = {
   SOV: {
     1: "TODO",
     4: "0xfbebceb1fc57b05b2bd845d936ea23ae60861584",
+  },
+  REIGN: {
+    1: "TODO",
+    4: "0x08188FC7d8F552d1D8F8d2743404e9E728425AE1",
   },
 };
 

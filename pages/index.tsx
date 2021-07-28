@@ -123,6 +123,9 @@ function Home() {
 
   const wrappingRewards = useWrappingRewards();
 
+  const { data: reignTokenBalance, mutate: reignTokenBalanceMutate } =
+    useTokenBalance(account, TOKEN_ADDRESSES.REIGN[chainId]);
+
   async function harvest() {
     try {
       const tx: TransactionResponse = await wrappingRewards.massHarvest();
@@ -130,7 +133,7 @@ function Home() {
       await tx.wait();
 
       await userRewardsMutate();
-      await sovTokenBalanceMutate();
+      await reignTokenBalanceMutate();
     } catch (error) {}
   }
 
@@ -157,6 +160,10 @@ function Home() {
               <li>
                 <p>SOV Balance</p>
                 <p>{formatUnits(sovTokenBalance ?? 0)}</p>
+              </li>
+              <li>
+                <p>REIGN Balance</p>
+                <p>{formatUnits(reignTokenBalance ?? 0)}</p>
               </li>
               <li>
                 <p>User Rewards</p>
