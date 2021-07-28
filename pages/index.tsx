@@ -130,6 +130,7 @@ function Home() {
       await tx.wait();
 
       await userRewardsMutate();
+      await sovTokenBalanceMutate();
     } catch (error) {}
   }
 
