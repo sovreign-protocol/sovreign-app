@@ -44,3 +44,16 @@ export function useTokenAllowanceForPoolRouter(
     CONTRACT_ADDRESSES.PoolRouter[chainId]
   );
 }
+
+export function useTokenAllowanceForReignFacet(
+  tokenAddress: string,
+  owner: string
+) {
+  const chainId = useWeb3Store((state) => state.chainId);
+
+  return useTokenAllowance(
+    tokenAddress,
+    owner,
+    CONTRACT_ADDRESSES.ReignFacet[chainId]
+  );
+}

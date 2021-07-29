@@ -1,12 +1,17 @@
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useBlockNumber from "@/hooks/useBlockNumber";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
-import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
+import useReignStaked from "@/hooks/view/useReignStaked";
+import {
+  useTokenAllowanceForPoolRouter,
+  useTokenAllowanceForReignFacet,
+} from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import { injected } from "@/lib/connectors/metamask";
@@ -38,6 +43,8 @@ function Home() {
 
   const poolRouter = usePoolRouter();
 
+  const reignFacet = useReignFacet();
+
   async function getMinPoolAmountOut(
     tokenAddress: string,
     amountToDeposit: string,
@@ -60,6 +67,10 @@ function Home() {
   const depositAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     depositAmountSet(event.currentTarget.value);
 
+  const [stakeDepositAmount, stakeDepositAmountSet] = useState<string>("");
+  const stakeDepositAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
+    stakeDepositAmountSet(event.currentTarget.value);
+
   const { data: tokenBalance } = useTokenBalance(account, tokenAddress);
 
   const { data: sovTokenBalance, mutate: sovTokenBalanceMutate } =
@@ -68,12 +79,24 @@ function Home() {
   const { data: tokenAllowance, mutate: tokenAllowanceMutate } =
     useTokenAllowanceForPoolRouter(tokenAddress, account);
 
+  const { data: stakedReign, mutate: stakedReignMutate } = useReignStaked();
+
+  const { data: reignTokenAllowance, mutate: reignTokenAllowanceMutate } =
+    useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
+
   const needsApproval =
     !!tokenAllowance && !!depositAmount
       ? tokenAllowance.lt(parseUnits(depositAmount))
       : undefined;
 
+  const reignNeedsApproval =
+    !!reignTokenAllowance && !!stakeDepositAmount
+      ? reignTokenAllowance.lt(parseUnits(stakeDepositAmount))
+      : undefined;
+
   const erc20Contract = useERC20(tokenAddress);
+
+  const reignERC20Contract = useERC20(TOKEN_ADDRESSES.REIGN[chainId]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -101,6 +124,36 @@ function Home() {
       await tx.wait();
 
       await sovTokenBalanceMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function depositStake() {
+    try {
+      const tx: TransactionResponse = await reignFacet.deposit(
+        parseUnits(stakeDepositAmount)
+      );
+
+      await tx.wait();
+
+      await reignTokenBalanceMutate();
+      await stakedReignMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function approveReign() {
+    try {
+      const tx: TransactionResponse = await reignERC20Contract.approve(
+        CONTRACT_ADDRESSES.ReignFacet[chainId],
+        MaxUint256
+      );
+
+      await tx.wait();
+
+      await reignTokenAllowanceMutate();
     } catch (error) {
       console.error(error);
     }
@@ -164,6 +217,47 @@ function Home() {
               <li>
                 <p>REIGN Balance</p>
                 <p>{formatUnits(reignTokenBalance ?? 0)}</p>
+
+                <div>
+                  <h4>Deposit Stake</h4>
+
+                  <div>
+                    <label className="block" htmlFor="reign-amount">
+                      Enter amount of REIGN token to deposit into Stake
+                    </label>
+
+                    <input
+                      autoComplete="off"
+                      autoCorrect="off"
+                      inputMode="decimal"
+                      maxLength={79}
+                      minLength={1}
+                      name="reign-amount"
+                      required
+                      id="reign-amount"
+                      value={stakeDepositAmount}
+                      onChange={stakeDepositAmountOnChange}
+                      pattern="^[0-9]*[.,]?[0-9]*$"
+                      placeholder="0.0"
+                      spellCheck="false"
+                      type="text"
+                    />
+                  </div>
+
+                  {reignNeedsApproval && (
+                    <button onClick={approveReign}>
+                      Approve Sovreign To Spend Your REIGN
+                    </button>
+                  )}
+
+                  <button disabled={reignNeedsApproval} onClick={depositStake}>
+                    Deposit Stake
+                  </button>
+                </div>
+              </li>
+              <li>
+                <p>REIGN Staked</p>
+                <p>{formatUnits(stakedReign ?? 0)}</p>
               </li>
               <li>
                 <p>User Rewards</p>
