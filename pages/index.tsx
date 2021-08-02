@@ -59,6 +59,16 @@ function Home() {
     return poolAmountOut.mul(100 - Number(slippage)).div(100);
   }
 
+  async function getPoolAmountIn(tokenOut: string, tokenAmountOut: string) {
+    const poolAmountIn: BigNumber = await poolRouter.getSovAmountInSingle(
+      tokenOut,
+      parseUnits(tokenAmountOut),
+      1
+    );
+
+    return poolAmountIn;
+  }
+
   const [tokenAddress, tokenAddressSet] = useState<string>("");
   const tokenAddressOnChange = (event: ChangeEvent<HTMLSelectElement>) =>
     tokenAddressSet(event.currentTarget.value);
@@ -75,7 +85,10 @@ function Home() {
   const withdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     withdrawAmountSet(event.currentTarget.value);
 
-  const { data: tokenBalance } = useTokenBalance(account, tokenAddress);
+  const { data: tokenBalance, mutate: tokenBalanceMutate } = useTokenBalance(
+    account,
+    tokenAddress
+  );
 
   const { data: sovTokenBalance, mutate: sovTokenBalanceMutate } =
     useTokenBalance(account, TOKEN_ADDRESSES.SOV[chainId]);
@@ -152,6 +165,24 @@ function Home() {
     };
 
     try {
+      const poolAmountIn = await getPoolAmountIn(
+        values["withdraw-token"].value,
+        values["withdraw-amount"].value
+      );
+
+      console.log(poolAmountIn.toString());
+
+      const tx: TransactionResponse = await poolRouter.withdraw(
+        values["withdraw-token"].value,
+        poolAmountIn,
+        parseUnits(values["withdraw-amount"].value)
+      );
+
+      await tx.wait();
+
+      await tokenBalanceMutate();
+
+      await sovTokenBalanceMutate();
     } catch (error) {
       console.error(error);
     }
@@ -421,38 +452,6 @@ function Home() {
 
           <form onSubmit={withdrawOnSubmit} method="POST" className="space-y-4">
             <div>
-              <label className="block" htmlFor="withdraw-amount">
-                Enter amount of SOV to repay
-              </label>
-
-              <input
-                autoComplete="off"
-                autoCorrect="off"
-                inputMode="decimal"
-                maxLength={79}
-                minLength={1}
-                name="withdraw-amount"
-                required
-                id="withdraw-amount"
-                value={withdrawAmount}
-                onChange={withdrawAmountOnChange}
-                pattern="^[0-9]*[.,]?[0-9]*$"
-                placeholder="0.0"
-                spellCheck="false"
-                type="text"
-              />
-            </div>
-
-            {sovTokenBalance && (
-              <div>
-                <p>
-                  <span>SOV Balance:</span>{" "}
-                  <span>{formatUnits(sovTokenBalance)}</span>
-                </p>
-              </div>
-            )}
-
-            <div>
               <label className="block" htmlFor="withdraw-token">
                 Select a token to receive back
               </label>
@@ -473,9 +472,40 @@ function Home() {
               </select>
             </div>
 
+            {tokenAddress && tokenBalance && (
+              <div>
+                <p>
+                  <span>Balance:</span> <span>{formatUnits(tokenBalance)}</span>
+                </p>
+              </div>
+            )}
+
+            <div>
+              <label className="block" htmlFor="withdraw-amount">
+                Enter amount of token to receive
+              </label>
+
+              <input
+                autoComplete="off"
+                autoCorrect="off"
+                inputMode="decimal"
+                maxLength={79}
+                minLength={1}
+                name="withdraw-amount"
+                required
+                id="withdraw-amount"
+                value={withdrawAmount}
+                onChange={withdrawAmountOnChange}
+                pattern="^[0-9]*[.,]?[0-9]*$"
+                placeholder="0.0"
+                spellCheck="false"
+                type="text"
+              />
+            </div>
+
             {sovNeedsApproval && (
               <div>
-                <p>Needs Token Approval</p>
+                <p>Needs SOV Approval</p>
 
                 <button onClick={approveSOV} type="button">
                   Approve Sovreign To Spend Your SOV
