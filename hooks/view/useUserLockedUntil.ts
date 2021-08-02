@@ -1,8 +1,12 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import useSWR from "swr";
 import useReignFacet from "../contracts/useReignFacet";
 import useWeb3Store from "../useWeb3Store";
+
+dayjs.extend(utc);
 
 const getUserLockedUntil =
   (contract: Contract) => async (_: string, address: string) => {
@@ -10,9 +14,11 @@ const getUserLockedUntil =
       address
     );
 
-    console.log("lockedUntilTimestamp", lockedUntilTimestamp.toString());
+    const timestamp = lockedUntilTimestamp.toNumber();
 
-    return lockedUntilTimestamp;
+    const isLocked = dayjs.utc(timestamp).isAfter(dayjs());
+
+    return { timestamp, isLocked };
   };
 
 export default function useUserLockedUntil() {
@@ -25,10 +31,4 @@ export default function useUserLockedUntil() {
     shouldFetch ? ["UserLockedUntil", account] : null,
     getUserLockedUntil(contract)
   );
-}
-
-export function useIsStakeLocked() {
-  const { data: lockedUntilTimestamp } = useUserLockedUntil();
-
-  return lockedUntilTimestamp?.toNumber() > Date.now();
 }

@@ -14,9 +14,10 @@ import {
   useTokenAllowanceForReignFacet,
 } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import { useIsStakeLocked } from "@/hooks/view/useUserLockedUntil";
+import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import { injected } from "@/lib/connectors/metamask";
+import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
@@ -91,7 +92,7 @@ function Home() {
   const withdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     withdrawAmountSet(event.currentTarget.value);
 
-  const [lockupInDays, lockupInDaysSet] = useState<string>("");
+  const [lockupInDays, lockupInDaysSet] = useState<string>("30");
   const lockupInDaysOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     lockupInDaysSet(event.currentTarget.value);
 
@@ -114,7 +115,8 @@ function Home() {
   const { data: sovTokenAllowance, mutate: sovTokenAllowanceMutate } =
     useTokenAllowanceForPoolRouter(TOKEN_ADDRESSES.SOV[chainId], account);
 
-  const isStakeLocked = useIsStakeLocked();
+  const { data: userLocked, mutate: userLockedUntilMutate } =
+    useUserLockedUntil();
 
   const sovNeedsApproval =
     !!sovTokenAllowance && !!withdrawAmount
@@ -283,6 +285,26 @@ function Home() {
     }
   }
 
+  async function lockupStake() {
+    try {
+      if (Number(lockupInDays) > 365 * 2) {
+        throw new Error("Max Lockup Time Is 2 Years (730 Days)");
+      }
+
+      const futureTimestamp = getFutureTimestamp(Number(lockupInDays));
+
+      const tx: TransactionResponse = await reignFacet.lock(
+        BigNumber.from(futureTimestamp)
+      );
+
+      await tx.wait();
+
+      await userLockedUntilMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const wrappingRewards = useWrappingRewards();
 
   const { data: reignTokenBalance, mutate: reignTokenBalanceMutate } =
@@ -394,14 +416,14 @@ function Home() {
                   </div>
 
                   <button
-                    disabled={isStakeLocked || stakedReign?.isZero()}
+                    disabled={userLocked?.isLocked || stakedReign?.isZero()}
                     onClick={withdrawStake}
                   >
                     Withdraw Stake
                   </button>
                 </div>
 
-                <form method="POST">
+                <div>
                   <p>Lock Up Stake</p>
 
                   <input
@@ -422,7 +444,6 @@ function Home() {
                     max={365 * 2}
                     name="lockup"
                     id="lockup"
-                    required
                     step={1}
                     onChange={lockupInDaysOnChange}
                   />
@@ -432,8 +453,8 @@ function Home() {
                     {((Number(lockupInDays) / 730) * 0.5 + 1).toFixed(2)}x
                   </p>
 
-                  <button>Lock Up</button>
-                </form>
+                  <button onClick={lockupStake}>Lock Up</button>
+                </div>
               </li>
               <li>
                 <p>User Rewards</p>
