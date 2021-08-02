@@ -4,7 +4,11 @@ export const INFURA_ID = "TODO";
 
 type Networks = 1 | 4;
 
-type ContractNames = "PoolRouter" | "WrappingRewards" | "ReignFacet";
+type ContractNames =
+  | "BasketBalancer"
+  | "PoolRouter"
+  | "WrappingRewards"
+  | "ReignFacet";
 
 type TokenNames = "SOV" | "REIGN";
 
@@ -12,6 +16,10 @@ export const CONTRACT_ADDRESSES: Record<
   ContractNames,
   Record<Networks, string>
 > = {
+  BasketBalancer: {
+    1: "TODO",
+    4: "0x38c2FA98Ba56fBF553821f55084737181A4c6635",
+  },
   PoolRouter: {
     1: "TODO",
     4: "0xa7f2c3bfe3e9e51eab595c44cd3cd45a4e2ae2df",
