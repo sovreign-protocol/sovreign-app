@@ -9,25 +9,17 @@ import useTokenBalance from "./useTokenBalance";
 
 function getMaxWithdraw(poolRouter: Contract) {
   return async (_: string, sovBalance: BigNumber, tokenOut: string) => {
-    const ANY_GIVEN_AMOUNT = parseUnits("1000");
+    const ANY_GIVEN_AMOUNT = parseUnits("1");
 
-    console.log("ANY_GIVEN_AMOUNT", ANY_GIVEN_AMOUNT.toString());
-
-    const sovAmountInSingle: BigNumber = await poolRouter.getSovAmountInSingle(
+    const poolAmountIn: BigNumber = await poolRouter.getSovAmountInSingle(
       tokenOut,
       ANY_GIVEN_AMOUNT,
       MaxUint256
     );
 
-    console.log("sovAmountInSingle", sovAmountInSingle.toString());
-
-    const tokenSovExchangeRate = ANY_GIVEN_AMOUNT.div(sovAmountInSingle);
-
-    console.log("tokenSovExchangeRate", tokenSovExchangeRate.toString());
+    const tokenSovExchangeRate = ANY_GIVEN_AMOUNT.div(poolAmountIn);
 
     const maxWithdraw = sovBalance.mul(tokenSovExchangeRate);
-
-    console.log("maxWithdraw", maxWithdraw.toString());
 
     return maxWithdraw;
   };
@@ -37,14 +29,18 @@ export default function useMaxWithdraw(tokenOut: string) {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const { data: sov } = useTokenBalance(account, TOKEN_ADDRESSES.SOV[chainId]);
+  const { data: sovBalance } = useTokenBalance(
+    account,
+    TOKEN_ADDRESSES.SOV[chainId]
+  );
 
   const contract = usePoolRouter();
 
-  const shouldFetch = !!contract && !!sov && typeof tokenOut === "string";
+  const shouldFetch =
+    !!contract && !!sovBalance && typeof tokenOut === "string";
 
   return useSWR(
-    shouldFetch ? ["MaxWithdraw", sov, tokenOut] : null,
+    shouldFetch ? ["MaxWithdraw", sovBalance, tokenOut] : null,
     getMaxWithdraw(contract)
   );
 }
