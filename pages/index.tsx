@@ -147,8 +147,8 @@ function Home() {
     event.preventDefault();
 
     const values = event.target as typeof event.target & {
-      token: { value: string };
-      amount: { value: string };
+      "withdraw-token": { value: string };
+      "withdraw-amount": { value: string };
     };
 
     try {
@@ -421,7 +421,7 @@ function Home() {
 
           <form onSubmit={withdrawOnSubmit} method="POST" className="space-y-4">
             <div>
-              <label className="block" htmlFor="amount">
+              <label className="block" htmlFor="withdraw-amount">
                 Enter amount of SOV to repay
               </label>
 
@@ -431,9 +431,9 @@ function Home() {
                 inputMode="decimal"
                 maxLength={79}
                 minLength={1}
-                name="amount"
+                name="withdraw-amount"
                 required
-                id="amount"
+                id="withdraw-amount"
                 value={withdrawAmount}
                 onChange={withdrawAmountOnChange}
                 pattern="^[0-9]*[.,]?[0-9]*$"
@@ -453,15 +453,15 @@ function Home() {
             )}
 
             <div>
-              <label className="block" htmlFor="token">
+              <label className="block" htmlFor="withdraw-token">
                 Select a token to receive back
               </label>
 
               <select
                 value={tokenAddress}
                 onChange={tokenAddressOnChange}
-                name="token"
-                id="token"
+                name="withdraw-token"
+                id="withdraw-token"
                 required
               >
                 <option value="">Select a token</option>
