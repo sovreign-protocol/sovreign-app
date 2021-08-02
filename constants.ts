@@ -8,7 +8,8 @@ type ContractNames =
   | "BasketBalancer"
   | "PoolRouter"
   | "WrappingRewards"
-  | "ReignFacet";
+  | "ReignFacet"
+  | "GovRewards";
 
 type TokenNames = "SOV" | "REIGN";
 
@@ -31,6 +32,10 @@ export const CONTRACT_ADDRESSES: Record<
   ReignFacet: {
     1: "TODO",
     4: "0xc31cb4f82f178ea0377492144035c48de119a4f8",
+  },
+  GovRewards: {
+    1: "TODO",
+    4: "0x923CA1b060577e8BcDF6d82A9C4109CEECCc1122",
   },
 };
 
