@@ -14,6 +14,7 @@ import {
   useTokenAllowanceForReignFacet,
 } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
+import { useIsStakeLocked } from "@/hooks/view/useUserLockedUntil";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import { injected } from "@/lib/connectors/metamask";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -90,6 +91,10 @@ function Home() {
   const withdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     withdrawAmountSet(event.currentTarget.value);
 
+  const [lockupInDays, lockupInDaysSet] = useState<string>("");
+  const lockupInDaysOnChange = (event: ChangeEvent<HTMLInputElement>) =>
+    lockupInDaysSet(event.currentTarget.value);
+
   const { data: tokenBalance, mutate: tokenBalanceMutate } = useTokenBalance(
     account,
     tokenAddress
@@ -108,6 +113,8 @@ function Home() {
 
   const { data: sovTokenAllowance, mutate: sovTokenAllowanceMutate } =
     useTokenAllowanceForPoolRouter(TOKEN_ADDRESSES.SOV[chainId], account);
+
+  const isStakeLocked = useIsStakeLocked();
 
   const sovNeedsApproval =
     !!sovTokenAllowance && !!withdrawAmount
@@ -387,12 +394,46 @@ function Home() {
                   </div>
 
                   <button
-                    disabled={stakedReign?.isZero()}
+                    disabled={isStakeLocked || stakedReign?.isZero()}
                     onClick={withdrawStake}
                   >
                     Withdraw Stake
                   </button>
                 </div>
+
+                <form method="POST">
+                  <p>Lock Up Stake</p>
+
+                  <input
+                    name="lockup-range"
+                    id="lockup-range"
+                    type="range"
+                    min={1}
+                    max={365 * 2}
+                    value={lockupInDays}
+                    onChange={lockupInDaysOnChange}
+                    step={1}
+                  />
+
+                  <input
+                    type="number"
+                    value={lockupInDays}
+                    min={1}
+                    max={365 * 2}
+                    name="lockup"
+                    id="lockup"
+                    required
+                    step={1}
+                    onChange={lockupInDaysOnChange}
+                  />
+
+                  <p>
+                    Multiplier:{" "}
+                    {((Number(lockupInDays) / 730) * 0.5 + 1).toFixed(2)}x
+                  </p>
+
+                  <button>Lock Up</button>
+                </form>
               </li>
               <li>
                 <p>User Rewards</p>
