@@ -71,6 +71,10 @@ function Home() {
   const stakeDepositAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     stakeDepositAmountSet(event.currentTarget.value);
 
+  const [withdrawAmount, withdrawAmountSet] = useState<string>("");
+  const withdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
+    withdrawAmountSet(event.currentTarget.value);
+
   const { data: tokenBalance } = useTokenBalance(account, tokenAddress);
 
   const { data: sovTokenBalance, mutate: sovTokenBalanceMutate } =
@@ -84,6 +88,14 @@ function Home() {
   const { data: reignTokenAllowance, mutate: reignTokenAllowanceMutate } =
     useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
 
+  const { data: sovTokenAllowance, mutate: sovTokenAllowanceMutate } =
+    useTokenAllowanceForPoolRouter(TOKEN_ADDRESSES.SOV[chainId], account);
+
+  const sovNeedsApproval =
+    !!sovTokenAllowance && !!withdrawAmount
+      ? sovTokenAllowance.lt(parseUnits(withdrawAmount))
+      : undefined;
+
   const needsApproval =
     !!tokenAllowance && !!depositAmount
       ? tokenAllowance.lt(parseUnits(depositAmount))
@@ -96,9 +108,11 @@ function Home() {
 
   const erc20Contract = useERC20(tokenAddress);
 
+  const sovERC20Contract = useERC20(TOKEN_ADDRESSES.SOV[chainId]);
+
   const reignERC20Contract = useERC20(TOKEN_ADDRESSES.REIGN[chainId]);
 
-  async function onSubmit(event: FormEvent) {
+  async function depositOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const values = event.target as typeof event.target & {
@@ -124,6 +138,20 @@ function Home() {
       await tx.wait();
 
       await sovTokenBalanceMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function withdrawOnSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const values = event.target as typeof event.target & {
+      token: { value: string };
+      amount: { value: string };
+    };
+
+    try {
     } catch (error) {
       console.error(error);
     }
@@ -169,6 +197,21 @@ function Home() {
       await tx.wait();
 
       await tokenAllowanceMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function approveSOV() {
+    try {
+      const tx: TransactionResponse = await sovERC20Contract.approve(
+        CONTRACT_ADDRESSES.PoolRouter[chainId],
+        MaxUint256
+      );
+
+      await tx.wait();
+
+      await sovTokenAllowanceMutate();
     } catch (error) {
       console.error(error);
     }
@@ -278,7 +321,7 @@ function Home() {
         <div>
           <h2 className="mb-4 text-lg font-bold">Deposit</h2>
 
-          <form onSubmit={onSubmit} method="POST" className="space-y-4">
+          <form onSubmit={depositOnSubmit} method="POST" className="space-y-4">
             <div>
               <label className="block" htmlFor="token">
                 Select a token
@@ -369,6 +412,79 @@ function Home() {
 
             <button type="submit" disabled={needsApproval}>
               Deposit
+            </button>
+          </form>
+        </div>
+
+        <div>
+          <h2 className="mb-4 text-lg font-bold">Withdraw</h2>
+
+          <form onSubmit={withdrawOnSubmit} method="POST" className="space-y-4">
+            <div>
+              <label className="block" htmlFor="amount">
+                Enter amount of SOV to repay
+              </label>
+
+              <input
+                autoComplete="off"
+                autoCorrect="off"
+                inputMode="decimal"
+                maxLength={79}
+                minLength={1}
+                name="amount"
+                required
+                id="amount"
+                value={withdrawAmount}
+                onChange={withdrawAmountOnChange}
+                pattern="^[0-9]*[.,]?[0-9]*$"
+                placeholder="0.0"
+                spellCheck="false"
+                type="text"
+              />
+            </div>
+
+            {sovTokenBalance && (
+              <div>
+                <p>
+                  <span>SOV Balance:</span>{" "}
+                  <span>{formatUnits(sovTokenBalance)}</span>
+                </p>
+              </div>
+            )}
+
+            <div>
+              <label className="block" htmlFor="token">
+                Select a token to receive back
+              </label>
+
+              <select
+                value={tokenAddress}
+                onChange={tokenAddressOnChange}
+                name="token"
+                id="token"
+                required
+              >
+                <option value="">Select a token</option>
+                {poolTokens?.map((token) => (
+                  <option key={token.address} value={token.address}>
+                    {token.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {sovNeedsApproval && (
+              <div>
+                <p>Needs Token Approval</p>
+
+                <button onClick={approveSOV} type="button">
+                  Approve Sovreign To Spend Your SOV
+                </button>
+              </div>
+            )}
+
+            <button type="submit" disabled={sovNeedsApproval}>
+              Withdraw
             </button>
           </form>
         </div>
