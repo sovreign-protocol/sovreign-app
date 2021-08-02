@@ -1,3 +1,4 @@
+import { Account } from "@/components/web3";
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
@@ -59,11 +60,11 @@ function Home() {
     return poolAmountOut.mul(100 - Number(slippage)).div(100);
   }
 
-  async function getPoolAmountIn(tokenOut: string, tokenAmountOut: string) {
+  async function getPoolAmountIn(tokenOut: string, tokenAmountOut: BigNumber) {
     const poolAmountIn: BigNumber = await poolRouter.getSovAmountInSingle(
       tokenOut,
-      parseUnits(tokenAmountOut),
-      1
+      tokenAmountOut,
+      MaxUint256
     );
 
     return poolAmountIn;
@@ -165,17 +166,20 @@ function Home() {
     };
 
     try {
-      const poolAmountIn = await getPoolAmountIn(
-        values["withdraw-token"].value,
-        values["withdraw-amount"].value
-      );
+      const tokenOut = values["withdraw-token"].value;
 
-      console.log(poolAmountIn.toString());
+      const minAmountOut = parseUnits(values["withdraw-amount"].value);
+
+      const poolAmountIn = await getPoolAmountIn(tokenOut, minAmountOut);
+
+      console.log(formatUnits(poolAmountIn));
+
+      console.log(formatUnits(minAmountOut));
 
       const tx: TransactionResponse = await poolRouter.withdraw(
-        values["withdraw-token"].value,
+        tokenOut,
         poolAmountIn,
-        parseUnits(values["withdraw-amount"].value)
+        minAmountOut
       );
 
       await tx.wait();
@@ -273,6 +277,12 @@ function Home() {
       </Head>
 
       <nav className="mb-8">
+        {account && (
+          <div className="flex">
+            <Account />
+          </div>
+        )}
+
         <div>
           {account ? (
             <ul>
