@@ -19,7 +19,7 @@ function useFormattedBigNumber(value: BigNumber, decimals = 2) {
     }
 
     return Number(0).toFixed(decimals);
-  }, [value]);
+  }, [value, decimals]);
 }
 
 function MixPage() {
