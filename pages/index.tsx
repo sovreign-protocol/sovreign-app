@@ -172,14 +172,14 @@ function Home() {
 
       const poolAmountIn = await getPoolAmountIn(tokenOut, minAmountOut);
 
-      console.log(formatUnits(poolAmountIn));
-
-      console.log(formatUnits(minAmountOut));
+      if (poolAmountIn.gt(sovTokenBalance)) {
+        throw new Error("You Don't Have Enough SOV To Make This Withdrawal");
+      }
 
       const tx: TransactionResponse = await poolRouter.withdraw(
         tokenOut,
         poolAmountIn,
-        minAmountOut
+        minAmountOut.mul(99).div(100)
       );
 
       await tx.wait();
