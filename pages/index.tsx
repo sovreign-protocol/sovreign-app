@@ -8,6 +8,7 @@ import useBlockNumber from "@/hooks/useBlockNumber";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import useMaxWithdraw from "@/hooks/view/useMaxWithdraw";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import {
   useTokenAllowanceForPoolRouter,
@@ -157,6 +158,8 @@ function Home() {
     }
   }
 
+  const { data: maxWithdraw } = useMaxWithdraw(tokenAddress);
+
   async function withdrawOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -172,6 +175,8 @@ function Home() {
 
       const poolAmountIn = await getPoolAmountIn(tokenOut, minAmountOut);
 
+      console.log("poolAmountIn", formatUnits(poolAmountIn));
+
       if (poolAmountIn.gt(sovTokenBalance)) {
         throw new Error("You Don't Have Enough SOV To Make This Withdrawal");
       }
@@ -179,6 +184,9 @@ function Home() {
       const tx: TransactionResponse = await poolRouter.withdraw(
         tokenOut,
         poolAmountIn,
+        /**
+         * Account for 1% slippage
+         */
         minAmountOut.mul(99).div(100)
       );
 
@@ -482,14 +490,6 @@ function Home() {
               </select>
             </div>
 
-            {tokenAddress && tokenBalance && (
-              <div>
-                <p>
-                  <span>Balance:</span> <span>{formatUnits(tokenBalance)}</span>
-                </p>
-              </div>
-            )}
-
             <div>
               <label className="block" htmlFor="withdraw-amount">
                 Enter amount of token to receive
@@ -512,6 +512,21 @@ function Home() {
                 type="text"
               />
             </div>
+
+            {maxWithdraw && (
+              <div>
+                <p>
+                  Max Amount Withdrawable:{" "}
+                  <span>{formatUnits(maxWithdraw)}</span>
+                  <button
+                    type="button"
+                    onClick={() => withdrawAmountSet(formatUnits(maxWithdraw))}
+                  >
+                    Max
+                  </button>
+                </p>
+              </div>
+            )}
 
             {sovNeedsApproval && (
               <div>
