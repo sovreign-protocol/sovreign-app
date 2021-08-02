@@ -18,7 +18,7 @@ export const CONTRACT_ADDRESSES: Record<
 > = {
   BasketBalancer: {
     1: "TODO",
-    4: "0x38c2FA98Ba56fBF553821f55084737181A4c6635",
+    4: "0xcab995251e50d310a4a924378c9ecde5032d75e0",
   },
   PoolRouter: {
     1: "TODO",
