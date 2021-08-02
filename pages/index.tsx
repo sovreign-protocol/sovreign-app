@@ -39,7 +39,6 @@ function Home() {
   }
 
   const { data: poolTokens } = useGetPoolTokens();
-  const { data: blockNumber } = useBlockNumber();
 
   const { data: userRewards, mutate: userRewardsMutate } =
     useUserRewards(account);
@@ -339,11 +338,6 @@ function Home() {
         <div>
           {account ? (
             <ul>
-              <li>
-                <p>Block Number</p>
-                <p>{blockNumber}</p>
-              </li>
-
               <li>
                 <p>REIGN Balance</p>
                 <p>{formatUnits(reignTokenBalance ?? 0)}</p>
