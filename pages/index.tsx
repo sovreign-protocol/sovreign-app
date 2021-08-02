@@ -83,6 +83,10 @@ function Home() {
   const stakeDepositAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     stakeDepositAmountSet(event.currentTarget.value);
 
+  const [stakeWithdrawAmount, stakeWithdrawAmountSet] = useState<string>("");
+  const stakeWithdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
+    stakeWithdrawAmountSet(event.currentTarget.value);
+
   const [withdrawAmount, withdrawAmountSet] = useState<string>("");
   const withdrawAmountOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     withdrawAmountSet(event.currentTarget.value);
@@ -208,8 +212,25 @@ function Home() {
 
       await tx.wait();
 
-      await reignTokenBalanceMutate();
-      await stakedReignMutate();
+      stakedReignMutate();
+
+      reignTokenBalanceMutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function withdrawStake() {
+    try {
+      const tx: TransactionResponse = await reignFacet.withdraw(
+        parseUnits(stakeWithdrawAmount)
+      );
+
+      await tx.wait();
+
+      stakedReignMutate();
+
+      reignTokenBalanceMutate();
     } catch (error) {
       console.error(error);
     }
@@ -295,17 +316,10 @@ function Home() {
           {account ? (
             <ul>
               <li>
-                <p>Connected Address</p>
-                <p>{account}</p>
-              </li>
-              <li>
                 <p>Block Number</p>
                 <p>{blockNumber}</p>
               </li>
-              <li>
-                <p>SOV Balance</p>
-                <p>{formatUnits(sovTokenBalance ?? 0)}</p>
-              </li>
+
               <li>
                 <p>REIGN Balance</p>
                 <p>{formatUnits(reignTokenBalance ?? 0)}</p>
@@ -315,7 +329,7 @@ function Home() {
 
                   <div>
                     <label className="block" htmlFor="reign-amount">
-                      Enter amount of REIGN token to deposit into Stake
+                      Enter amount of REIGN token to deposit
                     </label>
 
                     <input
@@ -350,6 +364,40 @@ function Home() {
               <li>
                 <p>REIGN Staked</p>
                 <p>{formatUnits(stakedReign ?? 0)}</p>
+
+                <div>
+                  <h4>Withdraw Stake</h4>
+
+                  <div>
+                    <label className="block" htmlFor="reign-withdraw-amount">
+                      Enter amount of REIGN token to withdraw
+                    </label>
+
+                    <input
+                      autoComplete="off"
+                      autoCorrect="off"
+                      inputMode="decimal"
+                      maxLength={79}
+                      minLength={1}
+                      name="reign-withdraw-amount"
+                      required
+                      id="reign-withdraw-amount"
+                      value={stakeWithdrawAmount}
+                      onChange={stakeWithdrawAmountOnChange}
+                      pattern="^[0-9]*[.,]?[0-9]*$"
+                      placeholder="0.0"
+                      spellCheck="false"
+                      type="text"
+                    />
+                  </div>
+
+                  <button
+                    disabled={stakedReign?.isZero()}
+                    onClick={withdrawStake}
+                  >
+                    Withdraw Stake
+                  </button>
+                </div>
               </li>
               <li>
                 <p>User Rewards</p>

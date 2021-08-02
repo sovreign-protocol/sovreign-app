@@ -1,7 +1,7 @@
 import { MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { parseUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import usePoolRouter from "../contracts/usePoolRouter";
 import useWeb3Store from "../useWeb3Store";
@@ -11,13 +11,13 @@ function getMaxWithdraw(poolRouter: Contract) {
   return async (_: string, sovBalance: BigNumber, tokenOut: string) => {
     const ANY_GIVEN_AMOUNT = parseUnits("1000");
 
+    console.log("ANY_GIVEN_AMOUNT", ANY_GIVEN_AMOUNT.toString());
+
     const sovAmountInSingle: BigNumber = await poolRouter.getSovAmountInSingle(
       tokenOut,
       ANY_GIVEN_AMOUNT,
       MaxUint256
     );
-
-    console.log("ANY_GIVEN_AMOUNT", ANY_GIVEN_AMOUNT.toString());
 
     console.log("sovAmountInSingle", sovAmountInSingle.toString());
 
