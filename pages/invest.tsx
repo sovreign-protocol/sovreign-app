@@ -192,263 +192,264 @@ function InvestPage() {
 
   const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 
+  const tabPanelClassNames = classNames(
+    "bg-white bg-opacity-[15%] rounded-xl p-3",
+    "focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20"
+  );
+
   return (
     <div>
-      <section>
-        <Tab.Group as="div" className="max-w-2xl mx-auto">
-          <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
-            <Tab
-              key={"Deposit"}
-              className={({ selected }) =>
-                classNames(
-                  "w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg",
-                  "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
-                  selected
-                    ? "bg-white shadow"
-                    : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
-                )
-              }
-            >
-              {"Deposit"}
-            </Tab>
+      <section className="pt-16">
+        <div className="max-w-xl mx-auto">
+          <Tab.Group>
+            <Tab.List className="flex p-1 space-x-1 bg-white/[0.05] rounded-xl">
+              <Tab
+                key={"Deposit"}
+                className={({ selected }) =>
+                  classNames(
+                    "w-full py-2.5 text-sm leading-5 font-medium text-gray-300 rounded-lg",
+                    "focus:outline-none focus:ring-4",
+                    selected
+                      ? "bg-white shadow text-primary"
+                      : "hover:bg-white/[0.10] hover:text-white"
+                  )
+                }
+              >
+                {"Deposit"}
+              </Tab>
 
-            <Tab
-              key={"Withdraw"}
-              className={({ selected }) =>
-                classNames(
-                  "w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg",
-                  "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
-                  selected
-                    ? "bg-white shadow"
-                    : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
-                )
-              }
-            >
-              {"Withdraw"}
-            </Tab>
-          </Tab.List>
+              <Tab
+                key={"Withdraw"}
+                className={({ selected }) =>
+                  classNames(
+                    "w-full py-2.5 text-sm leading-5 font-medium text-gray-300 rounded-lg",
+                    "focus:outline-none focus:ring-4",
+                    selected
+                      ? "bg-white shadow text-primary"
+                      : "hover:bg-white/[0.10] hover:text-white"
+                  )
+                }
+              >
+                {"Withdraw"}
+              </Tab>
+            </Tab.List>
 
-          <Tab.Panels className="mt-2">
-            <Tab.Panel
-              key={"Deposit"}
-              className={classNames(
-                "bg-white bg-opacity-[15%] rounded-xl p-3",
-                "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
-              )}
-            >
-              Lorem
-            </Tab.Panel>
+            <Tab.Panels className="mt-2">
+              <Tab.Panel key={"Deposit"} className={tabPanelClassNames}>
+                <form onSubmit={tokenDeposit}>
+                  <div className="flex justify-between mb-4">
+                    <h2 className="font-medium leading-5">Deposit</h2>
 
-            <Tab.Panel
-              key={"Withdraw"}
-              className={classNames(
-                "bg-white bg-opacity-[15%] rounded-xl p-3",
-                "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
-              )}
-            >
-              Lorem
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
-      </section>
+                    <Popover className="relative">
+                      <Popover.Button className="block h-5 w-5 focus:outline-none text-gray-300 hover:opacity-80">
+                        <Settings size={20} />
+                      </Popover.Button>
 
-      <section>
-        <div className="flex p-8 space-x-4">
-          <div className="flex-1">
-            <div className="p-4 bg-white bg-opacity-[15%] rounded-lg border border-opacity-10">
-              <form onSubmit={tokenDeposit}>
-                <div className="flex justify-between mb-4">
-                  <h2 className="font-medium leading-5">Deposit</h2>
+                      <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0">
+                        <div className="relative bg-primary p-4 rounded-lg ring-1 ring-inset ring-white ring-opacity-20">
+                          <div>
+                            <p className="leading-none mb-4">Advanced</p>
 
-                  <Popover className="relative">
-                    <Popover.Button className="block h-5 w-5 focus:outline-none text-gray-300 hover:opacity-80">
-                      <Settings size={20} />
-                    </Popover.Button>
+                            <label
+                              className="block text-sm mb-2 text-gray-300"
+                              htmlFor="slippage"
+                            >
+                              Slippage tolerance
+                            </label>
 
-                    <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0">
-                      <div className="relative bg-primary p-4 rounded-lg ring-1 ring-inset ring-white ring-opacity-20">
-                        <div>
-                          <p className="leading-none mb-4">Advanced</p>
+                            <div className="px-3 py-1 rounded-md bg-white bg-opacity-10 ring-1 ring-inset ring-white ring-opacity-10 flex">
+                              <input
+                                autoComplete="off"
+                                autoCorrect="off"
+                                inputMode="numeric"
+                                id="slippage"
+                                name="slippage"
+                                min={0}
+                                max={99}
+                                step={1}
+                                placeholder="1"
+                                className="w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                                spellCheck="false"
+                                type="number"
+                              />
 
-                          <label
-                            className="block text-sm mb-2 text-gray-300"
-                            htmlFor="slippage"
-                          >
-                            Slippage tolerance
-                          </label>
-
-                          <div className="px-3 py-1 rounded-md bg-white bg-opacity-10 ring-1 ring-inset ring-white ring-opacity-10 flex">
-                            <input
-                              autoComplete="off"
-                              autoCorrect="off"
-                              inputMode="numeric"
-                              id="slippage"
-                              name="slippage"
-                              min={0}
-                              max={99}
-                              step={1}
-                              placeholder="1"
-                              className="w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
-                              spellCheck="false"
-                              type="number"
-                            />
-
-                            <span>%</span>
+                              <span>%</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Popover.Panel>
-                  </Popover>
-                </div>
+                      </Popover.Panel>
+                    </Popover>
+                  </div>
 
-                <div className="flex space-x-4 mb-4">
-                  <div>
-                    <div className="mb-2">
-                      <label className="sr-only" htmlFor="deposit-token">
-                        Select a token
-                      </label>
-
-                      <select
-                        className="appearance-none bg-primary px-4 py-2 rounded-xl focus:outline-none focus:ring-4"
-                        name="deposit-token"
-                        id="deposit-token"
-                        required
-                        {...depositTokenSelect.eventBind}
-                      >
-                        <option value="" disabled>
+                  <div className="flex space-x-4 mb-4">
+                    <div>
+                      <div className="mb-2">
+                        <label className="sr-only" htmlFor="deposit-token">
                           Select a token
-                        </option>
-                        {poolTokens?.map((token) => (
-                          <option key={token.address} value={token.address}>
-                            {token.name}
+                        </label>
+
+                        <select
+                          className="appearance-none bg-primary px-4 py-2 rounded-xl focus:outline-none focus:ring-4"
+                          name="deposit-token"
+                          id="deposit-token"
+                          required
+                          {...depositTokenSelect.eventBind}
+                        >
+                          <option value="" disabled>
+                            Select a token
                           </option>
-                        ))}
-                      </select>
+                          {poolTokens?.map((token) => (
+                            <option key={token.address} value={token.address}>
+                              {token.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {depositTokenSelect.hasValue &&
+                        depositTokenBalance &&
+                        formattedDepositBalance && (
+                          <p className="text-sm text-gray-300">
+                            <span>Balance:</span>{" "}
+                            <span>{formattedDepositBalance}</span>{" "}
+                            <span>{"SYMBOL"}</span>
+                          </p>
+                        )}
                     </div>
 
-                    {depositTokenSelect.hasValue &&
-                      depositTokenBalance &&
-                      formattedDepositBalance && (
-                        <p className="text-sm text-gray-300">
-                          <span>Balance:</span>{" "}
-                          <span>{formattedDepositBalance}</span>{" "}
-                          <span>{"SYMBOL"}</span>
-                        </p>
-                      )}
+                    <div className="flex-1">
+                      <label className="sr-only" htmlFor="amount">
+                        Enter amount of token
+                      </label>
+
+                      <input
+                        autoComplete="off"
+                        autoCorrect="off"
+                        className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none"
+                        inputMode="decimal"
+                        maxLength={79}
+                        minLength={1}
+                        name="amount"
+                        required
+                        id="amount"
+                        pattern="^[0-9]*[.,]?[0-9]*$"
+                        placeholder="0.0"
+                        spellCheck="false"
+                        type="text"
+                        {...depositAmountInput.eventBind}
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex-1">
-                    <label className="sr-only" htmlFor="amount">
-                      Enter amount of token
-                    </label>
-
-                    <input
-                      autoComplete="off"
-                      autoCorrect="off"
-                      className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none"
-                      inputMode="decimal"
-                      maxLength={79}
-                      minLength={1}
-                      name="amount"
-                      required
-                      id="amount"
-                      pattern="^[0-9]*[.,]?[0-9]*$"
-                      placeholder="0.0"
-                      spellCheck="false"
-                      type="text"
-                      {...depositAmountInput.eventBind}
-                    />
-                  </div>
-                </div>
-
-                {depositTokenNeedsApproval && (
-                  <div>
-                    <p>Needs Token Approval</p>
-
+                  {depositTokenNeedsApproval && (
                     <button onClick={approveDepositToken} type="button">
-                      Approve Sovreign To Spend Your Token
+                      Approve Sovreign To Spend Your SYMBOL
                     </button>
-                  </div>
-                )}
-
-                <button
-                  className={classNames(
-                    "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-                    depositAmountInput.hasValue && depositTokenSelect.hasValue
-                      ? "bg-white text-primary"
-                      : "bg-white bg-opacity-10"
                   )}
-                  type="submit"
-                  disabled={depositTokenNeedsApproval}
-                >
-                  {depositAmountInput.hasValue && depositTokenSelect.hasValue
-                    ? "Deposit"
-                    : "Enter an amount"}
-                </button>
-              </form>
-            </div>
-          </div>
-          <div className="flex-1">
-            <form onSubmit={tokenWithdraw} className="space-y-4">
-              <h2>Withdraw</h2>
 
-              <div>
-                <label className="block" htmlFor="withdraw-token">
-                  Select a token to receive back
-                </label>
-
-                <select
-                  name="withdraw-token"
-                  id="withdraw-token"
-                  required
-                  {...withdrawTokenSelect.eventBind}
-                >
-                  <option value="">Select a token</option>
-                  {poolTokens?.map((token) => (
-                    <option key={token.address} value={token.address}>
-                      {token.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block" htmlFor="withdraw-amount">
-                  Enter amount of token to receive
-                </label>
-
-                <input
-                  autoComplete="off"
-                  autoCorrect="off"
-                  id="withdraw-amount"
-                  inputMode="decimal"
-                  maxLength={79}
-                  minLength={1}
-                  name="withdraw-amount"
-                  pattern="^[0-9]*[.,]?[0-9]*$"
-                  placeholder="0.0"
-                  required
-                  spellCheck="false"
-                  type="text"
-                  {...withdrawAmountInput.eventBind}
-                />
-              </div>
-
-              {sovNeedsApproval && (
-                <div>
-                  <p>Needs SOV Approval</p>
-
-                  <button onClick={approveSOV} type="button">
-                    Approve Sovreign To Spend Your SOV
+                  <button
+                    className={classNames(
+                      "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+                      depositAmountInput.hasValue && depositTokenSelect.hasValue
+                        ? "bg-white text-primary"
+                        : "bg-white bg-opacity-10"
+                    )}
+                    type="submit"
+                    disabled={depositTokenNeedsApproval}
+                  >
+                    {depositAmountInput.hasValue && depositTokenSelect.hasValue
+                      ? "Deposit"
+                      : "Enter an amount"}
                   </button>
-                </div>
-              )}
+                </form>
+              </Tab.Panel>
 
-              <button type="submit" disabled={sovNeedsApproval}>
-                Withdraw
-              </button>
-            </form>
-          </div>
+              <Tab.Panel key={"Withdraw"} className={tabPanelClassNames}>
+                <form onSubmit={tokenWithdraw}>
+                  <div className="flex justify-between mb-4">
+                    <h2 className="font-medium leading-5">Withdraw</h2>
+                  </div>
+
+                  <div className="flex space-x-4 mb-4">
+                    <div>
+                      <div className="mb-2">
+                        <label className="sr-only" htmlFor="withdraw-token">
+                          Select a token to receive back
+                        </label>
+
+                        <select
+                          className="appearance-none bg-primary px-4 py-2 rounded-xl focus:outline-none focus:ring-4"
+                          name="withdraw-token"
+                          id="withdraw-token"
+                          required
+                          {...withdrawTokenSelect.eventBind}
+                        >
+                          <option value="" disabled>
+                            Select a token
+                          </option>
+                          {poolTokens?.map((token) => (
+                            <option key={token.address} value={token.address}>
+                              {token.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="sr-only" htmlFor="withdraw-amount">
+                        Enter amount of token to receive
+                      </label>
+
+                      <input
+                        autoComplete="off"
+                        autoCorrect="off"
+                        className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none"
+                        inputMode="decimal"
+                        maxLength={79}
+                        minLength={1}
+                        name="withdraw-amount"
+                        required
+                        id="withdraw-amount"
+                        pattern="^[0-9]*[.,]?[0-9]*$"
+                        placeholder="0.0"
+                        spellCheck="false"
+                        type="text"
+                        {...withdrawAmountInput.eventBind}
+                      />
+                    </div>
+                  </div>
+
+                  {sovNeedsApproval && (
+                    <button
+                      className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
+                      onClick={approveSOV}
+                      type="button"
+                    >
+                      Approve Sovreign To Spend Your SOV
+                    </button>
+                  )}
+
+                  <button
+                    className={classNames(
+                      "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+                      withdrawAmountInput.hasValue &&
+                        withdrawTokenSelect.hasValue
+                        ? "bg-white text-primary"
+                        : "bg-white bg-opacity-10"
+                    )}
+                    type="submit"
+                    disabled={sovNeedsApproval}
+                  >
+                    {withdrawAmountInput.hasValue &&
+                    withdrawTokenSelect.hasValue
+                      ? "Withdraw"
+                      : "Enter an amount"}
+                  </button>
+                </form>
+              </Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
         </div>
       </section>
     </div>
