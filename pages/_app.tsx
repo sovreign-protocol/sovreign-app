@@ -17,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <Navigation />
 
-      <Component {...pageProps} />
+      <main>
+        <Component {...pageProps} />
+      </main>
     </>
   );
 }
