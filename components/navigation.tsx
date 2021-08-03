@@ -22,7 +22,7 @@ function NavigationItem({ text, href }: { text: string; href: string }) {
 
 export default function Navigation() {
   return (
-    <nav className="p-4">
+    <nav className="px-8 py-4">
       <ul className="flex items-center justify-between">
         <li className="flex-1">
           <span
@@ -33,6 +33,7 @@ export default function Navigation() {
             Sovreign
           </span>
         </li>
+
         <li className="flex-1 flex justify-center">
           <ul className="inline-flex justify-center rounded-lg bg-white bg-opacity-5">
             <li>
@@ -43,6 +44,7 @@ export default function Navigation() {
             </li>
           </ul>
         </li>
+
         <li className="flex-1">
           <Account />
         </li>

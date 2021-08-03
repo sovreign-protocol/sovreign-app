@@ -10,7 +10,7 @@ import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { Popover } from "@headlessui/react";
+import { Popover, Tab } from "@headlessui/react";
 import { FormEvent, useMemo } from "react";
 import { Settings } from "react-feather";
 import classNames from "classnames";
@@ -195,6 +195,64 @@ function InvestPage() {
   return (
     <div>
       <section>
+        <Tab.Group as="div" className="max-w-2xl mx-auto">
+          <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
+            <Tab
+              key={"Deposit"}
+              className={({ selected }) =>
+                classNames(
+                  "w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg",
+                  "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
+                  selected
+                    ? "bg-white shadow"
+                    : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
+                )
+              }
+            >
+              {"Deposit"}
+            </Tab>
+
+            <Tab
+              key={"Withdraw"}
+              className={({ selected }) =>
+                classNames(
+                  "w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg",
+                  "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
+                  selected
+                    ? "bg-white shadow"
+                    : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
+                )
+              }
+            >
+              {"Withdraw"}
+            </Tab>
+          </Tab.List>
+
+          <Tab.Panels className="mt-2">
+            <Tab.Panel
+              key={"Deposit"}
+              className={classNames(
+                "bg-white bg-opacity-[15%] rounded-xl p-3",
+                "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
+              )}
+            >
+              Lorem
+            </Tab.Panel>
+
+            <Tab.Panel
+              key={"Withdraw"}
+              className={classNames(
+                "bg-white bg-opacity-[15%] rounded-xl p-3",
+                "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
+              )}
+            >
+              Lorem
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+      </section>
+
+      <section>
         <div className="flex p-8 space-x-4">
           <div className="flex-1">
             <div className="p-4 bg-white bg-opacity-[15%] rounded-lg border border-opacity-10">
@@ -331,9 +389,9 @@ function InvestPage() {
             </div>
           </div>
           <div className="flex-1">
-            <h2>Withdraw</h2>
-
             <form onSubmit={tokenWithdraw} className="space-y-4">
+              <h2>Withdraw</h2>
+
               <div>
                 <label className="block" htmlFor="withdraw-token">
                   Select a token to receive back
