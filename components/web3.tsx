@@ -53,7 +53,7 @@ export function Account() {
       <Menu as="div" className="relative">
         <div className="bg-primary-400 rounded-lg flex items-center w-[fit-content] ml-auto">
           {sovBalance && (
-            <div className="flex-shrink-0 px-3 text-sm">
+            <div className="hidden sm:block flex-shrink-0 px-3 text-sm">
               {`${formattedSOVBalance} SOV`}
             </div>
           )}

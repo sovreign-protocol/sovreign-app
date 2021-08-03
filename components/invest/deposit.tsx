@@ -191,7 +191,7 @@ export default function Deposit() {
           <input
             autoComplete="off"
             autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none"
+            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono"
             inputMode="decimal"
             maxLength={79}
             minLength={1}

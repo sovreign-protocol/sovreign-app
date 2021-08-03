@@ -9,8 +9,7 @@ const TAB_KEYS = {
 };
 
 const tabPanelClassNames = classNames(
-  "bg-primary-400 rounded-xl p-4",
-  "focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20"
+  "bg-primary-400 rounded-xl p-4 focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20"
 );
 
 const tabClassNames = ({ selected }: { selected: boolean }) =>
@@ -24,8 +23,8 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
 
 function InvestPage() {
   return (
-    <section className="pt-16">
-      <div className="max-w-lg mx-auto">
+    <section className="pt-8 md:pt-16">
+      <div className="px-5 max-w-lg mx-auto">
         <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-primary-400 rounded-xl">
             <Tab key={TAB_KEYS.DEPOSIT} className={tabClassNames}>

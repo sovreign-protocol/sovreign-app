@@ -20,20 +20,32 @@ function NavigationItem({ text, href }: { text: string; href: string }) {
 
 export default function Navigation() {
   return (
-    <nav className="px-8 py-4">
+    <nav className="px-5 md:px-8 py-4">
       <ul className="flex items-center justify-between">
-        <li className="flex-1">
-          <span
-            className="text-2xl font-light tracking-wide leading-none cursor-default select-none"
-            role="img"
-            aria-label="Sovreign"
-          >
-            Sovreign
-          </span>
+        <li className="md:flex-1">
+          <div className="hidden md:block">
+            <span
+              className="inline-block text-2xl font-light tracking-wide leading-none cursor-default select-none"
+              role="img"
+              aria-label="Sovreign"
+            >
+              Sovreign
+            </span>
+          </div>
+
+          <div className="block md:hidden">
+            <span
+              className="inline-block text-4xl leading-none"
+              role="img"
+              aria-label="Sovreign"
+            >
+              👑
+            </span>
+          </div>
         </li>
 
         <li className="flex-1 flex justify-center">
-          <ul className="inline-flex justify-center space-x-4">
+          <ul className="inline-flex justify-center space-x-2 md:space-x-4">
             <li>
               <NavigationItem href="/invest" text="Invest" />
             </li>
