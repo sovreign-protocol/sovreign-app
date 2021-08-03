@@ -2,11 +2,11 @@ import { useRouter } from "next/dist/client/router";
 import { useEffect } from "react";
 
 function Home() {
-  const router = useRouter();
+  const { replace } = useRouter();
 
   useEffect(() => {
-    router.replace("/invest");
-  }, []);
+    replace("/invest");
+  }, [replace]);
 
   return null;
 }
