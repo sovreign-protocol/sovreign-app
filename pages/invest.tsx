@@ -294,71 +294,65 @@ function InvestPage() {
             </div>
           </div>
           <div className="flex-1">
-            <div>
-              <h2>Withdraw</h2>
+            <h2>Withdraw</h2>
 
-              <form
-                onSubmit={tokenWithdraw}
-                method="POST"
-                className="space-y-4"
-              >
+            <form onSubmit={tokenWithdraw} className="space-y-4">
+              <div>
+                <label className="block" htmlFor="withdraw-token">
+                  Select a token to receive back
+                </label>
+
+                <select
+                  name="withdraw-token"
+                  id="withdraw-token"
+                  required
+                  {...withdrawTokenSelect.eventBind}
+                >
+                  <option value="">Select a token</option>
+                  {poolTokens?.map((token) => (
+                    <option key={token.address} value={token.address}>
+                      {token.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block" htmlFor="withdraw-amount">
+                  Enter amount of token to receive
+                </label>
+
+                <input
+                  autoComplete="off"
+                  autoCorrect="off"
+                  id="withdraw-amount"
+                  inputMode="decimal"
+                  maxLength={79}
+                  minLength={1}
+                  name="withdraw-amount"
+                  pattern="^[0-9]*[.,]?[0-9]*$"
+                  placeholder="0.0"
+                  required
+                  spellCheck="false"
+                  type="text"
+                  {...withdrawAmountInput.eventBind}
+                />
+              </div>
+
+              {sovNeedsApproval && (
                 <div>
-                  <label className="block" htmlFor="withdraw-token">
-                    Select a token to receive back
-                  </label>
+                  <p>Needs SOV Approval</p>
 
-                  <select
-                    name="withdraw-token"
-                    id="withdraw-token"
-                    required
-                    {...withdrawTokenSelect.eventBind}
-                  >
-                    <option value="">Select a token</option>
-                    {poolTokens?.map((token) => (
-                      <option key={token.address} value={token.address}>
-                        {token.name}
-                      </option>
-                    ))}
-                  </select>
+                  <button onClick={approveSOV} type="button">
+                    Approve Sovreign To Spend Your SOV
+                  </button>
                 </div>
+              )}
 
-                <div>
-                  <label className="block" htmlFor="withdraw-amount">
-                    Enter amount of token to receive
-                  </label>
-
-                  <input
-                    autoComplete="off"
-                    autoCorrect="off"
-                    inputMode="decimal"
-                    maxLength={79}
-                    minLength={1}
-                    name="withdraw-amount"
-                    required
-                    id="withdraw-amount"
-                    pattern="^[0-9]*[.,]?[0-9]*$"
-                    placeholder="0.0"
-                    spellCheck="false"
-                    type="text"
-                    {...withdrawAmountInput.eventBind}
-                  />
-                </div>
-
-                {sovNeedsApproval && (
-                  <div>
-                    <p>Needs SOV Approval</p>
-
-                    <button onClick={approveSOV} type="button">
-                      Approve Sovreign To Spend Your SOV
-                    </button>
-                  </div>
-                )}
-
-                <button type="submit" disabled={sovNeedsApproval}>
-                  Withdraw
-                </button>
-              </form>
-            </div>
+              <button type="submit" disabled={sovNeedsApproval}>
+                Withdraw
+              </button>
+            </form>
           </div>
         </div>
       </section>
