@@ -113,5 +113,12 @@ export function Account() {
       </Menu>
     );
 
-  return <button onClick={connect}>Connect Wallet</button>;
+  return (
+    <button
+      className="bg-white text-primary rounded-lg block ml-auto px-4 py-3 text-sm font-medium"
+      onClick={connect}
+    >
+      Connect Wallet
+    </button>
+  );
 }

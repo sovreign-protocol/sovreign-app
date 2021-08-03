@@ -13,7 +13,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "@ethersproject/units";
 import { useMemo } from "react";
 
-function MixPage() {
+function RebalancePage() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
@@ -230,4 +230,4 @@ function MixPage() {
   );
 }
 
-export default MixPage;
+export default RebalancePage;

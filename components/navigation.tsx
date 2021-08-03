@@ -7,10 +7,8 @@ function NavigationItem({ text, href }: { text: string; href: string }) {
   const { asPath } = useRouter();
 
   const cachedClassNames = classNames(
-    "flex items-center justify-center py-[7px] border w-24 text-center rounded-md leading-5",
-    asPath === href
-      ? "bg-white bg-opacity-10 border-white border-opacity-10"
-      : "border-transparent"
+    "font-medium leading-5 flex items-center justify-center py-2 px-2 text-center leading-5 focus:outline-none rounded",
+    asPath === href ? "text-white " : "text-gray-500"
   );
 
   return (
@@ -35,12 +33,12 @@ export default function Navigation() {
         </li>
 
         <li className="flex-1 flex justify-center">
-          <ul className="inline-flex justify-center rounded-lg bg-white bg-opacity-5">
+          <ul className="inline-flex justify-center space-x-4">
             <li>
               <NavigationItem href="/invest" text="Invest" />
             </li>
             <li>
-              <NavigationItem href="/mix" text="Mix" />
+              <NavigationItem href="/rebalance" text="Rebalance" />
             </li>
           </ul>
         </li>
