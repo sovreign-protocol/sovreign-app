@@ -1,16 +1,19 @@
-import useWeb3Store from "@/hooks/useWeb3Store";
-import type { TransactionResponse } from "@ethersproject/providers";
-import { FormEvent } from "react";
-import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
+import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
+import useInput from "@/hooks/useInput";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { BigNumber } from "@ethersproject/bignumber";
+import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
-import useInput from "@/hooks/useInput";
-import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
-import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
-import { useMemo } from "react";
+import { Popover } from "@headlessui/react";
+import { FormEvent, useMemo } from "react";
+import { Settings } from "react-feather";
+import classNames from "classnames";
 
 function InvestPage() {
   const account = useWeb3Store((state) => state.account);
@@ -176,104 +179,127 @@ function InvestPage() {
   }, [sovAllowance, withdrawAmountInput.hasValue, withdrawAmountInput.value]);
 
   const depositTokenNeedsApproval = useMemo(() => {
-    if (!!depositTokenAllowance && depositTokenSelect.hasValue) {
-      return depositTokenAllowance.lt(parseUnits(depositTokenSelect.value));
+    if (!!depositTokenAllowance && depositAmountInput.hasValue) {
+      return depositTokenAllowance.lt(parseUnits(depositAmountInput.value));
     }
 
     return;
   }, [
     depositTokenAllowance,
-    depositTokenSelect.hasValue,
-    depositTokenSelect.value,
+    depositAmountInput.hasValue,
+    depositAmountInput.value,
   ]);
+
+  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 
   return (
     <div>
       <section>
-        <h1>Invest</h1>
-      </section>
-
-      <section>
-        <div className="flex">
+        <div className="flex p-8 space-x-4">
           <div className="flex-1">
-            <div>
-              <h2>Deposit</h2>
+            <div className="p-4 bg-white bg-opacity-[15%] rounded-lg border border-opacity-10">
+              <form onSubmit={tokenDeposit}>
+                <div className="flex justify-between mb-4">
+                  <h2 className="font-medium leading-5">Deposit</h2>
 
-              <form onSubmit={tokenDeposit} method="POST" className="space-y-4">
-                <div>
-                  <label className="block" htmlFor="token">
-                    Select a token
-                  </label>
+                  <Popover className="relative">
+                    <Popover.Button className="block h-5 w-5 focus:outline-none text-gray-300 hover:opacity-80">
+                      <Settings size={20} />
+                    </Popover.Button>
 
-                  <select
-                    name="token"
-                    id="token"
-                    required
-                    {...depositTokenSelect.eventBind}
-                  >
-                    <option value="">Select a token</option>
-                    {poolTokens?.map((token) => (
-                      <option key={token.address} value={token.address}>
-                        {token.name}
-                      </option>
-                    ))}
-                  </select>
+                    <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0">
+                      <div className="relative bg-primary p-4 rounded-lg ring-1 ring-inset ring-white ring-opacity-20">
+                        <div>
+                          <p className="leading-none mb-4">Advanced</p>
+
+                          <label
+                            className="block text-sm mb-2 text-gray-300"
+                            htmlFor="slippage"
+                          >
+                            Slippage tolerance
+                          </label>
+
+                          <div className="px-3 py-1 rounded-md bg-white bg-opacity-10 ring-1 ring-inset ring-white ring-opacity-10 flex">
+                            <input
+                              autoComplete="off"
+                              autoCorrect="off"
+                              inputMode="numeric"
+                              id="slippage"
+                              name="slippage"
+                              min={0}
+                              max={99}
+                              step={1}
+                              placeholder="1"
+                              className="w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                              spellCheck="false"
+                              type="number"
+                            />
+
+                            <span>%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Popover.Panel>
+                  </Popover>
                 </div>
 
-                {depositTokenSelect.hasValue && depositTokenBalance && (
+                <div className="flex space-x-4 mb-4">
                   <div>
-                    <p>
-                      <span>Balance:</span>{" "}
-                      <span>{formatUnits(depositTokenBalance)}</span>
-                    </p>
+                    <div className="mb-2">
+                      <label className="sr-only" htmlFor="deposit-token">
+                        Select a token
+                      </label>
+
+                      <select
+                        className="appearance-none bg-primary px-4 py-2 rounded-xl focus:outline-none focus:ring-4"
+                        name="deposit-token"
+                        id="deposit-token"
+                        required
+                        {...depositTokenSelect.eventBind}
+                      >
+                        <option value="" disabled>
+                          Select a token
+                        </option>
+                        {poolTokens?.map((token) => (
+                          <option key={token.address} value={token.address}>
+                            {token.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {depositTokenSelect.hasValue &&
+                      depositTokenBalance &&
+                      formattedDepositBalance && (
+                        <p className="text-sm text-gray-300">
+                          <span>Balance:</span>{" "}
+                          <span>{formattedDepositBalance}</span>{" "}
+                          <span>{"SYMBOL"}</span>
+                        </p>
+                      )}
                   </div>
-                )}
 
-                <div>
-                  <label className="block" htmlFor="amount">
-                    Enter amount of token
-                  </label>
-
-                  <input
-                    autoComplete="off"
-                    autoCorrect="off"
-                    inputMode="decimal"
-                    maxLength={79}
-                    minLength={1}
-                    name="amount"
-                    required
-                    id="amount"
-                    pattern="^[0-9]*[.,]?[0-9]*$"
-                    placeholder="0.0"
-                    spellCheck="false"
-                    type="text"
-                    {...depositAmountInput.eventBind}
-                  />
-                </div>
-
-                <div>
-                  <p>Advanced</p>
-
-                  <div>
-                    <label className="block" htmlFor="slippage">
-                      Slippage Percent
+                  <div className="flex-1">
+                    <label className="sr-only" htmlFor="amount">
+                      Enter amount of token
                     </label>
 
                     <input
                       autoComplete="off"
                       autoCorrect="off"
-                      inputMode="numeric"
-                      id="slippage"
-                      name="slippage"
-                      min={0}
-                      max={99}
-                      step={1}
-                      placeholder="1"
+                      className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none"
+                      inputMode="decimal"
+                      maxLength={79}
+                      minLength={1}
+                      name="amount"
+                      required
+                      id="amount"
+                      pattern="^[0-9]*[.,]?[0-9]*$"
+                      placeholder="0.0"
                       spellCheck="false"
-                      type="number"
+                      type="text"
+                      {...depositAmountInput.eventBind}
                     />
-
-                    <span>%</span>
                   </div>
                 </div>
 
@@ -287,8 +313,19 @@ function InvestPage() {
                   </div>
                 )}
 
-                <button type="submit" disabled={depositTokenNeedsApproval}>
-                  Deposit
+                <button
+                  className={classNames(
+                    "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+                    depositAmountInput.hasValue && depositTokenSelect.hasValue
+                      ? "bg-white text-primary"
+                      : "bg-white bg-opacity-10"
+                  )}
+                  type="submit"
+                  disabled={depositTokenNeedsApproval}
+                >
+                  {depositAmountInput.hasValue && depositTokenSelect.hasValue
+                    ? "Deposit"
+                    : "Enter an amount"}
                 </button>
               </form>
             </div>

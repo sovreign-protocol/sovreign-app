@@ -1,6 +1,7 @@
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useReignFacet from "@/hooks/contracts/useReignFacet";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
@@ -9,18 +10,8 @@ import useTokenBalance from "@/hooks/view/useTokenBalance";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { parseUnits } from "@ethersproject/units";
 import { useMemo } from "react";
-
-function useFormattedBigNumber(value: BigNumber, decimals = 2) {
-  return useMemo(() => {
-    if (value) {
-      return Number(formatUnits(value)).toFixed(decimals);
-    }
-
-    return Number(0).toFixed(decimals);
-  }, [value, decimals]);
-}
 
 function MixPage() {
   const account = useWeb3Store((state) => state.account);
