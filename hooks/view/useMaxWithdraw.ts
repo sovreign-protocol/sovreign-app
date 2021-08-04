@@ -1,7 +1,6 @@
-import { MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import { TOKEN_ADDRESSES } from "@/constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
-import { parseUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import usePoolRouter from "../contracts/usePoolRouter";
 import useWeb3Store from "../useWeb3Store";
@@ -9,19 +8,13 @@ import useTokenBalance from "./useTokenBalance";
 
 function getMaxWithdraw(poolRouter: Contract) {
   return async (_: string, sovBalance: BigNumber, tokenOut: string) => {
-    const ANY_GIVEN_AMOUNT = parseUnits("1");
-
-    const poolAmountIn: BigNumber = await poolRouter.getSovAmountInSingle(
+    const tokenAmountOut: BigNumber = await poolRouter.getTokenAmountOutSingle(
       tokenOut,
-      ANY_GIVEN_AMOUNT,
-      MaxUint256
+      sovBalance,
+      1
     );
 
-    const tokenSovExchangeRate = ANY_GIVEN_AMOUNT.div(poolAmountIn);
-
-    const maxWithdraw = sovBalance.mul(tokenSovExchangeRate);
-
-    return maxWithdraw;
+    return tokenAmountOut;
   };
 }
 
