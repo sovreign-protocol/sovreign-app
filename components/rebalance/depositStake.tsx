@@ -85,7 +85,13 @@ export default function DepositStake() {
                 "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
               )}
             >
-              <div className="h-6 w-6 rounded-full bg-white" />
+              <img
+                alt={"REIGN"}
+                className="rounded-full"
+                height={24}
+                src={`/tokens/REIGN.png`}
+                width={24}
+              />
 
               <span className="block truncate font-medium">{"REIGN"}</span>
             </div>
