@@ -70,7 +70,7 @@ export default function Deposit() {
 
       const liquidationFee = hasValue(values["liquidation-fee"]?.value)
         ? BigNumber.from(Number(values["liquidation-fee"].value) * 10000)
-        : BigNumber.from(1 * 10000);
+        : BigNumber.from(10 * 10000);
 
       const minPoolAmountOut = await getMinPoolAmountOut(
         depositToken.address,
@@ -182,7 +182,7 @@ export default function Deposit() {
                       inputMode="numeric"
                       id="liquidation-fee"
                       name="liquidation-fee"
-                      placeholder="1"
+                      placeholder="10"
                       step={0.1}
                       max={10}
                       min={0}
