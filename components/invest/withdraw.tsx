@@ -1,9 +1,11 @@
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import useMaxWithdraw from "@/hooks/view/useMaxWithdraw";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import type { BigNumber } from "@ethersproject/bignumber";
@@ -95,6 +97,10 @@ export default function Withdraw() {
     return;
   }, [sovAllowance, withdrawAmountInput.hasValue, withdrawAmountInput.value]);
 
+  // const { data: maxWithdraw } = useMaxWithdraw(withdrawToken?.address);
+
+  // const formattedMaxWithdraw = useFormattedBigNumber(maxWithdraw);
+
   return (
     <form className="space-y-4" onSubmit={tokenWithdraw}>
       <div className="flex justify-between">
@@ -110,6 +116,12 @@ export default function Withdraw() {
               tokens={poolTokens}
             />
           </div>
+
+          {/* <p className="text-sm text-gray-300 h-5">
+            {!!withdrawToken && maxWithdraw && formattedMaxWithdraw ? (
+              <span>{`Amount Withdrawable: ${formattedMaxWithdraw} ${withdrawToken?.symbol}`}</span>
+            ) : null}
+          </p> */}
 
           <div className="h-5" />
         </div>
@@ -153,7 +165,7 @@ export default function Withdraw() {
           className={classNames(
             "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
             (withdrawAmountInput.hasValue && !!withdrawToken) ||
-              sovNeedsApproval
+              !sovNeedsApproval
               ? "bg-white text-primary"
               : "bg-primary-300"
           )}
