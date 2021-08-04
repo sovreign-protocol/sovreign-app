@@ -23,7 +23,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   PoolRouter: {
     1: "TODO",
-    4: "0xa7f2c3bfe3e9e51eab595c44cd3cd45a4e2ae2df",
+    4: "0x89e0da559126aa5ca804d4c7c30715522031b92b",
   },
   WrappingRewards: {
     1: "TODO",
