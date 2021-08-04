@@ -42,6 +42,9 @@ export default function Deposit() {
 
   const depositAmountInput = useInput();
 
+  const slippageInput = useInput();
+  const liquidationFeeInput = useInput();
+
   async function getMinPoolAmountOut(
     tokenAddress: string,
     amountToDeposit: BigNumber,
@@ -134,7 +137,10 @@ export default function Deposit() {
             <Settings size={20} />
           </Popover.Button>
 
-          <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0">
+          <Popover.Panel
+            className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0"
+            unmount={false}
+          >
             <div className="relative bg-primary-300 p-4 rounded-lg ring-1 ring-inset ring-white ring-opacity-20">
               <div className="space-y-4">
                 <p className="leading-none">Advanced</p>
@@ -147,7 +153,7 @@ export default function Deposit() {
                     Slippage tolerance
                   </label>
 
-                  <div className="px-3 py-1 rounded-md bg-primary flex">
+                  <div className="px-3 py-1 rounded-md bg-primary flex focus-within:ring-4">
                     <input
                       autoComplete="off"
                       autoCorrect="off"
@@ -175,7 +181,7 @@ export default function Deposit() {
                     Liquidation fee
                   </label>
 
-                  <div className="px-3 py-1 rounded-md bg-primary flex">
+                  <div className="px-3 py-1 rounded-md bg-primary flex focus-within:ring-4">
                     <input
                       autoComplete="off"
                       autoCorrect="off"
@@ -245,7 +251,11 @@ export default function Deposit() {
 
       <div className="space-y-4">
         {depositTokenNeedsApproval && (
-          <button onClick={approveDepositToken} type="button">
+          <button
+            className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
+            onClick={approveDepositToken}
+            type="button"
+          >
             {`Approve Sovreign To Spend Your ${depositToken.symbol}`}
           </button>
         )}
@@ -253,8 +263,9 @@ export default function Deposit() {
         <button
           className={classNames(
             "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            (depositAmountInput.hasValue && !!depositToken) ||
-              depositTokenNeedsApproval
+            depositAmountInput.hasValue &&
+              !!depositToken &&
+              !depositTokenNeedsApproval
               ? "bg-white text-primary"
               : "bg-primary-300"
           )}

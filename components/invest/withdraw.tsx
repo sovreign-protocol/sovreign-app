@@ -164,8 +164,7 @@ export default function Withdraw() {
         <button
           className={classNames(
             "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            (withdrawAmountInput.hasValue && !!withdrawToken) ||
-              !sovNeedsApproval
+            withdrawAmountInput.hasValue && !!withdrawToken && !sovNeedsApproval
               ? "bg-white text-primary"
               : "bg-primary-300"
           )}
