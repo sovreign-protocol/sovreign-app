@@ -7,6 +7,7 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
+import hasValue from "@/utils/hasValue";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
@@ -60,11 +61,16 @@ export default function Deposit() {
 
     const values = event.target as typeof event.target & {
       "deposit-amount": { value: string };
+      "liquidation-fee": { value: string };
       slippage: { value: string };
     };
 
     try {
       const depositAmount = parseUnits(values["deposit-amount"].value);
+
+      const liquidationFee = hasValue(values["liquidation-fee"]?.value)
+        ? BigNumber.from(Number(values["liquidation-fee"].value) * 10000)
+        : BigNumber.from(1 * 10000);
 
       const minPoolAmountOut = await getMinPoolAmountOut(
         depositToken.address,
@@ -76,7 +82,7 @@ export default function Deposit() {
         depositToken.address,
         depositAmount,
         minPoolAmountOut,
-        BigNumber.from(10000)
+        liquidationFee
       );
 
       await tx.wait();
@@ -130,33 +136,63 @@ export default function Deposit() {
 
           <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 sm:px-0 right-0">
             <div className="relative bg-primary-300 p-4 rounded-lg ring-1 ring-inset ring-white ring-opacity-20">
-              <div>
-                <p className="leading-none mb-4">Advanced</p>
+              <div className="space-y-4">
+                <p className="leading-none">Advanced</p>
 
-                <label
-                  className="block text-sm mb-2 text-gray-300"
-                  htmlFor="slippage"
-                >
-                  Slippage tolerance
-                </label>
+                <div>
+                  <label
+                    className="block text-sm mb-2 text-gray-300"
+                    htmlFor="slippage"
+                  >
+                    Slippage tolerance
+                  </label>
 
-                <div className="px-3 py-1 rounded-md bg-primary flex">
-                  <input
-                    autoComplete="off"
-                    autoCorrect="off"
-                    inputMode="numeric"
-                    id="slippage"
-                    name="slippage"
-                    min={0}
-                    max={99}
-                    step={1}
-                    placeholder="1"
-                    className="hide-number-input-arrows w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
-                    spellCheck="false"
-                    type="number"
-                  />
+                  <div className="px-3 py-1 rounded-md bg-primary flex">
+                    <input
+                      autoComplete="off"
+                      autoCorrect="off"
+                      inputMode="numeric"
+                      id="slippage"
+                      name="slippage"
+                      min={0}
+                      max={99}
+                      step={1}
+                      placeholder="1"
+                      className="hide-number-input-arrows w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                      spellCheck="false"
+                      type="number"
+                    />
 
-                  <span>%</span>
+                    <span>%</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    className="block text-sm mb-2 text-gray-300"
+                    htmlFor="liquidation-fee"
+                  >
+                    Liquidation fee
+                  </label>
+
+                  <div className="px-3 py-1 rounded-md bg-primary flex">
+                    <input
+                      autoComplete="off"
+                      autoCorrect="off"
+                      inputMode="numeric"
+                      id="liquidation-fee"
+                      name="liquidation-fee"
+                      placeholder="1"
+                      step={0.1}
+                      max={10}
+                      min={0}
+                      className="hide-number-input-arrows w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                      spellCheck="false"
+                      type="number"
+                    />
+
+                    <span>%</span>
+                  </div>
                 </div>
               </div>
             </div>
