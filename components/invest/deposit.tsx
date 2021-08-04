@@ -42,13 +42,10 @@ export default function Deposit() {
 
   const depositAmountInput = useInput();
 
-  const slippageInput = useInput();
-  const liquidationFeeInput = useInput();
-
   async function getMinPoolAmountOut(
     tokenAddress: string,
     amountToDeposit: BigNumber,
-    slippage: string = "1"
+    slippage: string
   ) {
     const poolAmountOut: BigNumber = await poolRouter.getSovAmountOutSingle(
       tokenAddress,
@@ -63,22 +60,26 @@ export default function Deposit() {
     event.preventDefault();
 
     const values = event.target as typeof event.target & {
-      "deposit-amount": { value: string };
-      "liquidation-fee": { value: string };
+      depositAmount: { value: string };
+      liquidationFee: { value: string };
       slippage: { value: string };
     };
 
     try {
-      const depositAmount = parseUnits(values["deposit-amount"].value);
+      const depositAmount = parseUnits(values.depositAmount.value);
 
-      const liquidationFee = hasValue(values["liquidation-fee"]?.value)
-        ? BigNumber.from(Number(values["liquidation-fee"].value) * 10000)
+      const liquidationFee = hasValue(values.liquidationFee?.value)
+        ? BigNumber.from(Number(values.liquidationFee.value) * 10000)
         : BigNumber.from(10 * 10000);
+
+      const slippage = hasValue(values.slippage?.value)
+        ? values.slippage.value
+        : "1";
 
       const minPoolAmountOut = await getMinPoolAmountOut(
         depositToken.address,
         depositAmount,
-        values.slippage?.value
+        slippage
       );
 
       const tx: TransactionResponse = await poolRouter.deposit(
@@ -176,7 +177,7 @@ export default function Deposit() {
                 <div>
                   <label
                     className="block text-sm mb-2 text-gray-300"
-                    htmlFor="liquidation-fee"
+                    htmlFor="liquidationFee"
                   >
                     Liquidation fee
                   </label>
@@ -186,8 +187,8 @@ export default function Deposit() {
                       autoComplete="off"
                       autoCorrect="off"
                       inputMode="numeric"
-                      id="liquidation-fee"
-                      name="liquidation-fee"
+                      id="liquidationFee"
+                      name="liquidationFee"
                       placeholder="10"
                       step={0.1}
                       max={10}
@@ -226,7 +227,7 @@ export default function Deposit() {
         </div>
 
         <div className="flex-1">
-          <label className="sr-only" htmlFor="deposit-amount">
+          <label className="sr-only" htmlFor="depositAmount">
             Enter amount of token
           </label>
 
@@ -237,9 +238,9 @@ export default function Deposit() {
             inputMode="decimal"
             maxLength={79}
             minLength={1}
-            name="deposit-amount"
+            name="depositAmount"
             required
-            id="deposit-amount"
+            id="depositAmount"
             pattern="^[0-9]*[.,]?[0-9]*$"
             placeholder="0.0"
             spellCheck="false"
