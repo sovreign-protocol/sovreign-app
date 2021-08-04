@@ -4,7 +4,9 @@ import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
+import { useState } from "react";
 import { FormEvent, useMemo } from "react";
+import { Settings } from "react-feather";
 
 export default function Lock() {
   const lockupPeriod = useInput();
@@ -20,7 +22,12 @@ export default function Lock() {
       throw new Error("Max Lockup Time Is 2 Years (730 Days)");
     }
 
-    const futureTimestamp = getFutureTimestamp(days);
+    /**
+     * Account for today if the days is equal to 2 years exact, so remove a day
+     */
+    const futureTimestamp = getFutureTimestamp(
+      days === 365 * 2 ? days - 1 : days
+    );
 
     const transaction: TransactionResponse = await reignFacet.lock(
       BigNumber.from(futureTimestamp)
@@ -32,6 +39,9 @@ export default function Lock() {
   const multiplier = useMemo(() => {
     return ((Number(lockupPeriod.value) / (365 * 2)) * 0.5 + 1).toFixed(2);
   }, [lockupPeriod.value]);
+
+  const [showInput, showInputSet] = useState(false);
+  const toggleInput = () => showInputSet(!showInput);
 
   return (
     <div className="bg-primary-400 rounded-xl p-4 focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20">
@@ -55,50 +65,72 @@ export default function Lock() {
             />
           </div> */}
 
-          <div className="flex space-x-2">
-            <div className="flex divide-x">
-              <button
-                onClick={() => lockupPeriod.setValue("60")}
-                type="button"
-                className="py-2 px-3 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-              >
-                60 Days
-              </button>
+          <div className="space-y-2">
+            <div className="flex space-x-2">
+              <div className="flex divide-x">
+                <button
+                  onClick={() => lockupPeriod.setValue("60")}
+                  type="button"
+                  className="flex-1 py-2 px-3 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                >
+                  60 Days
+                </button>
+
+                <button
+                  onClick={() => lockupPeriod.setValue("180")}
+                  type="button"
+                  className="flex-1 py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                >
+                  180 Days
+                </button>
+
+                <button
+                  onClick={() => lockupPeriod.setValue("365")}
+                  type="button"
+                  className="flex-1 py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                >
+                  365 Days
+                </button>
+
+                <button
+                  onClick={() => lockupPeriod.setValue("730")}
+                  type="button"
+                  className="flex-1 py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                >
+                  730 Days
+                </button>
+              </div>
 
               <button
-                onClick={() => lockupPeriod.setValue("180")}
+                onClick={toggleInput}
                 type="button"
-                className="py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                className="flex-1 p-2 rounded-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
               >
-                180 Days
-              </button>
-
-              <button
-                onClick={() => lockupPeriod.setValue("365")}
-                type="button"
-                className="py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-              >
-                365 Days
+                <Settings size={20} className="m-0.5" />
               </button>
             </div>
 
-            <div className="flex-1 py-2 pr-4 pl-3 rounded-md whitespace-nowrap bg-primary flex focus-within:ring-4">
-              <input
-                autoComplete="off"
-                autoCorrect="off"
-                className="hide-number-input-arrows text-right appearance-none bg-transparent flex-1 focus:outline-none mr-1 text-white"
-                id="lockupPeriod"
-                max={365 * 2 - 1}
-                min={1}
-                name="lockupPeriod"
-                placeholder="1"
-                step={1}
-                type="number"
-                {...lockupPeriod.eventBind}
-              />
+            {showInput && (
+              <div className="flex-1 py-2 pr-4 pl-3 rounded-md whitespace-nowrap bg-primary flex focus-within:ring-4 space-x-4">
+                <p>Custom Period</p>
 
-              <span className="font-medium">Days</span>
-            </div>
+                <input
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className="hide-number-input-arrows text-right appearance-none bg-transparent flex-1 focus:outline-none mr-1 text-white"
+                  id="lockupPeriod"
+                  max={365 * 2}
+                  min={1}
+                  name="lockupPeriod"
+                  placeholder="1"
+                  step={1}
+                  type="number"
+                  {...lockupPeriod.eventBind}
+                />
+
+                <span className="font-medium">Days</span>
+              </div>
+            )}
           </div>
 
           <div>
