@@ -1,17 +1,17 @@
 import useGovRewards from "@/hooks/contracts/useGovRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useEpochStartGovRewards } from "@/hooks/view/useEpochStart";
+import { useEpochDatesGovRewards } from "@/hooks/view/useEpochDates";
 import { useUserRewardsGovRewards } from "@/hooks/view/useUserRewards";
-import getTimeUntilNextEpoch from "@/utils/getTimeUntilNextEpoch";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { FormEvent } from "react";
 
 export default function REIGNHarvest() {
   const account = useWeb3Store((state) => state.account);
 
-  const { data: epochStart } = useEpochStartGovRewards();
+  const { data: epochDates } = useEpochDatesGovRewards();
 
   const { data: userRewards } = useUserRewardsGovRewards(account);
 
@@ -31,17 +31,38 @@ export default function REIGNHarvest() {
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <form onSubmit={harvestREIGN} className="space-y-4">
+      <form className="space-y-4" onSubmit={harvestREIGN}>
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">Staking Rewards In REIGN</h2>
         </div>
 
-        <p>{getTimeUntilNextEpoch(epochStart)}</p>
-
         <div>
-          <div className="h-4" />
+          <p className="font-medium leading-5 mb-4">Time until next epoch</p>
 
-          <h2 className="font-medium leading-5 mb-4">Available Rewards</h2>
+          <p className="text-2xl leading-none font-semibold mb-4">
+            {epochDates?.relative}
+          </p>
+
+          <div
+            aria-label={`${epochDates?.relative} until next epoch`}
+            aria-valuenow={parseFloat(epochDates?.progress.toFixed(2))}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuetext={`${epochDates?.progress.toFixed(2)}%`}
+            role="progressbar"
+            className="w-full"
+          >
+            <div className="h-3 bg-primary rounded overflow-hidden">
+              <div
+                className="h-3 bg-green-500"
+                style={{ width: `${epochDates?.progress.toFixed(2)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-end">
+          <p className="leading-none">Available Rewards</p>
 
           <p className="text-2xl leading-none font-semibold">
             {`${fmUserRewards} REIGN`}

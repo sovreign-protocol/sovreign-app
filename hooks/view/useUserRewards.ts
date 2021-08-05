@@ -1,6 +1,5 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
-import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import useGovRewards from "../contracts/useGovRewards";
 import useWrappingRewards from "../contracts/useWrappingRewards";

@@ -1,17 +1,17 @@
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useEpochStartWrappingRewards } from "@/hooks/view/useEpochStart";
+import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
 import { useUserRewardsWrappingRewards } from "@/hooks/view/useUserRewards";
-import getTimeUntilNextEpoch from "@/utils/getTimeUntilNextEpoch";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { FormEvent } from "react";
 
 export default function SOVHarvest() {
   const account = useWeb3Store((state) => state.account);
 
-  const { data: epochStart } = useEpochStartWrappingRewards();
+  const { data: epochDates } = useEpochDatesWrappingRewards();
 
   const { data: userRewards } = useUserRewardsWrappingRewards(account);
 
@@ -36,12 +36,33 @@ export default function SOVHarvest() {
           <h2 className="font-medium leading-5">Wrapping Rewards In SOV</h2>
         </div>
 
-        <p>{getTimeUntilNextEpoch(epochStart)}</p>
-
         <div>
-          <div className="h-4" />
+          <p className="font-medium leading-5 mb-4">Time until next epoch</p>
 
-          <h2 className="font-medium leading-5 mb-4">Available Rewards</h2>
+          <p className="text-2xl leading-none font-semibold mb-4">
+            {epochDates?.relative}
+          </p>
+
+          <div
+            aria-label={`${epochDates?.relative} until next epoch`}
+            aria-valuenow={parseFloat(epochDates?.progress.toFixed(2))}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuetext={`${epochDates?.progress.toFixed(2)}%`}
+            role="progressbar"
+            className="w-full"
+          >
+            <div className="h-3 bg-primary rounded overflow-hidden">
+              <div
+                className="h-3 bg-green-500"
+                style={{ width: `${epochDates?.progress.toFixed(2)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-end">
+          <p className="leading-none">Available Rewards</p>
 
           <p className="text-2xl leading-none font-semibold">
             {`${fmUserRewards} SOV`}

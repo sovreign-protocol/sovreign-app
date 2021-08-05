@@ -69,3 +69,5 @@ export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
 export const MaxUint256 = BigInt(
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 );
+
+export const EPOCH_DURATION = 604800;
