@@ -27,7 +27,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   WrappingRewards: {
     1: "TODO",
-    4: "0x20CF7b7F003A32Fa7169ecEeB435ee1af5eE6ED1",
+    4: "0x855dD13AbAb0e891952Fd973634cefBb1c5AAbAC",
   },
   ReignFacet: {
     1: "TODO",

@@ -6,11 +6,11 @@ dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
 export default function getTimeUntilNextEpoch(epochStart: number) {
-  const epochStartTime = dayjs(epochStart);
+  const epochStartTime = dayjs.unix(epochStart);
 
   const oneWeekFromEpochStart = epochStartTime.add(1, "week");
 
   const nowInUTC = dayjs.utc();
 
-  return oneWeekFromEpochStart.from(nowInUTC);
+  return epochStartTime.format();
 }
