@@ -1,10 +1,12 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
+import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
+import useGovRewards from "../contracts/useGovRewards";
 import useWrappingRewards from "../contracts/useWrappingRewards";
 
 const getUserRewards =
-  (contract: Contract) => async (_: string, address: string) => {
+  (contract: Contract) => async (_: string, userAddress: string) => {
     const lastEpochHarvested: BigNumber =
       await contract.userLastEpochIdHarvested();
 
@@ -19,11 +21,17 @@ const getUserRewards =
         const epochToCheck = index + 1;
 
         const epochStake: BigNumber = await contract.getEpochStake(
-          address,
+          userAddress,
           epochToCheck
         );
 
+        console.log("epochStake", formatUnits(epochStake));
+
         const poolSize: BigNumber = await contract.getPoolSize(epochToCheck);
+
+        console.log("poolSize", formatUnits(poolSize));
+
+        console.log("getRewardsForEpoch", formatUnits(getRewardsForEpoch));
 
         return getRewardsForEpoch.mul(epochStake).div(poolSize);
       })
@@ -32,13 +40,24 @@ const getUserRewards =
     return epochRewardsArray.reduce((prev, cur) => prev.add(cur));
   };
 
-export default function useUserRewards(address: string) {
-  const contract = useWrappingRewards();
+export function useUserRewardsGovRewards(userAddress: string) {
+  const contract = useGovRewards();
 
-  const shouldFetch = !!contract && typeof address === "string";
+  const shouldFetch = !!contract && typeof userAddress === "string";
 
   return useSWR(
-    shouldFetch ? ["UserRewards", address] : null,
+    shouldFetch ? ["UserRewardsGovRewards", userAddress] : null,
+    getUserRewards(contract)
+  );
+}
+
+export function useUserRewardsWrappingRewards(userAddress: string) {
+  const contract = useWrappingRewards();
+
+  const shouldFetch = !!contract && typeof userAddress === "string";
+
+  return useSWR(
+    shouldFetch ? ["UserRewardsWrappingRewards", userAddress] : null,
     getUserRewards(contract)
   );
 }
