@@ -12,5 +12,9 @@ export default function getTimeUntilNextEpoch(epochStart: number) {
 
   const nowInUTC = dayjs.utc();
 
-  return epochStartTime.format();
+  if (oneWeekFromEpochStart.isAfter(nowInUTC)) {
+    return `Next epoch ${oneWeekFromEpochStart.from(nowInUTC)}`;
+  }
+
+  return "Epoch passed, awaiting next epoch starting";
 }
