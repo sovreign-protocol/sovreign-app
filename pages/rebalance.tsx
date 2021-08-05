@@ -1,7 +1,7 @@
 import Lock from "@/components/rebalance/lock";
 import Stake from "@/components/rebalance/stake";
-import TokenBreakdown from "@/components/rebalance/tokenBreakdown";
-import VotingPower from "@/components/rebalance/votingPower";
+import TokenAllocation from "@/components/rebalance/tokenAllocation";
+// import VotingPower from "@/components/rebalance/votingPower";
 
 function RebalancePage() {
   return (
@@ -10,11 +10,11 @@ function RebalancePage() {
         <div className="flex-1">
           <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
             <div className="space-y-4">
-              <TokenBreakdown />
+              <TokenAllocation />
 
-              <div className="h-px w-full bg-primary-300" />
+              {/* <div className="h-px w-full bg-primary-300" />
 
-              <VotingPower />
+              <VotingPower /> */}
             </div>
           </div>
         </div>

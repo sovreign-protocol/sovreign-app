@@ -10,7 +10,7 @@ const getPoolTokens = (contract: Contract) => async () => {
     .map((addr) => addr.toLowerCase())
     .map((address) => ({
       address: address,
-      symbol: TOKEN_NAMES_BY_ADDRESS[address],
+      symbol: TOKEN_NAMES_BY_ADDRESS[address.toLowerCase()],
     }));
 
   return formatted;

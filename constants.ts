@@ -9,7 +9,9 @@ type ContractNames =
   | "PoolRouter"
   | "WrappingRewards"
   | "ReignFacet"
-  | "GovRewards";
+  | "GovRewards"
+  | "LPRewardsSOVUSDC"
+  | "LPRewardsREIGNWETH";
 
 type TokenNames = "SOV" | "REIGN";
 
@@ -36,6 +38,14 @@ export const CONTRACT_ADDRESSES: Record<
   GovRewards: {
     1: "TODO",
     4: "0x923CA1b060577e8BcDF6d82A9C4109CEECCc1122",
+  },
+  LPRewardsREIGNWETH: {
+    1: "TOOD",
+    4: "0xAD031dcb078a6237E7752dEd9261685F6a7364ac",
+  },
+  LPRewardsSOVUSDC: {
+    1: "TODO",
+    4: "0xd2e6F93050937749cF4347c07B070A92d96C4dFf",
   },
 };
 
