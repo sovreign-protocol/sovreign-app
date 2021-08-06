@@ -1,3 +1,4 @@
+import AllocationAdjustment from "@/components/rebalance/allocationAdjustment";
 import Lock from "@/components/rebalance/lock";
 import Stake from "@/components/rebalance/stake";
 import TokenAllocation from "@/components/rebalance/tokenAllocation";
@@ -12,9 +13,11 @@ function RebalancePage() {
             <div className="space-y-4">
               <TokenAllocation />
 
-              {/* <div className="h-px w-full bg-primary-300" />
+              <div className="h-px w-full bg-primary-300" />
 
-              <VotingPower /> */}
+              {/* <VotingPower /> */}
+
+              <AllocationAdjustment />
             </div>
           </div>
         </div>
