@@ -1,8 +1,8 @@
 import AllocationAdjustment from "@/components/rebalance/allocationAdjustment";
+import ContinuousTokenAllocation from "@/components/rebalance/continuousTokenAllocation";
 import Lock from "@/components/rebalance/lock";
 import Stake from "@/components/rebalance/stake";
 import TokenAllocation from "@/components/rebalance/tokenAllocation";
-// import VotingPower from "@/components/rebalance/votingPower";
 
 function RebalancePage() {
   return (
@@ -15,7 +15,9 @@ function RebalancePage() {
 
               <div className="h-px w-full bg-primary-300" />
 
-              {/* <VotingPower /> */}
+              <ContinuousTokenAllocation />
+
+              <div className="h-px w-full bg-primary-300" />
 
               <AllocationAdjustment />
             </div>
