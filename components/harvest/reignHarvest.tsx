@@ -5,7 +5,6 @@ import { useEpochDatesGovRewards } from "@/hooks/view/useEpochDates";
 import { useUserRewardsGovRewards } from "@/hooks/view/useUserRewards";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
-import dayjs from "dayjs";
 import { FormEvent } from "react";
 
 export default function REIGNHarvest() {
@@ -13,7 +12,8 @@ export default function REIGNHarvest() {
 
   const { data: epochDates } = useEpochDatesGovRewards();
 
-  const { data: userRewards } = useUserRewardsGovRewards(account);
+  const { data: userRewards, mutate: userRewardsMutate } =
+    useUserRewardsGovRewards(account);
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
@@ -26,6 +26,8 @@ export default function REIGNHarvest() {
       const tx: TransactionResponse = await govRewards.massHarvest();
 
       await tx.wait();
+
+      userRewardsMutate();
     } catch (error) {}
   }
 

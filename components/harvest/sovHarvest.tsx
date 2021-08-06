@@ -1,23 +1,31 @@
+import { TOKEN_ADDRESSES } from "@/constants";
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
+import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { useUserRewardsWrappingRewards } from "@/hooks/view/useUserRewards";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
-import dayjs from "dayjs";
 import { FormEvent } from "react";
 
 export default function SOVHarvest() {
   const account = useWeb3Store((state) => state.account);
+  const chainId = useWeb3Store((state) => state.chainId);
 
   const { data: epochDates } = useEpochDatesWrappingRewards();
 
-  const { data: userRewards } = useUserRewardsWrappingRewards(account);
+  const { data: userRewards, mutate: userRewardsMutate } =
+    useUserRewardsWrappingRewards(account);
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
   const wrappingRewards = useWrappingRewards();
+
+  const { mutate: sovBalanceMutate } = useTokenBalance(
+    account,
+    TOKEN_ADDRESSES.SOV[chainId]
+  );
 
   async function harvestSOV(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,6 +34,9 @@ export default function SOVHarvest() {
       const tx: TransactionResponse = await wrappingRewards.massHarvest();
 
       await tx.wait();
+
+      userRewardsMutate();
+      sovBalanceMutate();
     } catch (error) {}
   }
 
