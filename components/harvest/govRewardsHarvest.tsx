@@ -1,50 +1,41 @@
-import { TOKEN_ADDRESSES } from "@/constants";
-import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
+import useGovRewards from "@/hooks/contracts/useGovRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
-import useTokenBalance from "@/hooks/view/useTokenBalance";
-import { useUserRewardsWrappingRewards } from "@/hooks/view/useUserRewards";
+import { useEpochDatesGovRewards } from "@/hooks/view/useEpochDates";
+import { useUserRewardsGovRewards } from "@/hooks/view/useUserRewards";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
 
-export default function SOVHarvest() {
+export default function GovRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
-  const chainId = useWeb3Store((state) => state.chainId);
 
-  const { data: epochDates } = useEpochDatesWrappingRewards();
+  const { data: epochDates } = useEpochDatesGovRewards();
 
   const { data: userRewards, mutate: userRewardsMutate } =
-    useUserRewardsWrappingRewards(account);
+    useUserRewardsGovRewards(account);
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
-  const wrappingRewards = useWrappingRewards();
+  const govRewards = useGovRewards();
 
-  const { mutate: sovBalanceMutate } = useTokenBalance(
-    account,
-    TOKEN_ADDRESSES.SOV[chainId]
-  );
-
-  async function harvestSOV(event: FormEvent<HTMLFormElement>) {
+  async function harvestREIGN(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await wrappingRewards.massHarvest();
+      const tx: TransactionResponse = await govRewards.massHarvest();
 
       await tx.wait();
 
       userRewardsMutate();
-      sovBalanceMutate();
     } catch (error) {}
   }
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <form onSubmit={harvestSOV} className="space-y-4">
+      <form className="space-y-4" onSubmit={harvestREIGN}>
         <div className="flex justify-between">
-          <h2 className="font-medium leading-5">Wrapping Rewards In SOV</h2>
+          <h2 className="font-medium leading-5">Staking Rewards In REIGN</h2>
         </div>
 
         <div>
@@ -76,7 +67,7 @@ export default function SOVHarvest() {
           <p className="leading-none">Available Rewards</p>
 
           <p className="text-2xl leading-none font-semibold">
-            {`${fmUserRewards} SOV`}
+            {`${fmUserRewards} REIGN`}
           </p>
         </div>
 

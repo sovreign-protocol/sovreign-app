@@ -1,29 +1,29 @@
-import useGovRewards from "@/hooks/contracts/useGovRewards";
+import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useEpochDatesGovRewards } from "@/hooks/view/useEpochDates";
-import { useUserRewardsGovRewards } from "@/hooks/view/useUserRewards";
+import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
+import { useUserRewardsWrappingRewards } from "@/hooks/view/useUserRewards";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
 
-export default function REIGNHarvest() {
+export default function WrappingRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
 
-  const { data: epochDates } = useEpochDatesGovRewards();
+  const { data: epochDates } = useEpochDatesWrappingRewards();
 
   const { data: userRewards, mutate: userRewardsMutate } =
-    useUserRewardsGovRewards(account);
+    useUserRewardsWrappingRewards(account);
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
-  const govRewards = useGovRewards();
+  const wrappingRewards = useWrappingRewards();
 
-  async function harvestREIGN(event: FormEvent<HTMLFormElement>) {
+  async function harvestSOV(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await govRewards.massHarvest();
+      const tx: TransactionResponse = await wrappingRewards.massHarvest();
 
       await tx.wait();
 
@@ -33,9 +33,9 @@ export default function REIGNHarvest() {
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <form className="space-y-4" onSubmit={harvestREIGN}>
+      <form onSubmit={harvestSOV} className="space-y-4">
         <div className="flex justify-between">
-          <h2 className="font-medium leading-5">Staking Rewards In REIGN</h2>
+          <h2 className="font-medium leading-5">Wrapping Rewards In REIGN</h2>
         </div>
 
         <div>
