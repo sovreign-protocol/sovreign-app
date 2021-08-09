@@ -23,7 +23,7 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
 
 function InvestPage() {
   return (
-    <section className="pt-8 md:pt-16">
+    <section className="pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-lg mx-auto">
         <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-primary-400 rounded-xl">
