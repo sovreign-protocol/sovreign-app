@@ -7,9 +7,19 @@ import shortenAddress from "@/utils/shortenAddress";
 import { formatUnits } from "@ethersproject/units";
 import { Menu } from "@headlessui/react";
 import cn from "classnames";
-import { useMemo } from "react";
-import { useCallback } from "react";
+import Link from "next/link";
+import { useCallback, useMemo } from "react";
 import Blockie from "./blockie";
+
+function NextLink(props) {
+  let { href, children, ...rest } = props;
+
+  return (
+    <Link href={href}>
+      <a {...rest}>{children}</a>
+    </Link>
+  );
+}
 
 const menuItemClassNames =
   "flex rounded-md items-center w-full p-2 text-sm focus:outline-none";
@@ -66,6 +76,16 @@ export function Account() {
         </div>
 
         <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-primary-400 ring-1 ring-inset ring-white ring-opacity-10 rounded-lg focus:outline-none p-1 z-50">
+          <Menu.Item>
+            {({ active }) => (
+              <NextLink
+                href="/faqs"
+                className={cn(menuItemClassNames, active && "bg-primary-300")}
+              >
+                FAQs
+              </NextLink>
+            )}
+          </Menu.Item>
           <Menu.Item>
             {({ active }) => (
               <a
