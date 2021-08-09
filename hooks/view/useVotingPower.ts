@@ -17,9 +17,17 @@ const getVotingPower =
 
     const votingPower: BigNumber = await reignFacet.votingPower(userAddress);
 
+    const reignStaked: BigNumber = await reignFacet.reignStaked();
+
+    const reignStakedAtTs: BigNumber = await reignFacet.reignStakedAtTs(
+      lastEpochEnd
+    );
+
     return {
       votingPowerAtLastEpoch: votingPowerAtTs,
       currentVotingPower: votingPower,
+      total: reignStaked,
+      totalAtLastEpoch: reignStakedAtTs,
     };
   };
 

@@ -5,12 +5,21 @@ export default function VotingPower() {
   const { data: votingPower } = useVotingPower();
 
   const fmCurrentVotingPower = useFormattedBigNumber(
-    votingPower?.currentVotingPower
+    votingPower?.currentVotingPower,
+    0
   );
 
   const fmVotingPowerAtLastEpoch = useFormattedBigNumber(
-    votingPower?.votingPowerAtLastEpoch
+    votingPower?.votingPowerAtLastEpoch,
+    0
   );
+
+  const fmTotalAtLastEpoch = useFormattedBigNumber(
+    votingPower?.totalAtLastEpoch,
+    0
+  );
+
+  const fmTotal = useFormattedBigNumber(votingPower?.total, 0);
 
   return (
     <div className="space-y-4">
@@ -18,7 +27,8 @@ export default function VotingPower() {
         <h2 className="font-medium leading-5 mb-4">Current Voting Power</h2>
 
         <p className="text-2xl leading-none font-semibold">
-          {fmCurrentVotingPower}
+          {fmCurrentVotingPower} <span className="text-gray-500">/</span>{" "}
+          <span className="text-lg leading-none">{`${fmTotal} votes`}</span>
         </p>
       </div>
 
@@ -30,7 +40,8 @@ export default function VotingPower() {
         </h2>
 
         <p className="text-2xl leading-none font-semibold">
-          {fmVotingPowerAtLastEpoch}
+          {fmVotingPowerAtLastEpoch} <span className="text-gray-500">/</span>{" "}
+          <span className="text-lg leading-none">{`${fmTotalAtLastEpoch} votes`}</span>
         </p>
       </div>
     </div>
