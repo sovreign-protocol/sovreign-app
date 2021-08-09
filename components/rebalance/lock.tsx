@@ -68,20 +68,59 @@ export default function Lock() {
     <div className="bg-primary-400 rounded-xl p-4 focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20">
       <form onSubmit={lockReign}>
         <div className="space-y-4">
-          <div className="flex justify-between">
+          <div>
             <h2 className="font-medium leading-5">Lock Stake</h2>
           </div>
 
           <div className="space-y-2">
             <div>
-              <div className="flex justify-between mb-2">
-                <p>Days</p>
+              <div className="flex space-x-2 mb-2">
+                <div className="flex divide-x">
+                  <button
+                    onClick={() => lockupPeriod.setValue("180")}
+                    type="button"
+                    className="flex-1 py-2 px-3 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                  >
+                    180 Days
+                  </button>
 
-                <p>{lockupPeriod.value}</p>
+                  <button
+                    onClick={() => lockupPeriod.setValue("365")}
+                    type="button"
+                    className="flex-1 py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                  >
+                    365 Days
+                  </button>
+
+                  <button
+                    onClick={() => lockupPeriod.setValue("730")}
+                    type="button"
+                    className="flex-1 py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                  >
+                    730 Days
+                  </button>
+                </div>
+
+                <div className="ml-auto py-2 pr-4 pl-3 rounded-md whitespace-nowrap bg-primary flex focus-within:ring-4">
+                  <input
+                    autoComplete="off"
+                    autoCorrect="off"
+                    className="hide-number-input-arrows text-right appearance-none bg-transparent flex-1 focus:outline-none mr-1 text-white"
+                    id="lockupPeriod"
+                    max={365 * 2}
+                    min={1}
+                    name="lockupPeriod"
+                    placeholder="1"
+                    step={1}
+                    type="number"
+                    {...lockupPeriod.eventBind}
+                  />
+                  <span>Days</span>
+                </div>
               </div>
 
               <Slider.Root
-                name="lockup-range"
+                name="lockupPeriod-range"
                 className="relative flex items-center select-none w-full h-5 touch-action-none"
                 max={365 * 2}
                 min={1}
@@ -97,76 +136,10 @@ export default function Lock() {
                 <Slider.Thumb className="block w-4 h-4 bg-white rounded-full focus:outline-none focus:ring-4" />
               </Slider.Root>
             </div>
-
-            <div className="flex space-x-2">
-              <div className="flex divide-x">
-                <button
-                  onClick={() => lockupPeriod.setValue("60")}
-                  type="button"
-                  className="flex-1 py-2 px-3 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                >
-                  60 Days
-                </button>
-
-                <button
-                  onClick={() => lockupPeriod.setValue("180")}
-                  type="button"
-                  className="flex-1 py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                >
-                  180 Days
-                </button>
-
-                <button
-                  onClick={() => lockupPeriod.setValue("365")}
-                  type="button"
-                  className="flex-1 py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                >
-                  365 Days
-                </button>
-
-                <button
-                  onClick={() => lockupPeriod.setValue("730")}
-                  type="button"
-                  className="flex-1 py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                >
-                  730 Days
-                </button>
-              </div>
-
-              <button
-                onClick={toggleInput}
-                type="button"
-                className="flex-1 p-2 rounded-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-              >
-                <Settings size={20} className="m-0.5" />
-              </button>
-            </div>
-
-            {showInput && (
-              <div className="flex-1 py-2 pr-4 pl-3 rounded-md whitespace-nowrap bg-primary flex focus-within:ring-4 space-x-4">
-                <p>Custom Period</p>
-
-                <input
-                  autoComplete="off"
-                  autoCorrect="off"
-                  className="hide-number-input-arrows text-right appearance-none bg-transparent flex-1 focus:outline-none mr-1 text-white"
-                  id="lockupPeriod"
-                  max={365 * 2}
-                  min={1}
-                  name="lockupPeriod"
-                  placeholder="1"
-                  step={1}
-                  type="number"
-                  {...lockupPeriod.eventBind}
-                />
-
-                <span className="font-medium">Days</span>
-              </div>
-            )}
           </div>
 
           <div>
-            <div className="h-4" />
+            {/* <div className="h-4" /> */}
 
             <div className="flex justify-between items-end">
               <p className="leading-none">Rewards Multiplier</p>
