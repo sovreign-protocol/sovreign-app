@@ -1,6 +1,7 @@
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useEpochDates from "@/hooks/view/useEpochDates";
 import classNames from "classnames";
+import { ArrowDown, ArrowUp } from "react-feather";
 
 const TOKEN_COLORS = ["bg-green-500", "bg-blue-500", "bg-purple-500"];
 
@@ -30,7 +31,7 @@ export default function ContinuousTokenAllocation() {
           <div
             key={token.address}
             className={classNames(
-              "h-12 flex items-center pl-4",
+              "h-12 flex items-center justify-between px-4",
               TOKEN_COLORS[tokenIndex]
             )}
             style={{
@@ -38,6 +39,30 @@ export default function ContinuousTokenAllocation() {
             }}
           >
             <span className="font-bold">{token.symbol}</span>
+
+            <div className="flex space-x-0.5 items-center">
+              {token.percentChange === 0 ? (
+                <>
+                  <span className="font-medium">{`0.00%`}</span>
+                </>
+              ) : token.percentChange > 0 ? (
+                <>
+                  <ArrowUp size={18} />
+
+                  <span className="font-medium">{`${token.percentChange.toFixed(
+                    2
+                  )}%`}</span>
+                </>
+              ) : (
+                <>
+                  <ArrowDown size={18} />
+
+                  <span className="font-medium">{`${(
+                    token.percentChange * -1
+                  ).toFixed(2)}%`}</span>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>

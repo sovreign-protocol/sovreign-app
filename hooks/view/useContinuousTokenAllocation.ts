@@ -11,17 +11,27 @@ function getContinuousTokenAllocation(contract: Contract) {
 
     const tokenAllocations = await Promise.all(
       tokens.map(async (poolAddress) => {
-        const allocationInWei: BigNumber = await contract.continuousVote(
+        const targetAllocationInWei: BigNumber =
+          await contract.getTargetAllocation(poolAddress);
+
+        const continuousVoteInWei: BigNumber = await contract.continuousVote(
           poolAddress
         );
 
-        const allocation = parseFloat(formatUnits(allocationInWei));
+        const continuousVote = parseFloat(formatUnits(continuousVoteInWei));
+
+        const targetAllocation = parseFloat(formatUnits(targetAllocationInWei));
+
+        const percentChange =
+          ((continuousVote - targetAllocation) / targetAllocation) * 100;
+
+        console.log(percentChange);
 
         return {
           address: poolAddress,
           symbol: TOKEN_NAMES_BY_ADDRESS[poolAddress.toLowerCase()],
-          allocationInWei,
-          allocation,
+          allocation: continuousVote,
+          percentChange,
         };
       })
     );
