@@ -5,8 +5,8 @@ import useReignFacet from "../contracts/useReignFacet";
 import useWeb3Store from "../useWeb3Store";
 
 const getVotingPower =
-  (contract: Contract) => async (_: string, user: string) => {
-    const value: BigNumber = await contract.votingPower(user);
+  (contract: Contract) => async (_: string, userAddress: string) => {
+    const value: BigNumber = await contract.votingPower(userAddress);
 
     return value;
   };
