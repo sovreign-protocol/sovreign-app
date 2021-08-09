@@ -179,7 +179,9 @@ export default function Lock() {
               type="submit"
               disabled={!lockupPeriod.hasValue || userLockedUntil?.isLocked}
             >
-              {lockupPeriod.hasValue ? "Lock Up Reign" : "Enter Number Of Days"}
+              {lockupPeriod.hasValue
+                ? "Lock up stake"
+                : "Select number of days"}
             </button>
           </div>
         </div>
