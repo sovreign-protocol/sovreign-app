@@ -1,7 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import { useEffect } from "react";
 
-function Home() {
+function HomePage() {
   const { replace } = useRouter();
 
   useEffect(() => {
@@ -11,4 +11,4 @@ function Home() {
   return null;
 }
 
-export default Home;
+export default HomePage;
