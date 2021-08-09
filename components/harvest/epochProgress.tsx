@@ -36,7 +36,7 @@ export default function EpochProgress() {
       >
         <div className="h-3 bg-primary rounded overflow-hidden">
           <div
-            className="h-3 bg-green-500"
+            className="h-3 bg-indigo-500"
             style={{
               width: epochDates ? `${epochDates.progress.toFixed(2)}%` : "0%",
             }}
