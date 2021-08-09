@@ -6,7 +6,7 @@ import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Minus, Plus } from "react-feather";
 import VotingPower from "./votingPower";
 
@@ -48,7 +48,9 @@ export default function AllocationAdjustment() {
 
   const canUpdate = total === totalAllocation;
 
-  async function updateAllocationVote() {
+  async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     try {
       const tx: TransactionResponse = await basketBalancer.updateAllocationVote(
         Object.keys(inputObject),
@@ -71,94 +73,105 @@ export default function AllocationAdjustment() {
           <VotingPower />
         </div>
 
-        <div className="flex-1">
-          <ul className="space-y-4 mb-4">
-            <div>
-              <h2 className="font-medium leading-5">Adjust Token Allocation</h2>
-            </div>
+        <form method="POST" onSubmit={updateAllocationVote} className="flex-1">
+          <div className="mb-4">
+            <h2 className="font-medium leading-5">Adjust Token Allocation</h2>
+          </div>
 
-            {inputObject &&
-              tokenAllocation &&
-              tokenAllocation?.map((token) => (
-                <li key={token.address}>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-medium leading-5">{token.symbol}</p>
+          <div className="mb-4">
+            <ul className="divide-y -mt-4 -mb-4">
+              {inputObject &&
+                tokenAllocation &&
+                tokenAllocation?.map((token) => {
+                  return (
+                    <li
+                      className="border-primary-300 pb-4 pt-4"
+                      key={token.address}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-xl font-semibold leading-none mb-1">
+                            {token.symbol}
+                          </p>
 
-                      <span>{`Current: ${token.allocation}`}</span>
-                    </div>
+                          <p className="text-sm text-gray-300">{`Current Allocation: ${token.allocation}`}</p>
+                        </div>
 
-                    <div className="flex divide-x">
-                      <button
-                        className="flex-1 p-2 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                        onClick={() =>
-                          inputObjectSet((prev) => {
-                            const prevValue = prev[token.address];
+                        <div className="flex divide-x">
+                          <button
+                            type="button"
+                            className="flex-1 p-2 border-primary-300 rounded-l-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                            onClick={() =>
+                              inputObjectSet((prev) => {
+                                const prevValue = prev[token.address];
 
-                            if (prevValue >= token.allocation + delta) {
-                              return prev;
+                                if (prevValue >= token.allocation + delta) {
+                                  return prev;
+                                }
+
+                                return {
+                                  ...prev,
+                                  [token.address]: prevValue + 0.5,
+                                };
+                              })
                             }
+                          >
+                            <Plus size={20} />
+                          </button>
 
-                            return {
-                              ...prev,
-                              [token.address]: prevValue + 0.5,
-                            };
-                          })
-                        }
-                      >
-                        <Plus size={20} />
-                      </button>
+                          <div className="p-2 w-16 border-primary-300 whitespace-nowrap bg-primary flex items-center justify-center leading-5">
+                            <input
+                              autoComplete="off"
+                              autoCorrect="off"
+                              inputMode="decimal"
+                              max={token.allocation + delta}
+                              min={token.allocation - delta}
+                              required
+                              step={0.01}
+                              value={inputObject[token.address]}
+                              onChange={(event) =>
+                                inputObjectSet((prev) => ({
+                                  ...prev,
+                                  [token.address]: event.target.valueAsNumber,
+                                }))
+                              }
+                              className="hide-number-input-arrows w-full text-center appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                              spellCheck="false"
+                              type="number"
+                            />
+                          </div>
 
-                      <div className="p-2 w-24 border-primary-300 whitespace-nowrap bg-primary flex items-center justify-center">
-                        <input
-                          autoComplete="off"
-                          autoCorrect="off"
-                          inputMode="decimal"
-                          value={inputObject[token.address]}
-                          onChange={(event) =>
-                            inputObjectSet((prev) => {
-                              console.log(event.target.valueAsNumber);
+                          <button
+                            type="button"
+                            className="flex-1 p-2 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                            onClick={() =>
+                              inputObjectSet((prev) => {
+                                const prevValue = prev[token.address];
 
-                              return {
-                                ...prev,
-                                [token.address]: Number(event.target.value),
-                              };
-                            })
-                          }
-                          className="hide-number-input-arrows w-full text-center appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
-                          spellCheck="false"
-                          type="number"
-                        />
+                                if (prevValue <= token.allocation - delta) {
+                                  return prev;
+                                }
+
+                                return {
+                                  ...prev,
+                                  [token.address]: prevValue - 0.5,
+                                };
+                              })
+                            }
+                          >
+                            <Minus size={20} />
+                          </button>
+                        </div>
                       </div>
-
-                      <button
-                        className="flex-1 p-2 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
-                        onClick={() =>
-                          inputObjectSet((prev) => {
-                            const prevValue = prev[token.address];
-
-                            if (prevValue <= token.allocation - delta) {
-                              return prev;
-                            }
-
-                            return {
-                              ...prev,
-                              [token.address]: prevValue - 0.5,
-                            };
-                          })
-                        }
-                      >
-                        <Minus size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
 
           <div className="space-y-2">
             <button
-              onClick={updateAllocationVote}
+              type="submit"
               className={classNames(
                 "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
                 canUpdate && !hasVotedInEpoch
@@ -170,7 +183,7 @@ export default function AllocationAdjustment() {
               Cast Vote
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
