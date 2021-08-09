@@ -11,6 +11,7 @@ import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { FormEvent } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -29,7 +30,9 @@ export default function WithdrawStake() {
 
   const withdrawInput = useInput();
 
-  async function withdrawReign() {
+  async function withdrawReign(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     try {
       const amountToWithdraw = parseUnits(withdrawInput.value);
 
@@ -54,7 +57,7 @@ export default function WithdrawStake() {
   const { data: isStakeLocked } = useUserLockedUntil();
 
   return (
-    <div className="space-y-4">
+    <form method="POST" onSubmit={withdrawReign} className="space-y-4">
       <div>
         <div className="flex justify-between items-end">
           <p className="leading-none font-semibold">Staked Balance</p>
@@ -122,7 +125,7 @@ export default function WithdrawStake() {
           withdrawInput.hasValue ? "bg-white text-primary" : "bg-primary-300"
         )}
         disabled={!withdrawInput.hasValue && !isStakeLocked?.isLocked}
-        onClick={withdrawReign}
+        type="submit"
       >
         {isStakeLocked?.isLocked
           ? `Withdraws disabled for ${dayjs(isStakeLocked.timestamp).fromNow()}`
@@ -130,6 +133,6 @@ export default function WithdrawStake() {
           ? "Withdraw"
           : "Enter an amount"}
       </button>
-    </div>
+    </form>
   );
 }

@@ -10,7 +10,7 @@ import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
-import { useMemo } from "react";
+import { FormEvent, useMemo } from "react";
 
 export default function DepositStake() {
   const account = useWeb3Store((state) => state.account);
@@ -27,11 +27,11 @@ export default function DepositStake() {
 
   const formattedReignBalance = useFormattedBigNumber(reignBalance);
 
-  const formattedReignStaked = useFormattedBigNumber(reignStaked);
-
   const depositInput = useInput();
 
-  async function depositReign() {
+  async function depositReign(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     try {
       const tx: TransactionResponse = await reignFacet.deposit(
         parseUnits(depositInput.value)
@@ -76,7 +76,7 @@ export default function DepositStake() {
   }, [reignAllowance, depositInput.hasValue, depositInput.value]);
 
   return (
-    <div className="space-y-4">
+    <form onSubmit={depositReign} method="POST" className="space-y-4">
       <div className="flex space-x-4">
         <div>
           <div className="mb-2">
@@ -149,11 +149,11 @@ export default function DepositStake() {
               : "bg-primary-300"
           )}
           disabled={!depositInput.hasValue || reignNeedsApproval}
-          onClick={depositReign}
+          type="submit"
         >
           {depositInput.hasValue ? "Deposit" : "Enter an amount"}
         </button>
       </div>
-    </div>
+    </form>
   );
 }

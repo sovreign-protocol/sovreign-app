@@ -1,9 +1,11 @@
 import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useInput from "@/hooks/useInput";
+import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { FormEvent, useMemo } from "react";
 import { Settings } from "react-feather";
@@ -13,27 +15,36 @@ export default function Lock() {
 
   const reignFacet = useReignFacet();
 
+  const { data: userLockedUntil, mutate: userLockedUntilMutate } =
+    useUserLockedUntil();
+
   async function lockReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const days = Number(lockupPeriod.value);
+    try {
+      const days = Number(lockupPeriod.value);
 
-    if (days > 365 * 2) {
-      throw new Error("Max Lockup Time Is 2 Years (730 Days)");
+      if (days > 365 * 2) {
+        throw new Error("Max Lockup Time Is 2 Years (730 Days)");
+      }
+
+      /**
+       * Account for today if the days is equal to 2 years exact, so remove a day
+       */
+      const futureTimestamp = getFutureTimestamp(
+        days === 365 * 2 ? days - 1 : days
+      );
+
+      const transaction: TransactionResponse = await reignFacet.lock(
+        BigNumber.from(futureTimestamp)
+      );
+
+      await transaction.wait();
+
+      userLockedUntilMutate();
+    } catch (error) {
+      console.error(error);
     }
-
-    /**
-     * Account for today if the days is equal to 2 years exact, so remove a day
-     */
-    const futureTimestamp = getFutureTimestamp(
-      days === 365 * 2 ? days - 1 : days
-    );
-
-    const transaction: TransactionResponse = await reignFacet.lock(
-      BigNumber.from(futureTimestamp)
-    );
-
-    await transaction.wait();
   }
 
   const multiplier = useMemo(() => {
@@ -145,16 +156,28 @@ export default function Lock() {
 
           <div className="h-px w-full bg-primary-300" />
 
+          {userLockedUntil && userLockedUntil.isLocked && (
+            <div>
+              <div className="flex justify-between">
+                <p className="leading-none font-semibold">
+                  Currently Locked Until
+                </p>
+
+                <p className="leading-none">{userLockedUntil.formatted}</p>
+              </div>
+            </div>
+          )}
+
           <div className="space-y-4">
             <button
               className={classNames(
                 "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-                lockupPeriod.hasValue
+                !userLockedUntil?.isLocked && lockupPeriod.hasValue
                   ? "bg-white text-primary"
                   : "bg-primary-300"
               )}
               type="submit"
-              disabled={!lockupPeriod.hasValue}
+              disabled={!lockupPeriod.hasValue || userLockedUntil?.isLocked}
             >
               {lockupPeriod.hasValue ? "Lock Up Reign" : "Enter Number Of Days"}
             </button>

@@ -16,9 +16,15 @@ const getUserLockedUntil =
 
     const timestamp = lockedUntilTimestamp.toNumber();
 
-    const isLocked = dayjs.utc(timestamp).isAfter(dayjs());
+    const isLocked = dayjs.unix(timestamp).isAfter(dayjs());
 
-    return { timestamp, isLocked };
+    const formatted = dayjs.unix(timestamp).format("MMM D, YYYY");
+
+    return {
+      timestamp,
+      formatted,
+      isLocked,
+    };
   };
 
 export default function useUserLockedUntil() {
