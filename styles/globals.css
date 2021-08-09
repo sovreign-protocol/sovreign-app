@@ -11,4 +11,7 @@
   .hide-number-input-arrows[type="number"] {
     -moz-appearance: textfield;
   }
+  .touch-action-none {
+    touch-action: none;
+  }
 }

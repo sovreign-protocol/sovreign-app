@@ -4,14 +4,14 @@ import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
+import * as Slider from "@radix-ui/react-slider";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { useState } from "react";
-import { FormEvent, useMemo } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { Settings } from "react-feather";
 
 export default function Lock() {
-  const lockupPeriod = useInput();
+  const lockupPeriod = useInput("1");
 
   const reignFacet = useReignFacet();
 
@@ -19,6 +19,10 @@ export default function Lock() {
     useUserLockedUntil();
 
   const isLockupPeriodAfterCurrentLockedTimestamp = useMemo(() => {
+    if (typeof userLockedUntil === "undefined") {
+      return;
+    }
+
     const newLockupPeriod = dayjs().add(Number(lockupPeriod.value) - 1, "days");
 
     return newLockupPeriod.isAfter(dayjs.unix(userLockedUntil.timestamp));
@@ -68,21 +72,32 @@ export default function Lock() {
             <h2 className="font-medium leading-5">Lock Stake</h2>
           </div>
 
-          {/* Add Back Range Slider */}
-          {/* <div>
-            <input
-              id="lockupPeriod-range"
-              max={365 * 2}
-              min={1}
-              name="lockupPeriod-range"
-              step={1}
-              type="range"
-              className="w-full"
-              {...lockupPeriod.eventBind}
-            />
-          </div> */}
-
           <div className="space-y-2">
+            <div>
+              <div className="flex justify-between mb-2">
+                <p>Days</p>
+
+                <p>{lockupPeriod.value}</p>
+              </div>
+
+              <Slider.Root
+                name="lockup-range"
+                className="relative flex items-center select-none w-full h-5 touch-action-none"
+                max={365 * 2}
+                min={1}
+                step={1}
+                value={[Number(lockupPeriod.value)]}
+                onValueChange={(value: number[]) =>
+                  lockupPeriod.setValue(String(value[0]))
+                }
+              >
+                <Slider.Track className="bg-primary-300 relative flex-grow rounded-full h-[3px]">
+                  <Slider.Range className="absolute bg-white rounded-full h-full" />
+                </Slider.Track>
+                <Slider.Thumb className="block w-4 h-4 bg-white rounded-full focus:outline-none focus:ring-4" />
+              </Slider.Root>
+            </div>
+
             <div className="flex space-x-2">
               <div className="flex divide-x">
                 <button
