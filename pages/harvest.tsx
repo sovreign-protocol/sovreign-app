@@ -1,7 +1,6 @@
-import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest";
-import GovRewardsHarvest from "@/components/harvest/govRewardsHarvest";
-import { useEpochDatesGovRewards } from "@/hooks/view/useEpochDates";
 import EpochProgress from "@/components/harvest/epochProgress";
+import GovRewardsHarvest from "@/components/harvest/govRewardsHarvest";
+import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest";
 
 function HarvestPage() {
   return (
