@@ -10,12 +10,17 @@ const getVotingPower =
   async (_: string, userAddress: string) => {
     const lastEpochEnd = await basketBalancer.lastEpochEnd();
 
-    const value: BigNumber = await reignFacet.votingPowerAtTs(
+    const votingPowerAtTs: BigNumber = await reignFacet.votingPowerAtTs(
       userAddress,
       lastEpochEnd
     );
 
-    return value;
+    const votingPower: BigNumber = await reignFacet.votingPower(userAddress);
+
+    return {
+      votingPowerAtLastEpoch: votingPowerAtTs,
+      currentVotingPower: votingPower,
+    };
   };
 
 export default function useVotingPower() {
