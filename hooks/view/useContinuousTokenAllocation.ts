@@ -25,8 +25,6 @@ function getContinuousTokenAllocation(contract: Contract) {
         const percentChange =
           ((continuousVote - targetAllocation) / targetAllocation) * 100;
 
-        console.log(percentChange);
-
         return {
           address: poolAddress,
           symbol: TOKEN_NAMES_BY_ADDRESS[poolAddress.toLowerCase()],
