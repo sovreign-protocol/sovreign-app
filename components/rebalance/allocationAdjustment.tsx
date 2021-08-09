@@ -192,9 +192,7 @@ export default function AllocationAdjustment() {
           )}
           disabled={!canUpdate || hasVotedInEpoch}
         >
-          {hasVotedInEpoch
-            ? "Vote already cast"
-            : canUpdate
+          {canUpdate
             ? "Cast vote"
             : `Total allocation must equal ${totalAllocation}`}
         </button>
