@@ -14,7 +14,11 @@ export default function ContinuousTokenAllocation() {
 
   return (
     <div className="space-y-4">
-      <p className="font-medium leading-5">Continuous Allocation</p>
+      <div>
+        <p className="font-medium leading-5 mb-2">Continuous Allocation</p>
+
+        <p className="text-sm">Epoch ends in 2 days</p>
+      </div>
 
       <div className="h-12 rounded w-full bg-primary flex relative overflow-hidden">
         {continuousTokenAllocation?.map((token, tokenIndex) => (

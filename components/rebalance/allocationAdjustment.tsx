@@ -11,6 +11,13 @@ import { Minus, Plus } from "react-feather";
 import VotingPower from "./votingPower";
 
 export default function AllocationAdjustment() {
+  const basketBalancer = useBasketBalancer();
+
+  const { data: hasVotedInEpoch, mutate: hasVotedInEpochMutate } =
+    useHasVotedInEpoch();
+
+  const { data: delta } = useMaxDelta();
+
   const { data: tokenAllocation } = useTokenAllocation();
 
   const { mutate: continuousTokenAllocationMutate } =
@@ -24,6 +31,9 @@ export default function AllocationAdjustment() {
 
   const [inputObject, inputObjectSet] = useState<Record<string, number>>();
 
+  const total =
+    inputObject && Object.values(inputObject).reduce((prev, cur) => prev + cur);
+
   useEffect(() => {
     if (typeof tokenAllocation === "undefined") {
       return;
@@ -36,21 +46,9 @@ export default function AllocationAdjustment() {
     );
   }, [tokenAllocation]);
 
-  console.log(inputObject);
-
-  const { data: hasVotedInEpoch, mutate: hasVotedInEpochMutate } =
-    useHasVotedInEpoch();
-
-  const { data: delta } = useMaxDelta();
-
-  const total =
-    inputObject && Object.values(inputObject).reduce((prev, cur) => prev + cur);
-
   const canUpdate = total === totalAllocation;
 
-  const basketBalancer = useBasketBalancer();
-
-  async function castAdjustedVote() {
+  async function updateAllocationVote() {
     try {
       const tx: TransactionResponse = await basketBalancer.updateAllocationVote(
         Object.keys(inputObject),
@@ -75,24 +73,19 @@ export default function AllocationAdjustment() {
 
         <div className="flex-1">
           <ul className="space-y-4 mb-4">
+            <div>
+              <h2 className="font-medium leading-5">Adjust Token Allocation</h2>
+            </div>
+
             {inputObject &&
               tokenAllocation &&
               tokenAllocation?.map((token) => (
                 <li key={token.address}>
-                  <div className="mb-2">
-                    <p className="font-medium leading-5">{token.symbol}</p>
-                  </div>
-
                   <div className="flex items-start justify-between">
                     <div>
-                      <p>
-                        Current Allocation: <span>{token.allocation}</span>
-                      </p>
+                      <p className="font-medium leading-5">{token.symbol}</p>
 
-                      <p>
-                        New Allocation:{" "}
-                        <span>{inputObject[token.address]}</span>
-                      </p>
+                      <span>{`Current: ${token.allocation}`}</span>
                     </div>
 
                     <div className="flex divide-x">
@@ -115,6 +108,28 @@ export default function AllocationAdjustment() {
                       >
                         <Plus size={20} />
                       </button>
+
+                      <div className="p-2 w-24 border-primary-300 whitespace-nowrap bg-primary flex items-center justify-center">
+                        <input
+                          autoComplete="off"
+                          autoCorrect="off"
+                          inputMode="decimal"
+                          value={inputObject[token.address]}
+                          onChange={(event) =>
+                            inputObjectSet((prev) => {
+                              console.log(event.target.valueAsNumber);
+
+                              return {
+                                ...prev,
+                                [token.address]: Number(event.target.value),
+                              };
+                            })
+                          }
+                          className="hide-number-input-arrows w-full text-center appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
+                          spellCheck="false"
+                          type="number"
+                        />
+                      </div>
 
                       <button
                         className="flex-1 p-2 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
@@ -143,7 +158,7 @@ export default function AllocationAdjustment() {
 
           <div className="space-y-2">
             <button
-              onClick={castAdjustedVote}
+              onClick={updateAllocationVote}
               className={classNames(
                 "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
                 canUpdate && !hasVotedInEpoch

@@ -87,7 +87,7 @@ export default function Lock() {
                 <button
                   onClick={() => lockupPeriod.setValue("365")}
                   type="button"
-                  className="flex-1 py-2 px-3 border-primary-300 rounded-r-md whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
+                  className="flex-1 py-2 px-3 border-primary-300 whitespace-nowrap bg-primary flex focus:outline-none focus:ring-4"
                 >
                   365 Days
                 </button>

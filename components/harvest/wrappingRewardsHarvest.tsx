@@ -1,7 +1,6 @@
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
 import useUserRewardsWrappingRewards, {
   useUserRewardsWrappingRewardsForCurrentEpoch,
 } from "@/hooks/view/useUserRewardsWrappingRewards";
@@ -11,8 +10,6 @@ import { FormEvent } from "react";
 
 export default function WrappingRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
-
-  const { data: epochDates } = useEpochDatesWrappingRewards();
 
   const { data: userRewards, mutate: userRewardsMutate } =
     useUserRewardsWrappingRewards(account);
@@ -45,32 +42,7 @@ export default function WrappingRewardsHarvest() {
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
       <form onSubmit={harvestSOV} className="space-y-4">
         <div className="flex justify-between">
-          <h2 className="font-medium leading-5">Wrapping Rewards In REIGN</h2>
-        </div>
-
-        <div>
-          <p className="font-medium leading-5 mb-4">Time until next epoch</p>
-
-          <p className="text-2xl leading-none font-semibold mb-4">
-            {epochDates?.relative}
-          </p>
-
-          <div
-            aria-label={`${epochDates?.relative} until next epoch`}
-            aria-valuenow={parseFloat(epochDates?.progress.toFixed(2))}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuetext={`${epochDates?.progress.toFixed(2)}%`}
-            role="progressbar"
-            className="w-full"
-          >
-            <div className="h-3 bg-primary rounded overflow-hidden">
-              <div
-                className="h-3 bg-green-500"
-                style={{ width: `${epochDates?.progress.toFixed(2)}%` }}
-              />
-            </div>
-          </div>
+          <h2 className="font-medium leading-5">Deposit Rewards</h2>
         </div>
 
         <div className="flex justify-between items-end">

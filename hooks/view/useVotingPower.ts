@@ -1,12 +1,19 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
+import useBasketBalancer from "../contracts/useBasketBalancer";
 import useReignFacet from "../contracts/useReignFacet";
 import useWeb3Store from "../useWeb3Store";
 
 const getVotingPower =
-  (contract: Contract) => async (_: string, userAddress: string) => {
-    const value: BigNumber = await contract.votingPower(userAddress);
+  (reignFacet: Contract, basketBalancer: Contract) =>
+  async (_: string, userAddress: string) => {
+    const lastEpochEnd = await basketBalancer.lastEpochEnd();
+
+    const value: BigNumber = await reignFacet.votingPowerAtTs(
+      userAddress,
+      lastEpochEnd
+    );
 
     return value;
   };
@@ -14,12 +21,15 @@ const getVotingPower =
 export default function useVotingPower() {
   const account = useWeb3Store((state) => state.account);
 
-  const contract = useReignFacet();
+  const reignFacet = useReignFacet();
 
-  const shouldFetch = !!contract && typeof account === "string";
+  const basketBalancer = useBasketBalancer();
+
+  const shouldFetch =
+    !!reignFacet && !!basketBalancer && typeof account === "string";
 
   return useSWR(
     shouldFetch ? ["VotingPower", account] : null,
-    getVotingPower(contract)
+    getVotingPower(reignFacet, basketBalancer)
   );
 }
