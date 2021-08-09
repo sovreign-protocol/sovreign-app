@@ -2,7 +2,9 @@ import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import { useEpochDatesWrappingRewards } from "@/hooks/view/useEpochDates";
-import { useUserRewardsWrappingRewards } from "@/hooks/view/useUserRewards";
+import useUserRewardsWrappingRewards, {
+  useUserRewardsWrappingRewardsForCurrentEpoch,
+} from "@/hooks/view/useUserRewardsWrappingRewards";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
@@ -14,6 +16,11 @@ export default function WrappingRewardsHarvest() {
 
   const { data: userRewards, mutate: userRewardsMutate } =
     useUserRewardsWrappingRewards(account);
+
+  const {
+    data: userRewardsForCurrentEpoch,
+    mutate: userRewardsForCurrentEpochMutate,
+  } = useUserRewardsWrappingRewardsForCurrentEpoch(account);
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
@@ -28,7 +35,10 @@ export default function WrappingRewardsHarvest() {
       await tx.wait();
 
       userRewardsMutate();
-    } catch (error) {}
+      userRewardsForCurrentEpochMutate();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -78,11 +88,15 @@ export default function WrappingRewardsHarvest() {
             type="submit"
             className={classNames(
               "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-              userRewards && !userRewards?.isZero()
+              userRewardsForCurrentEpoch &&
+                !userRewardsForCurrentEpoch?.isZero()
                 ? "bg-white text-primary"
                 : "bg-primary-300"
             )}
-            disabled={!userRewards || userRewards?.isZero()}
+            disabled={
+              !userRewardsForCurrentEpoch ||
+              userRewardsForCurrentEpoch?.isZero()
+            }
           >
             Harvest Rewards
           </button>

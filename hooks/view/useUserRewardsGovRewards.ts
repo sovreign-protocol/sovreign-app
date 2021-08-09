@@ -1,8 +1,7 @@
-import type { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
 import useGovRewards from "../contracts/useGovRewards";
-import useWrappingRewards from "../contracts/useWrappingRewards";
 
 function getUserRewardsGovRewards(contract: Contract) {
   return async (_: string, userAddress: string) => {
@@ -38,7 +37,7 @@ function getUserRewardsGovRewards(contract: Contract) {
   };
 }
 
-export function useUserRewardsGovRewards(userAddress: string) {
+export default function useUserRewardsGovRewards(userAddress: string) {
   const contract = useGovRewards();
 
   const shouldFetch = !!contract && typeof userAddress === "string";
@@ -49,43 +48,51 @@ export function useUserRewardsGovRewards(userAddress: string) {
   );
 }
 
-function getUserRewardsWrappingRewards(contract: Contract) {
+function getUserRewardsForGovRewardsCurrentEpoch(contract: Contract) {
   return async (_: string, userAddress: string) => {
     const lastEpochHarvested: BigNumber =
       await contract.userLastEpochIdHarvested();
 
-    const epoch: BigNumber = await contract.getCurrentEpoch();
+    const currentEpoch: BigNumber = await contract.getCurrentEpoch();
 
-    const epochsToHarvest = epoch.sub(lastEpochHarvested).toNumber();
+    if (lastEpochHarvested.eq(currentEpoch)) {
+      return BigNumber.from(0);
+    }
+
+    const epochToCheck = currentEpoch.toNumber() - 1;
+
+    if (epochToCheck === 0) {
+      return BigNumber.from(0);
+    }
+
+    if (lastEpochHarvested.toNumber() === epochToCheck) {
+      return BigNumber.from(0);
+    }
 
     const getRewardsForEpoch: BigNumber = await contract.getRewardsForEpoch();
 
-    const epochRewardsArray = await Promise.all(
-      [...new Array(epochsToHarvest)].map(async (_, index) => {
-        const epochToCheck = index + 1;
-
-        const epochStake: BigNumber = await contract.getEpochStake(
-          userAddress,
-          epochToCheck
-        );
-
-        const poolSize: BigNumber = await contract.getPoolSize(epochToCheck);
-
-        return getRewardsForEpoch.mul(epochStake).div(poolSize);
-      })
+    const epochStake: BigNumber = await contract.getEpochStake(
+      userAddress,
+      epochToCheck
     );
 
-    return epochRewardsArray.reduce((prev, cur) => prev.add(cur));
+    const epochStart: BigNumber = await contract.epochStart();
+
+    const epochTimestamp = epochStart.toNumber() + 604800 * epochToCheck;
+
+    const poolSize: BigNumber = await contract.getPoolSize(epochTimestamp);
+
+    return getRewardsForEpoch.mul(epochStake).div(poolSize);
   };
 }
 
-export function useUserRewardsWrappingRewards(userAddress: string) {
-  const contract = useWrappingRewards();
+export function useUserRewardsGovRewardsForCurrentEpoch(userAddress: string) {
+  const contract = useGovRewards();
 
   const shouldFetch = !!contract && typeof userAddress === "string";
 
   return useSWR(
-    shouldFetch ? ["UserRewardsWrappingRewards", userAddress] : null,
-    getUserRewardsWrappingRewards(contract)
+    shouldFetch ? ["UserRewardsGovRewardsForCurrentEpoch", userAddress] : null,
+    getUserRewardsForGovRewardsCurrentEpoch(contract)
   );
 }
