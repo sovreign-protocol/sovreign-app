@@ -18,6 +18,12 @@ export default function Lock() {
   const { data: userLockedUntil, mutate: userLockedUntilMutate } =
     useUserLockedUntil();
 
+  const isLockupPeriodAfterCurrentLockedTimestamp = useMemo(() => {
+    const newLockupPeriod = dayjs().add(Number(lockupPeriod.value) - 1, "days");
+
+    return newLockupPeriod.isAfter(dayjs.unix(userLockedUntil.timestamp));
+  }, [userLockedUntil, lockupPeriod.value]);
+
   async function lockReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -175,12 +181,16 @@ export default function Lock() {
             <button
               className={classNames(
                 "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-                !userLockedUntil?.isLocked && lockupPeriod.hasValue
+                isLockupPeriodAfterCurrentLockedTimestamp &&
+                  lockupPeriod.hasValue
                   ? "bg-white text-primary"
                   : "bg-primary-300"
               )}
               type="submit"
-              disabled={!lockupPeriod.hasValue || userLockedUntil?.isLocked}
+              disabled={
+                !lockupPeriod.hasValue ||
+                !isLockupPeriodAfterCurrentLockedTimestamp
+              }
             >
               {lockupPeriod.hasValue
                 ? "Lock up stake"
