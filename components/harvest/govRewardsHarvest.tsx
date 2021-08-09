@@ -64,7 +64,7 @@ export default function GovRewardsHarvest() {
         </div>
 
         <div className="flex justify-between items-end">
-          <p className="leading-none">Available Rewards</p>
+          <p className="leading-none">Potential Rewards</p>
 
           <p className="text-2xl leading-none font-semibold">
             {`${fmUserRewards} REIGN`}
