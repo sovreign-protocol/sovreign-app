@@ -119,7 +119,7 @@ export default function AllocationAdjustment() {
                             <Plus size={20} />
                           </button>
 
-                          <div className="p-2 w-16 border-primary-300 whitespace-nowrap bg-primary flex items-center justify-center leading-5">
+                          <div className="p-2 w-16 border-primary-300 whitespace-nowrap bg-primary flex items-center justify-center leading-5 focus-within:ring-4">
                             <input
                               autoComplete="off"
                               autoCorrect="off"
@@ -166,6 +166,16 @@ export default function AllocationAdjustment() {
                     </li>
                   );
                 })}
+
+              <li className="border-primary-300 pb-4 pt-4">
+                <div className="flex justify-between items-end">
+                  <p className="leading-none">Total Allocation</p>
+
+                  <div className="text-2xl leading-none font-semibold">
+                    {totalAllocation ? total : "..."}
+                  </div>
+                </div>
+              </li>
             </ul>
           </div>
 
@@ -180,7 +190,11 @@ export default function AllocationAdjustment() {
               )}
               disabled={!canUpdate || hasVotedInEpoch}
             >
-              Cast Vote
+              {hasVotedInEpoch
+                ? "Vote already cast"
+                : canUpdate
+                ? "Cast vote"
+                : `Total allocation must equal ${totalAllocation}`}
             </button>
           </div>
         </form>
