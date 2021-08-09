@@ -5,7 +5,6 @@ import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
@@ -53,8 +52,6 @@ export default function WithdrawStake() {
   const formattedReignBalance = useFormattedBigNumber(reignBalance);
 
   const formattedReignStaked = useFormattedBigNumber(reignStaked);
-
-  const { data: isStakeLocked } = useUserLockedUntil();
 
   return (
     <form method="POST" onSubmit={withdrawReign} className="space-y-4">
@@ -124,14 +121,10 @@ export default function WithdrawStake() {
           "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
           withdrawInput.hasValue ? "bg-white text-primary" : "bg-primary-300"
         )}
-        disabled={!withdrawInput.hasValue && !isStakeLocked?.isLocked}
+        disabled={!withdrawInput.hasValue}
         type="submit"
       >
-        {isStakeLocked?.isLocked
-          ? `Withdraws disabled for ${dayjs(isStakeLocked.timestamp).fromNow()}`
-          : withdrawInput.hasValue
-          ? "Withdraw"
-          : "Enter an amount"}
+        {withdrawInput.hasValue ? "Withdraw" : "Enter an amount"}
       </button>
     </form>
   );
