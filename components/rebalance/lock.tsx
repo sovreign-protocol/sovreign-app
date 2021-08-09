@@ -163,7 +163,10 @@ export default function Lock() {
                   Currently Locked Until
                 </p>
 
-                <p className="leading-none">{userLockedUntil.formatted}</p>
+                <p className="leading-none">
+                  <span>{userLockedUntil.formatted}</span>{" "}
+                  <span>({`${userLockedUntil.multiplier}x`})</span>
+                </p>
               </div>
             </div>
           )}
