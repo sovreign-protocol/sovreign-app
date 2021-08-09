@@ -1,11 +1,10 @@
 import { EPOCH_DURATION } from "@/constants";
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
-import useSWR from "swr";
-import useGovRewards from "../contracts/useGovRewards";
-import useWrappingRewards from "../contracts/useWrappingRewards";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import useSWR from "swr";
+import useGovRewards from "../contracts/useGovRewards";
 
 dayjs.extend(relativeTime);
 
@@ -33,24 +32,10 @@ function getEpochDates(contract: Contract) {
   };
 }
 
-export function useEpochDatesGovRewards() {
+export default function useEpochDates() {
   const contract = useGovRewards();
 
   const shouldFetch = !!contract;
 
-  return useSWR(
-    shouldFetch ? ["EpochDGovRewards"] : null,
-    getEpochDates(contract)
-  );
-}
-
-export function useEpochDatesWrappingRewards() {
-  const contract = useWrappingRewards();
-
-  const shouldFetch = !!contract;
-
-  return useSWR(
-    shouldFetch ? ["EpochDWrappingRewards"] : null,
-    getEpochDates(contract)
-  );
+  return useSWR(shouldFetch ? ["EpochDates"] : null, getEpochDates(contract));
 }
