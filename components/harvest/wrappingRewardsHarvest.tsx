@@ -7,9 +7,12 @@ import useUserRewardsWrappingRewards, {
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
+import toast from "react-hot-toast";
 
 export default function WrappingRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
+
+  const wrappingRewards = useWrappingRewards();
 
   const { data: userRewards, mutate: userRewardsMutate } =
     useUserRewardsWrappingRewards(account);
@@ -21,27 +24,39 @@ export default function WrappingRewardsHarvest() {
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
-  const wrappingRewards = useWrappingRewards();
-
-  async function harvestSOV(event: FormEvent<HTMLFormElement>) {
+  async function harvestWrappingRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
 
     try {
       const transaction: TransactionResponse =
         await wrappingRewards.massHarvest();
 
+      toast.loading(`Harvest ${fmUserRewards} REIGN`, { id: _id });
+
       await transaction.wait();
+
+      toast.success(`Harvest ${fmUserRewards} REIGN`, { id: _id });
 
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <form onSubmit={harvestSOV} className="space-y-4">
+      <form onSubmit={harvestWrappingRewards} className="space-y-4">
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">Deposit Rewards</h2>
         </div>

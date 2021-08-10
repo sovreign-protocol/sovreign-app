@@ -7,9 +7,12 @@ import useUserRewardsGovRewards, {
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
+import toast from "react-hot-toast";
 
 export default function GovRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
+
+  const govRewards = useGovRewards();
 
   const { data: userRewards, mutate: userRewardsMutate } =
     useUserRewardsGovRewards(account);
@@ -21,26 +24,38 @@ export default function GovRewardsHarvest() {
 
   const fmUserRewards = useFormattedBigNumber(userRewards);
 
-  const govRewards = useGovRewards();
-
-  async function harvestREIGN(event: FormEvent<HTMLFormElement>) {
+  async function harvestGovRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
 
     try {
       const transaction: TransactionResponse = await govRewards.massHarvest();
 
+      toast.loading(`Harvest ${fmUserRewards} REIGN`, { id: _id });
+
       await transaction.wait();
+
+      toast.success(`Harvest ${fmUserRewards} REIGN`, { id: _id });
 
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <form className="space-y-4" onSubmit={harvestREIGN}>
+      <form className="space-y-4" onSubmit={harvestGovRewards}>
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">Governance Rewards</h2>
         </div>
