@@ -66,7 +66,7 @@ export default function Withdraw() {
         throw new Error("You Don't Have Enough SOV To Make This Withdrawal");
       }
 
-      const tx: TransactionResponse = await poolRouter.withdraw(
+      const transaction: TransactionResponse = await poolRouter.withdraw(
         withdrawToken.address,
         poolAmountIn,
         /**
@@ -80,7 +80,7 @@ export default function Withdraw() {
         { id: _id }
       );
 
-      await tx.wait();
+      await transaction.wait();
 
       toast.success(
         `Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`,
@@ -105,14 +105,14 @@ export default function Withdraw() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const tx: TransactionResponse = await sovContract.approve(
+      const transaction: TransactionResponse = await sovContract.approve(
         CONTRACT_ADDRESSES.PoolRouter[chainId],
         MaxUint256
       );
 
       toast.loading(`Approve SOV`, { id: _id });
 
-      await tx.wait();
+      await transaction.wait();
 
       toast.success(`Approve SOV`, { id: _id });
 

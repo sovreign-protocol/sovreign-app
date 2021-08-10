@@ -27,9 +27,10 @@ export default function WrappingRewardsHarvest() {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await wrappingRewards.massHarvest();
+      const transaction: TransactionResponse =
+        await wrappingRewards.massHarvest();
 
-      await tx.wait();
+      await transaction.wait();
 
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();

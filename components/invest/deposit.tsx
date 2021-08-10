@@ -90,7 +90,7 @@ export default function Deposit() {
         .mul(100 - Number(slippage))
         .div(100);
 
-      const tx: TransactionResponse = await poolRouter.deposit(
+      const transaction: TransactionResponse = await poolRouter.deposit(
         depositToken.address,
         depositAmount,
         minPoolAmountOut,
@@ -102,7 +102,7 @@ export default function Deposit() {
         { id: _id }
       );
 
-      await tx.wait();
+      await transaction.wait();
 
       toast.success(
         `Deposit ${values.depositAmount.value} ${depositToken.symbol}`,
@@ -128,14 +128,15 @@ export default function Deposit() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const tx: TransactionResponse = await depositTokenContract.approve(
-        CONTRACT_ADDRESSES.PoolRouter[chainId],
-        MaxUint256
-      );
+      const transaction: TransactionResponse =
+        await depositTokenContract.approve(
+          CONTRACT_ADDRESSES.PoolRouter[chainId],
+          MaxUint256
+        );
 
       toast.loading(`Approve ${depositToken.symbol}`, { id: _id });
 
-      await tx.wait();
+      await transaction.wait();
 
       toast.success(`Approve ${depositToken.symbol}`, { id: _id });
 

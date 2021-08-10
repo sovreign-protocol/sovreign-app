@@ -51,12 +51,13 @@ export default function AllocationAdjustment() {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await basketBalancer.updateAllocationVote(
-        Object.keys(inputObject),
-        Object.values(inputObject).map((el) => parseUnits(el.toString()))
-      );
+      const transaction: TransactionResponse =
+        await basketBalancer.updateAllocationVote(
+          Object.keys(inputObject),
+          Object.values(inputObject).map((el) => parseUnits(el.toString()))
+        );
 
-      await tx.wait();
+      await transaction.wait();
 
       hasVotedInEpochMutate();
       continuousTokenAllocationMutate();

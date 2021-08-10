@@ -35,11 +35,11 @@ export default function WithdrawStake() {
     try {
       const amountToWithdraw = parseUnits(withdrawInput.value);
 
-      const tx: TransactionResponse = await reignFacet.withdraw(
+      const transaction: TransactionResponse = await reignFacet.withdraw(
         amountToWithdraw
       );
 
-      await tx.wait();
+      await transaction.wait();
 
       reignStakedMutate();
 

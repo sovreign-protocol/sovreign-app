@@ -27,9 +27,9 @@ export default function GovRewardsHarvest() {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await govRewards.massHarvest();
+      const transaction: TransactionResponse = await govRewards.massHarvest();
 
-      await tx.wait();
+      await transaction.wait();
 
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();

@@ -33,11 +33,11 @@ export default function DepositStake() {
     event.preventDefault();
 
     try {
-      const tx: TransactionResponse = await reignFacet.deposit(
+      const transaction: TransactionResponse = await reignFacet.deposit(
         parseUnits(depositInput.value)
       );
 
-      await tx.wait();
+      await transaction.wait();
 
       reignStakedMutate();
 
@@ -54,12 +54,12 @@ export default function DepositStake() {
 
   async function approveReign() {
     try {
-      const tx: TransactionResponse = await reignContract.approve(
+      const transaction: TransactionResponse = await reignContract.approve(
         CONTRACT_ADDRESSES.ReignFacet[chainId],
         MaxUint256
       );
 
-      await tx.wait();
+      await transaction.wait();
 
       reignAllowanceMutate();
     } catch (error) {
