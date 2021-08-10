@@ -118,6 +118,18 @@ export function Account() {
           </Menu.Item>
           <Menu.Item>
             {({ active }) => (
+              <a
+                href="https://discord.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(menuItemClassNames, active && "bg-primary-300")}
+              >
+                Discord
+              </a>
+            )}
+          </Menu.Item>
+          <Menu.Item>
+            {({ active }) => (
               <button
                 onClick={disconnect}
                 className={cn(menuItemClassNames, active && "bg-primary-300")}
