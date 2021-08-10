@@ -11,6 +11,8 @@ import { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import { FormEvent, useMemo } from "react";
+import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 export default function DepositStake() {
   const account = useWeb3Store((state) => state.account);
@@ -23,7 +25,7 @@ export default function DepositStake() {
     TOKEN_ADDRESSES.REIGN[chainId]
   );
 
-  const { data: reignStaked, mutate: reignStakedMutate } = useReignStaked();
+  const { mutate: reignStakedMutate } = useReignStaked();
 
   const formattedReignBalance = useFormattedBigNumber(reignBalance);
 
@@ -32,18 +34,45 @@ export default function DepositStake() {
   async function depositReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const transaction: TransactionResponse = await reignFacet.deposit(
         parseUnits(depositInput.value)
       );
 
+      toast.loading(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Deposit ${depositInput.value} REIGN`}
+        />,
+        { id: _id }
+      );
+
       await transaction.wait();
 
-      reignStakedMutate();
+      toast.success(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Deposit ${depositInput.value} REIGN`}
+        />,
+        { id: _id }
+      );
 
+      reignStakedMutate();
       reignBalanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
@@ -53,17 +82,31 @@ export default function DepositStake() {
     useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
 
   async function approveReign() {
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const transaction: TransactionResponse = await reignContract.approve(
         CONTRACT_ADDRESSES.ReignFacet[chainId],
         MaxUint256
       );
 
+      toast.loading(`Approve REIGN`, { id: _id });
+
       await transaction.wait();
+
+      toast.success(`Approve REIGN`, { id: _id });
 
       reignAllowanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 

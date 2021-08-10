@@ -13,6 +13,7 @@ import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Withdraw() {
@@ -76,14 +77,22 @@ export default function Withdraw() {
       );
 
       toast.loading(
-        `Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`,
+        <TransactionToast
+          message={`Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
         { id: _id }
       );
 
       await transaction.wait();
 
       toast.success(
-        `Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`,
+        <TransactionToast
+          message={`Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
         { id: _id }
       );
 

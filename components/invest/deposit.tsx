@@ -17,6 +17,7 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
 import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Deposit() {
@@ -98,14 +99,22 @@ export default function Deposit() {
       );
 
       toast.loading(
-        `Deposit ${values.depositAmount.value} ${depositToken.symbol}`,
+        <TransactionToast
+          message={`Deposit ${values.depositAmount.value} ${depositToken.symbol}`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
         { id: _id }
       );
 
       await transaction.wait();
 
       toast.success(
-        `Deposit ${values.depositAmount.value} ${depositToken.symbol}`,
+        <TransactionToast
+          message={`Deposit ${values.depositAmount.value} ${depositToken.symbol}`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
         { id: _id }
       );
 

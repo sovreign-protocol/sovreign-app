@@ -11,6 +11,8 @@ import classNames from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { FormEvent } from "react";
+import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 dayjs.extend(relativeTime);
 
@@ -32,6 +34,8 @@ export default function WithdrawStake() {
   async function withdrawReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const amountToWithdraw = parseUnits(withdrawInput.value);
 
@@ -39,13 +43,38 @@ export default function WithdrawStake() {
         amountToWithdraw
       );
 
+      toast.loading(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Withdraw ${withdrawInput.value} REIGN`}
+        />,
+        { id: _id }
+      );
+
       await transaction.wait();
 
-      reignStakedMutate();
+      toast.success(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Withdraw ${withdrawInput.value} REIGN`}
+        />,
+        { id: _id }
+      );
 
+      reignStakedMutate();
       reignBalanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 

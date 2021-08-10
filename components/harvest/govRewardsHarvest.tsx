@@ -8,9 +8,11 @@ import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import { FormEvent } from "react";
 import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 export default function GovRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
+  const chainId = useWeb3Store((state) => state.chainId);
 
   const govRewards = useGovRewards();
 
@@ -32,11 +34,25 @@ export default function GovRewardsHarvest() {
     try {
       const transaction: TransactionResponse = await govRewards.massHarvest();
 
-      toast.loading(`Harvest ${fmUserRewards} REIGN`, { id: _id });
+      toast.loading(
+        <TransactionToast
+          message={`Harvest ${fmUserRewards} REIGN`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
+        { id: _id }
+      );
 
       await transaction.wait();
 
-      toast.success(`Harvest ${fmUserRewards} REIGN`, { id: _id });
+      toast.success(
+        <TransactionToast
+          message={`Harvest ${fmUserRewards} REIGN`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
+        { id: _id }
+      );
 
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();
