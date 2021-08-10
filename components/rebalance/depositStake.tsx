@@ -112,7 +112,7 @@ export default function DepositStake() {
           <input
             autoComplete="off"
             autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono"
+            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
             inputMode="decimal"
             maxLength={79}
             minLength={1}
@@ -122,7 +122,7 @@ export default function DepositStake() {
             pattern="^[0-9]*[.,]?[0-9]*$"
             placeholder="0.0"
             spellCheck="false"
-            type="text"
+            type="number"
             {...depositInput.eventBind}
           />
         </div>
