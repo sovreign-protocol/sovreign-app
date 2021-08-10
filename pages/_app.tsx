@@ -13,7 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Sovreign</title>
         <meta name="description" content="The future-looking SDR" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Navigation />
