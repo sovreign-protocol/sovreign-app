@@ -22,28 +22,28 @@ export default function VotingPower() {
   const fmTotal = useFormattedBigNumber(votingPower?.total, 0);
 
   return (
-    <div className="space-y-4">
-      <div>
+    <>
+      <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
         <h2 className="font-medium leading-5 mb-4">Current Voting Power</h2>
 
         <p className="text-2xl leading-none font-semibold">
-          {fmCurrentVotingPower} <span className="text-gray-500">/</span>{" "}
+          {fmCurrentVotingPower} <span className="text-gray-500">/</span>
+          <br />
           <span className="text-lg leading-none">{`${fmTotal} votes`}</span>
         </p>
       </div>
 
-      <div className="h-px w-full bg-primary-300" />
-
-      <div>
+      <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
         <h2 className="font-medium leading-5 mb-4">
           Voting Power At Last Epoch
         </h2>
 
         <p className="text-2xl leading-none font-semibold">
-          {fmVotingPowerAtLastEpoch} <span className="text-gray-500">/</span>{" "}
+          {fmVotingPowerAtLastEpoch} <span className="text-gray-500">/</span>
+          <br />
           <span className="text-lg leading-none">{`${fmTotalAtLastEpoch} votes`}</span>
         </p>
       </div>
-    </div>
+    </>
   );
 }

@@ -284,6 +284,7 @@ export default function Deposit() {
             placeholder="0.0"
             spellCheck="false"
             type="number"
+            step={0.0001}
             {...depositAmountInput.eventBind}
           />
         </div>

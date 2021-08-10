@@ -95,12 +95,19 @@ export default function AllocationAdjustment() {
 
   return (
     <form method="POST" onSubmit={updateAllocationVote} className="flex-1">
-      <div className="mb-4">
+      <div className="flex justify-between items-start mb-4">
         <h2 className="font-medium leading-5">Adjust Token Allocation</h2>
+
+        <p className="leading-none text-right">
+          <span className="font-semibold">Total Allocation:</span>{" "}
+          <span>
+            {totalAllocation ? `${total} / ${totalAllocation}` : "..."}
+          </span>
+        </p>
       </div>
 
       <div className="mb-4">
-        <ul className="space-y-4">
+        <ul className="grid grid-cols-2 gap-4">
           {inputObject &&
             tokenAllocation &&
             tokenAllocation?.map((token) => {
@@ -196,16 +203,6 @@ export default function AllocationAdjustment() {
                 </li>
               );
             })}
-
-          <li>
-            <div className="flex justify-between items-end">
-              <p className="leading-none  font-semibold">Total Allocation</p>
-
-              <div className="leading-none">
-                {totalAllocation ? total : "..."}
-              </div>
-            </div>
-          </li>
         </ul>
       </div>
 
