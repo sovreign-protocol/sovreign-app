@@ -8,12 +8,12 @@ import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import hasValue from "@/utils/hasValue";
-import parseError from "@/utils/parseError";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
 import classNames from "classnames";
+import { errorCodes, getMessageFromCode, serializeError } from "eth-rpc-errors";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
@@ -122,17 +122,19 @@ export default function Deposit() {
       sovBalanceMutate();
       depositTokenBalanceMutate();
     } catch (error) {
-      console.error(error);
+      const _error = serializeError(error);
 
-      const { message, code } = parseError(error);
+      console.error(_error);
 
-      if (code === 4001) {
+      if (_error.code === errorCodes.provider.userRejectedRequest) {
         toast.dismiss(_id);
 
         return;
       }
 
-      toast.error(message, { id: _id });
+      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
+        id: _id,
+      });
     }
   }
 
@@ -154,15 +156,19 @@ export default function Deposit() {
 
       depositTokenAllowanceMutate();
     } catch (error) {
-      console.error(error);
+      const _error = serializeError(error);
 
-      if (error?.code === 4001) {
+      console.error(_error);
+
+      if (_error.code === errorCodes.provider.userRejectedRequest) {
         toast.dismiss(_id);
 
         return;
       }
 
-      toast.error(error.message, { id: _id });
+      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
+        id: _id,
+      });
     }
   }
 

@@ -10,6 +10,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
+import { errorCodes, getMessageFromCode, serializeError } from "eth-rpc-errors";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -98,15 +99,19 @@ export default function Withdraw() {
 
       sovBalanceMutate();
     } catch (error) {
-      console.error(error);
+      const _error = serializeError(error);
 
-      if (error?.code === 4001) {
+      console.error(_error);
+
+      if (_error.code === errorCodes.provider.userRejectedRequest) {
         toast.dismiss(_id);
 
         return;
       }
 
-      toast.error(error.message, { id: _id });
+      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
+        id: _id,
+      });
     }
   }
 
@@ -127,15 +132,19 @@ export default function Withdraw() {
 
       sovAllowanceMutate();
     } catch (error) {
-      console.error(error);
+      const _error = serializeError(error);
 
-      if (error?.code === 4001) {
+      console.error(_error);
+
+      if (_error.code === errorCodes.provider.userRejectedRequest) {
         toast.dismiss(_id);
 
         return;
       }
 
-      toast.error(error.message, { id: _id });
+      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
+        id: _id,
+      });
     }
   }
 
