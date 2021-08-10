@@ -4,9 +4,10 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useUserRewardsWrappingRewards, {
   useUserRewardsWrappingRewardsForCurrentEpoch,
 } from "@/hooks/view/useUserRewardsWrappingRewards";
+import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
-import { FormEvent } from "react";
+import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 
@@ -58,15 +59,7 @@ export default function WrappingRewardsHarvest() {
       userRewardsMutate();
       userRewardsForCurrentEpochMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 

@@ -5,12 +5,13 @@ import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import { TransactionResponse } from "@ethersproject/providers";
+import handleError from "@/utils/handleError";
+import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { FormEvent } from "react";
+import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 
@@ -66,15 +67,7 @@ export default function WithdrawStake() {
       reignStakedMutate();
       reignBalanceMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 

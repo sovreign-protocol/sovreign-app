@@ -3,6 +3,7 @@ import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
+import handleError from "@/utils/handleError";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import * as Slider from "@radix-ui/react-slider";
@@ -77,15 +78,7 @@ export default function Lock() {
 
       userLockedUntilMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 

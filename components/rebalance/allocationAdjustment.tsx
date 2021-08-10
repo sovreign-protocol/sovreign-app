@@ -4,10 +4,12 @@ import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocat
 import useHasVotedInEpoch from "@/hooks/view/useHasVotedInEpoch";
 import useMaxDelta from "@/hooks/view/useMaxDelta";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
+import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { Minus, Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
@@ -87,15 +89,7 @@ export default function AllocationAdjustment() {
       hasVotedInEpochMutate();
       continuousTokenAllocationMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 

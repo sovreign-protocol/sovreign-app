@@ -7,10 +7,12 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import { useTokenAllowanceForReignFacet } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import { TransactionResponse } from "@ethersproject/providers";
+import handleError from "@/utils/handleError";
+import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
-import { FormEvent, useMemo } from "react";
+import type { FormEvent } from "react";
+import { useMemo } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 
@@ -64,15 +66,7 @@ export default function DepositStake() {
       reignStakedMutate();
       reignBalanceMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 
@@ -98,15 +92,7 @@ export default function DepositStake() {
 
       reignAllowanceMutate();
     } catch (error) {
-      console.error(error);
-
-      if (error?.code === 4001) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(error.message, { id: _id });
+      handleError(error, _id);
     }
   }
 
