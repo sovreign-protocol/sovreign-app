@@ -4,7 +4,7 @@ import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocat
 import useHasVotedInEpoch from "@/hooks/view/useHasVotedInEpoch";
 import useMaxDelta from "@/hooks/view/useMaxDelta";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
-import { TransactionResponse } from "@ethersproject/providers";
+import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import { FormEvent, useEffect, useState } from "react";

@@ -8,6 +8,7 @@ import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import hasValue from "@/utils/hasValue";
+import parseError from "@/utils/parseError";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
@@ -123,13 +124,15 @@ export default function Deposit() {
     } catch (error) {
       console.error(error);
 
-      if (error?.code === 4001) {
+      const { message, code } = parseError(error);
+
+      if (code === 4001) {
         toast.dismiss(_id);
 
         return;
       }
 
-      toast.error(error.message, { id: _id });
+      toast.error(message, { id: _id });
     }
   }
 
