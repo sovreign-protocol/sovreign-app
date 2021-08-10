@@ -10,6 +10,9 @@ module.exports = {
           400: "#181b2c",
           300: "#303342",
         },
+        network: {
+          rinkeby: "#f6c343",
+        },
       },
     },
   },

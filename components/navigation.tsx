@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
+import NetworkIndicator from "./network";
 import { Account } from "./web3";
 
 function NavigationItem({ text, href }: { text: string; href: string }) {
@@ -58,7 +59,8 @@ export default function Navigation() {
           </ul>
         </li>
 
-        <li className="flex-1">
+        <li className="flex-1 flex justify-end space-x-4">
+          <NetworkIndicator />
           <Account />
         </li>
       </ul>
