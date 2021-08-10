@@ -1,5 +1,6 @@
 import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useInput from "@/hooks/useInput";
+import useWeb3Store from "@/hooks/useWeb3Store";
 import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -7,10 +8,13 @@ import type { TransactionResponse } from "@ethersproject/providers";
 import * as Slider from "@radix-ui/react-slider";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { FormEvent, useMemo, useState } from "react";
-import { Settings } from "react-feather";
+import { FormEvent, useMemo } from "react";
+import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 export default function Lock() {
+  const chainId = useWeb3Store((state) => state.chainId);
+
   const lockupPeriod = useInput("1");
 
   const reignFacet = useReignFacet();
@@ -31,6 +35,8 @@ export default function Lock() {
   async function lockReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const days = Number(lockupPeriod.value);
 
@@ -49,20 +55,43 @@ export default function Lock() {
         BigNumber.from(futureTimestamp)
       );
 
+      toast.loading(
+        <TransactionToast
+          message={`Lock Stake For ${days} Days`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
+        { id: _id }
+      );
+
       await transaction.wait();
+
+      toast.success(
+        <TransactionToast
+          message={`Lock Stake For ${days} Days`}
+          chainId={chainId}
+          hash={transaction.hash}
+        />,
+        { id: _id }
+      );
 
       userLockedUntilMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
   const multiplier = useMemo(() => {
     return ((Number(lockupPeriod.value) / (365 * 2)) * 0.5 + 1).toFixed(2);
   }, [lockupPeriod.value]);
-
-  const [showInput, showInputSet] = useState(false);
-  const toggleInput = () => showInputSet(!showInput);
 
   return (
     <div className="bg-primary-400 rounded-xl p-4 focus:outline-none ring-1 ring-inset ring-white ring-opacity-10 focus:ring-opacity-20">

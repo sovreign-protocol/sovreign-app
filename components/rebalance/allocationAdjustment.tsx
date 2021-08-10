@@ -1,4 +1,5 @@
 import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
+import useWeb3Store from "@/hooks/useWeb3Store";
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useHasVotedInEpoch from "@/hooks/view/useHasVotedInEpoch";
 import useMaxDelta from "@/hooks/view/useMaxDelta";
@@ -8,8 +9,12 @@ import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import { FormEvent, useEffect, useState } from "react";
 import { Minus, Plus } from "react-feather";
+import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 export default function AllocationAdjustment() {
+  const chainId = useWeb3Store((state) => state.chainId);
+
   const basketBalancer = useBasketBalancer();
 
   const { data: hasVotedInEpoch, mutate: hasVotedInEpochMutate } =
@@ -50,6 +55,8 @@ export default function AllocationAdjustment() {
   async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const transaction: TransactionResponse =
         await basketBalancer.updateAllocationVote(
@@ -57,12 +64,38 @@ export default function AllocationAdjustment() {
           Object.values(inputObject).map((el) => parseUnits(el.toString()))
         );
 
+      toast.loading(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Update Token Allocation Vote`}
+        />,
+        { id: _id }
+      );
+
       await transaction.wait();
+
+      toast.success(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Update Token Allocation Vote`}
+        />,
+        { id: _id }
+      );
 
       hasVotedInEpochMutate();
       continuousTokenAllocationMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
