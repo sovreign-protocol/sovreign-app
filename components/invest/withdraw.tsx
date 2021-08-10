@@ -1,11 +1,9 @@
 import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
-// import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
-// import useMaxWithdraw from "@/hooks/view/useMaxWithdraw";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import type { BigNumber } from "@ethersproject/bignumber";
@@ -14,6 +12,7 @@ import { parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Withdraw() {
@@ -37,8 +36,18 @@ export default function Withdraw() {
 
   const withdrawAmountInput = useInput();
 
+  const sovNeedsApproval = useMemo(() => {
+    if (!!sovAllowance && withdrawAmountInput.hasValue) {
+      return sovAllowance.lt(parseUnits(withdrawAmountInput.value));
+    }
+
+    return;
+  }, [sovAllowance, withdrawAmountInput.hasValue, withdrawAmountInput.value]);
+
   async function tokenWithdraw(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
 
     const values = event.target as typeof event.target & {
       "withdraw-amount": { value: string };
@@ -66,40 +75,60 @@ export default function Withdraw() {
         minAmountOut.mul(99).div(100)
       );
 
+      toast.loading(
+        `Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`,
+        { id: _id }
+      );
+
       await tx.wait();
 
-      await sovBalanceMutate();
+      toast.success(
+        `Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`,
+        { id: _id }
+      );
+
+      sovBalanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
   async function approveSOV() {
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const tx: TransactionResponse = await sovContract.approve(
         CONTRACT_ADDRESSES.PoolRouter[chainId],
         MaxUint256
       );
 
+      toast.loading(`Approve SOV`, { id: _id });
+
       await tx.wait();
 
-      await sovAllowanceMutate();
+      toast.success(`Approve SOV`, { id: _id });
+
+      sovAllowanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
-
-  const sovNeedsApproval = useMemo(() => {
-    if (!!sovAllowance && withdrawAmountInput.hasValue) {
-      return sovAllowance.lt(parseUnits(withdrawAmountInput.value));
-    }
-
-    return;
-  }, [sovAllowance, withdrawAmountInput.hasValue, withdrawAmountInput.value]);
-
-  // const { data: maxWithdraw } = useMaxWithdraw(withdrawToken?.address);
-
-  // const formattedMaxWithdraw = useFormattedBigNumber(maxWithdraw);
 
   return (
     <form className="space-y-4" onSubmit={tokenWithdraw}>
@@ -116,12 +145,6 @@ export default function Withdraw() {
               tokens={poolTokens}
             />
           </div>
-
-          {/* <p className="text-sm text-gray-300 h-5">
-            {!!withdrawToken && maxWithdraw && formattedMaxWithdraw ? (
-              <span>{`Amount Withdrawable: ${formattedMaxWithdraw} ${withdrawToken?.symbol}`}</span>
-            ) : null}
-          </p> */}
 
           <div className="h-5" />
         </div>

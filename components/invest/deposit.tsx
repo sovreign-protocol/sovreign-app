@@ -16,6 +16,7 @@ import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
+import toast from "react-hot-toast";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Deposit() {
@@ -42,22 +43,24 @@ export default function Deposit() {
 
   const depositAmountInput = useInput();
 
-  async function getMinPoolAmountOut(
-    tokenAddress: string,
-    amountToDeposit: BigNumber,
-    slippage: string
-  ) {
-    const poolAmountOut: BigNumber = await poolRouter.getSovAmountOutSingle(
-      tokenAddress,
-      amountToDeposit,
-      slippage
-    );
+  const depositTokenNeedsApproval = useMemo(() => {
+    if (!!depositTokenAllowance && depositAmountInput.hasValue) {
+      return depositTokenAllowance.lt(parseUnits(depositAmountInput.value));
+    }
 
-    return poolAmountOut.mul(100 - Number(slippage)).div(100);
-  }
+    return;
+  }, [
+    depositTokenAllowance,
+    depositAmountInput.hasValue,
+    depositAmountInput.value,
+  ]);
+
+  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 
   async function tokenDeposit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
 
     const values = event.target as typeof event.target & {
       depositAmount: { value: string };
@@ -76,11 +79,16 @@ export default function Deposit() {
         ? values.slippage.value
         : "1";
 
-      const minPoolAmountOut = await getMinPoolAmountOut(
-        depositToken.address,
-        depositAmount,
-        slippage
-      );
+      const sovAmountOutSingle: BigNumber =
+        await poolRouter.getSovAmountOutSingle(
+          depositToken.address,
+          depositAmount,
+          slippage
+        );
+
+      const minPoolAmountOut = sovAmountOutSingle
+        .mul(100 - Number(slippage))
+        .div(100);
 
       const tx: TransactionResponse = await poolRouter.deposit(
         depositToken.address,
@@ -89,44 +97,61 @@ export default function Deposit() {
         liquidationFee
       );
 
+      toast.loading(
+        `Deposit ${values.depositAmount.value} ${depositToken.symbol}`,
+        { id: _id }
+      );
+
       await tx.wait();
 
-      await sovBalanceMutate();
+      toast.success(
+        `Deposit ${values.depositAmount.value} ${depositToken.symbol}`,
+        { id: _id }
+      );
 
-      await depositTokenBalanceMutate();
+      sovBalanceMutate();
+      depositTokenBalanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
 
   async function approveDepositToken() {
+    const _id = toast.loading("Waiting for confirmation");
+
     try {
       const tx: TransactionResponse = await depositTokenContract.approve(
         CONTRACT_ADDRESSES.PoolRouter[chainId],
         MaxUint256
       );
 
+      toast.loading(`Approve ${depositToken.symbol}`, { id: _id });
+
       await tx.wait();
 
-      await depositTokenAllowanceMutate();
+      toast.success(`Approve ${depositToken.symbol}`, { id: _id });
+
+      depositTokenAllowanceMutate();
     } catch (error) {
       console.error(error);
+
+      if (error?.code === 4001) {
+        toast.dismiss(_id);
+
+        return;
+      }
+
+      toast.error(error.message, { id: _id });
     }
   }
-
-  const depositTokenNeedsApproval = useMemo(() => {
-    if (!!depositTokenAllowance && depositAmountInput.hasValue) {
-      return depositTokenAllowance.lt(parseUnits(depositAmountInput.value));
-    }
-
-    return;
-  }, [
-    depositTokenAllowance,
-    depositAmountInput.hasValue,
-    depositAmountInput.value,
-  ]);
-
-  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 
   return (
     <form className="space-y-4" onSubmit={tokenDeposit}>
