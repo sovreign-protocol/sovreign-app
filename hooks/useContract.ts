@@ -1,6 +1,5 @@
-import { isAddress } from "@ethersproject/address";
-import { Contract } from "@ethersproject/contracts";
 import type { ContractInterface } from "@ethersproject/contracts";
+import { Contract } from "@ethersproject/contracts";
 import { useMemo } from "react";
 import useWeb3Store from "./useWeb3Store";
 
@@ -10,7 +9,7 @@ export default function useContract(address: string, ABI: ContractInterface) {
 
   return useMemo(
     () =>
-      isAddress(address) && !!ABI && !!library
+      typeof address === "string" && !!ABI && !!library
         ? new Contract(address, ABI, library.getSigner(account))
         : undefined,
     [address, ABI, library, account]
