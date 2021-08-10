@@ -53,6 +53,9 @@ export default function Navigation() {
               <NavigationItem href="/rebalance" text="Rebalance" />
             </li>
             <li>
+              <NavigationItem href="/stake" text="Stake" />
+            </li>
+            <li>
               <NavigationItem href="/harvest" text="Harvest" />
             </li>
           </ul>

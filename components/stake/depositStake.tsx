@@ -106,6 +106,10 @@ export default function DepositStake() {
 
   return (
     <form onSubmit={depositReign} method="POST" className="space-y-4">
+      <div className="flex justify-between">
+        <h2 className="font-medium leading-5">Deposit Stake</h2>
+      </div>
+
       <div className="flex space-x-4">
         <div>
           <div className="mb-2">
@@ -152,18 +156,16 @@ export default function DepositStake() {
             placeholder="0.0"
             spellCheck="false"
             type="number"
+            step={0.0001}
             {...depositInput.eventBind}
           />
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         {reignNeedsApproval && (
           <button
-            className={classNames(
-              "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-              "bg-white text-primary"
-            )}
+            className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
             onClick={approveReign}
           >
             Approve Sovreign To Spend Your REIGN
@@ -172,7 +174,7 @@ export default function DepositStake() {
 
         <button
           className={classNames(
-            "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
+            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
             depositInput.hasValue && !reignNeedsApproval
               ? "bg-white text-primary"
               : "bg-primary-300"

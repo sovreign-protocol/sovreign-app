@@ -77,15 +77,9 @@ export default function WithdrawStake() {
 
   return (
     <form method="POST" onSubmit={withdrawReign} className="space-y-4">
-      <div>
-        <div className="flex justify-between items-end">
-          <p className="leading-none font-semibold">Staked Balance</p>
-
-          <p className="leading-none">{`${formattedReignStaked} REIGN`}</p>
-        </div>
+      <div className="flex justify-between">
+        <h2 className="font-medium leading-5">Withdraw Stake</h2>
       </div>
-
-      <div className="h-px w-full bg-primary-300" />
 
       <div className="flex space-x-4">
         <div>
@@ -108,8 +102,8 @@ export default function WithdrawStake() {
           </div>
 
           <p className="text-sm text-gray-300 h-5">
-            {formattedReignBalance ? (
-              <span>{`Balance: ${formattedReignBalance} REIGN`}</span>
+            {formattedReignStaked ? (
+              <span>{`Staked: ${formattedReignStaked} REIGN`}</span>
             ) : null}
           </p>
         </div>
@@ -133,21 +127,24 @@ export default function WithdrawStake() {
             placeholder="0.0"
             spellCheck="false"
             type="number"
+            step={0.0001}
             {...withdrawInput.eventBind}
           />
         </div>
       </div>
 
-      <button
-        className={classNames(
-          "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-          withdrawInput.hasValue ? "bg-white text-primary" : "bg-primary-300"
-        )}
-        disabled={!withdrawInput.hasValue}
-        type="submit"
-      >
-        {withdrawInput.hasValue ? "Withdraw" : "Enter an amount"}
-      </button>
+      <div className="space-y-4">
+        <button
+          className={classNames(
+            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+            withdrawInput.hasValue ? "bg-white text-primary" : "bg-primary-300"
+          )}
+          disabled={!withdrawInput.hasValue}
+          type="submit"
+        >
+          {withdrawInput.hasValue ? "Withdraw" : "Enter an amount"}
+        </button>
+      </div>
     </form>
   );
 }
