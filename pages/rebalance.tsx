@@ -16,19 +16,17 @@ function RebalancePage() {
       </div>
 
       <div className="px-5 max-w-4xl mx-auto mb-4">
-        <div className="flex-1">
-          <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-            <div className="space-y-4">
-              <TokenAllocation />
+        <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+          <div className="space-y-4">
+            <TokenAllocation />
 
-              <div className="h-px w-full bg-primary-300" />
+            <div className="h-px w-full bg-primary-300" />
 
-              <ContinuousTokenAllocation />
+            <ContinuousTokenAllocation />
 
-              <div className="h-px w-full bg-primary-300" />
+            <div className="h-px w-full bg-primary-300" />
 
-              <AllocationAdjustment />
-            </div>
+            <AllocationAdjustment />
           </div>
         </div>
       </div>
