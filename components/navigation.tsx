@@ -23,7 +23,7 @@ export default function Navigation() {
   return (
     <nav className="px-5 md:px-8 py-4">
       <ul className="flex items-center justify-between">
-        <li className="md:flex-1">
+        <li className="md:flex-1 flex-shrink-0">
           <div className="hidden md:block">
             <span
               className="inline-block text-2xl font-light tracking-wide leading-none cursor-default select-none"
@@ -35,13 +35,12 @@ export default function Navigation() {
           </div>
 
           <div className="block md:hidden">
-            <span
-              className="inline-block text-4xl leading-none"
-              role="img"
-              aria-label="Sovreign"
-            >
-              👑
-            </span>
+            <img
+              className="w-10 h-10"
+              src="/logo.png"
+              alt="Sovreing"
+              loading="eager"
+            />
           </div>
         </li>
 
@@ -59,7 +58,7 @@ export default function Navigation() {
           </ul>
         </li>
 
-        <li className="flex-1 flex justify-end space-x-4">
+        <li className="flex-1 flex justify-end md:space-x-4">
           <NetworkIndicator />
           <Account />
         </li>
