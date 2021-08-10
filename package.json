@@ -11,7 +11,8 @@
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
     "format-staged": "pretty-quick --staged",
     "lint-staged": "lint-staged",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "analyze": "ANALYZE=true next build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -46,6 +47,7 @@
     "zustand": "^3.5.7"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^11.0.1",
     "@types/classnames": "^2.3.1",
     "@types/lodash.omit": "^4.5.6",
     "@types/react": "^17.0.15",
