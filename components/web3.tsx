@@ -9,7 +9,7 @@ import { Menu } from "@headlessui/react";
 import cn from "classnames";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
-import Blockie from "./blockie";
+import Identicon from "./identicon";
 
 function NextLink(props) {
   let { href, children, ...rest } = props;
@@ -69,7 +69,7 @@ export function Account() {
           )}
 
           <Menu.Button className="inline-flex space-x-2 w-full px-4 py-3 bg-primary-300 ring-1 ring-inset ring-white ring-opacity-10 text-sm rounded-md focus:outline-none focus-visible:ring-4">
-            <Blockie address={account} />
+            <Identicon address={account} />
 
             <span>{shortenAddress(account)}</span>
           </Menu.Button>
