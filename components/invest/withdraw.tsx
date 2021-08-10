@@ -1,4 +1,9 @@
-import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import {
+  CONTRACT_ADDRESSES,
+  MaxUint256,
+  POOL_ADDRESS,
+  TOKEN_ADDRESSES,
+} from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
 import useInput from "@/hooks/useInput";
@@ -6,11 +11,11 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
+import handleError from "@/utils/handleError";
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
-import { errorCodes, getMessageFromCode, serializeError } from "eth-rpc-errors";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -38,6 +43,8 @@ export default function Withdraw() {
 
   const withdrawAmountInput = useInput();
 
+  const withdrawTokenContract = useERC20(withdrawToken?.address);
+
   const sovNeedsApproval = useMemo(() => {
     if (!!sovAllowance && withdrawAmountInput.hasValue) {
       return sovAllowance.lt(parseUnits(withdrawAmountInput.value));
@@ -58,6 +65,20 @@ export default function Withdraw() {
     try {
       const minAmountOut = parseUnits(values["withdraw-amount"].value);
 
+      const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
+        POOL_ADDRESS[chainId]
+      );
+
+      const maxWithdraw = poolBalance.div(3);
+
+      if (minAmountOut.gt(maxWithdraw)) {
+        const fmMaxWithdraw = parseFloat(formatUnits(maxWithdraw)).toFixed(2);
+
+        throw new Error(
+          `Maximum Withdraw: ${fmMaxWithdraw} ${withdrawToken.symbol}`
+        );
+      }
+
       const poolAmountIn: BigNumber = await poolRouter.getSovAmountInSingle(
         withdrawToken.address,
         minAmountOut,
@@ -65,7 +86,7 @@ export default function Withdraw() {
       );
 
       if (poolAmountIn.gt(sovBalance)) {
-        throw new Error("You Don't Have Enough SOV To Make This Withdrawal");
+        throw new Error("Not Enough SOV");
       }
 
       const transaction: TransactionResponse = await poolRouter.withdraw(
@@ -99,19 +120,7 @@ export default function Withdraw() {
 
       sovBalanceMutate();
     } catch (error) {
-      const _error = serializeError(error);
-
-      console.error(_error);
-
-      if (_error.code === errorCodes.provider.userRejectedRequest) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
-        id: _id,
-      });
+      handleError(error, _id);
     }
   }
 
@@ -132,19 +141,7 @@ export default function Withdraw() {
 
       sovAllowanceMutate();
     } catch (error) {
-      const _error = serializeError(error);
-
-      console.error(_error);
-
-      if (_error.code === errorCodes.provider.userRejectedRequest) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
-        id: _id,
-      });
+      handleError(error, _id);
     }
   }
 

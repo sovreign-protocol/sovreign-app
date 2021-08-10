@@ -1,4 +1,9 @@
-import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import {
+  CONTRACT_ADDRESSES,
+  MaxUint256,
+  POOL_ADDRESS,
+  TOKEN_ADDRESSES,
+} from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -7,13 +12,13 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
+import handleError from "@/utils/handleError";
 import hasValue from "@/utils/hasValue";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
 import classNames from "classnames";
-import { errorCodes, getMessageFromCode, serializeError } from "eth-rpc-errors";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
@@ -81,6 +86,20 @@ export default function Deposit() {
         ? values.slippage.value
         : "1";
 
+      const poolBalance: BigNumber = await depositTokenContract.balanceOf(
+        POOL_ADDRESS[chainId]
+      );
+
+      const maxDeposit = poolBalance.div(2);
+
+      if (depositAmount.gt(maxDeposit)) {
+        const fmMaxDeposit = parseFloat(formatUnits(maxDeposit)).toFixed(2);
+
+        throw new Error(
+          `Maximum Deposit: ${fmMaxDeposit} ${depositToken.symbol}`
+        );
+      }
+
       const sovAmountOutSingle: BigNumber =
         await poolRouter.getSovAmountOutSingle(
           depositToken.address,
@@ -122,19 +141,7 @@ export default function Deposit() {
       sovBalanceMutate();
       depositTokenBalanceMutate();
     } catch (error) {
-      const _error = serializeError(error);
-
-      console.error(_error);
-
-      if (_error.code === errorCodes.provider.userRejectedRequest) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
-        id: _id,
-      });
+      handleError(error, _id);
     }
   }
 
@@ -156,19 +163,7 @@ export default function Deposit() {
 
       depositTokenAllowanceMutate();
     } catch (error) {
-      const _error = serializeError(error);
-
-      console.error(_error);
-
-      if (_error.code === errorCodes.provider.userRejectedRequest) {
-        toast.dismiss(_id);
-
-        return;
-      }
-
-      toast.error(getMessageFromCode(_error.code, "Something Went Wrong"), {
-        id: _id,
-      });
+      handleError(error, _id);
     }
   }
 

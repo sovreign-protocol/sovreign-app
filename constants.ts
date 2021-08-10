@@ -82,6 +82,11 @@ export const TOKEN_ADDRESSES: Record<
   },
 };
 
+export const POOL_ADDRESS: Record<SupportedChainId, string> = {
+  [SupportedChainId.MAINNET]: "TODO",
+  [SupportedChainId.RINKEBY]: "0x27104Bda81e14697240Cd74161A21EeE8FA00284",
+};
+
 export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
   "0x712863c3ad98ef4319133b8646d51383700cb37b": "sCHF",
   "0xf65c93902ecc4c7979e92ed2cca01421e8021f77": "sBTC",
