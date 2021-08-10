@@ -86,9 +86,26 @@ export default class MetaMaskConnector {
       console.log("[handleChainChanged]", chainId);
     }
 
-    useWeb3Store.setState({
-      chainId: normalizeChainId(chainId),
-    });
+    try {
+      const _chainId = normalizeChainId(chainId);
+
+      if (
+        !!this.supportedChainIds &&
+        !this.supportedChainIds.includes(_chainId)
+      ) {
+        this.deactivate();
+
+        useWeb3Store.getState().reset();
+
+        throw new UnsupportedChainIdError(_chainId, this.supportedChainIds);
+      }
+
+      useWeb3Store.setState({
+        chainId: _chainId,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   private handleAccountsChanged = (accounts: ProviderAccounts) => {

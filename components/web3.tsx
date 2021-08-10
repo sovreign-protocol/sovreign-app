@@ -9,6 +9,7 @@ import { Menu } from "@headlessui/react";
 import cn from "classnames";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
+import toast from "react-hot-toast";
 import Identicon from "./identicon";
 
 function NextLink(props) {
@@ -55,6 +56,8 @@ export function Account() {
       await injected.activate();
     } catch (error) {
       console.error(error);
+
+      toast.error(error.message);
     }
   }
 

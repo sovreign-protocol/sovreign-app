@@ -2,6 +2,7 @@ import Navigation from "@/components/navigation";
 import { useEagerConnect } from "@/hooks/useEagerConnect";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -20,6 +21,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <main>
         <Component {...pageProps} />
       </main>
+
+      <Toaster position="bottom-right" reverseOrder={false} />
     </>
   );
 }
