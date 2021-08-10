@@ -2,7 +2,10 @@ export const __DEV__ = process.env.NODE_ENV !== "production";
 
 export const INFURA_ID = "TODO";
 
-type Networks = 1 | 4;
+export enum SupportedChainId {
+  MAINNET = 1,
+  RINKEBY = 4,
+}
 
 type ContractNames =
   | "BasketBalancer"
@@ -17,46 +20,49 @@ type TokenNames = "SOV" | "REIGN";
 
 export const CONTRACT_ADDRESSES: Record<
   ContractNames,
-  Record<Networks, string>
+  Record<SupportedChainId, string>
 > = {
   BasketBalancer: {
-    1: "TODO",
-    4: "0xcab995251e50d310a4a924378c9ecde5032d75e0",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xcab995251e50d310a4a924378c9ecde5032d75e0",
   },
   PoolRouter: {
-    1: "TODO",
-    4: "0x89e0da559126aa5ca804d4c7c30715522031b92b",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x89e0da559126aa5ca804d4c7c30715522031b92b",
   },
   WrappingRewards: {
-    1: "TODO",
-    4: "0x855dD13AbAb0e891952Fd973634cefBb1c5AAbAC",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x855dD13AbAb0e891952Fd973634cefBb1c5AAbAC",
   },
   ReignFacet: {
-    1: "TODO",
-    4: "0xc31cb4f82f178ea0377492144035c48de119a4f8",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xc31cb4f82f178ea0377492144035c48de119a4f8",
   },
   GovRewards: {
-    1: "TODO",
-    4: "0x923CA1b060577e8BcDF6d82A9C4109CEECCc1122",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x923CA1b060577e8BcDF6d82A9C4109CEECCc1122",
   },
   LPRewardsREIGNWETH: {
-    1: "TOOD",
-    4: "0xAD031dcb078a6237E7752dEd9261685F6a7364ac",
+    [SupportedChainId.MAINNET]: "TOOD",
+    [SupportedChainId.RINKEBY]: "0xAD031dcb078a6237E7752dEd9261685F6a7364ac",
   },
   LPRewardsSOVUSDC: {
-    1: "TODO",
-    4: "0xd2e6F93050937749cF4347c07B070A92d96C4dFf",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xd2e6F93050937749cF4347c07B070A92d96C4dFf",
   },
 };
 
-export const TOKEN_ADDRESSES: Record<TokenNames, Record<Networks, string>> = {
+export const TOKEN_ADDRESSES: Record<
+  TokenNames,
+  Record<SupportedChainId, string>
+> = {
   SOV: {
-    1: "TODO",
-    4: "0xfbebceb1fc57b05b2bd845d936ea23ae60861584",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xfbebceb1fc57b05b2bd845d936ea23ae60861584",
   },
   REIGN: {
-    1: "TODO",
-    4: "0x08188FC7d8F552d1D8F8d2743404e9E728425AE1",
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x08188FC7d8F552d1D8F8d2743404e9E728425AE1",
   },
 };
 
