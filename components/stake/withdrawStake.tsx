@@ -21,7 +21,7 @@ export default function WithdrawStake() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const { data: reignBalance, mutate: reignBalanceMutate } = useTokenBalance(
+  const { mutate: reignBalanceMutate } = useTokenBalance(
     account,
     TOKEN_ADDRESSES.REIGN[chainId]
   );
@@ -32,6 +32,8 @@ export default function WithdrawStake() {
 
   const withdrawInput = useInput();
 
+  const formattedReignStaked = useFormattedBigNumber(reignStaked);
+
   async function withdrawReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -39,6 +41,10 @@ export default function WithdrawStake() {
 
     try {
       const amountToWithdraw = parseUnits(withdrawInput.value);
+
+      if (amountToWithdraw.gt(reignStaked)) {
+        throw new Error(`Maximum Withdraw: ${formattedReignStaked} REIGN`);
+      }
 
       const transaction: TransactionResponse = await reignFacet.withdraw(
         amountToWithdraw
@@ -70,10 +76,6 @@ export default function WithdrawStake() {
       handleError(error, _id);
     }
   }
-
-  const formattedReignBalance = useFormattedBigNumber(reignBalance);
-
-  const formattedReignStaked = useFormattedBigNumber(reignStaked);
 
   return (
     <form method="POST" onSubmit={withdrawReign} className="space-y-4">

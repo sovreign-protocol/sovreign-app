@@ -33,14 +33,33 @@ export default function DepositStake() {
 
   const depositInput = useInput();
 
+  const reignContract = useERC20(TOKEN_ADDRESSES.REIGN[chainId]);
+
+  const { data: reignAllowance, mutate: reignAllowanceMutate } =
+    useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
+
+  const reignNeedsApproval = useMemo(() => {
+    if (!!reignAllowance && depositInput.hasValue) {
+      return reignAllowance.lt(parseUnits(depositInput.value));
+    }
+
+    return;
+  }, [reignAllowance, depositInput.hasValue, depositInput.value]);
+
   async function depositReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      const depositAmount = parseUnits(depositInput.value);
+
+      if (depositAmount.gt(reignBalance)) {
+        throw new Error(`Maximum Deposit: ${formattedReignBalance} REIGN`);
+      }
+
       const transaction: TransactionResponse = await reignFacet.deposit(
-        parseUnits(depositInput.value)
+        depositAmount
       );
 
       toast.loading(
@@ -70,11 +89,6 @@ export default function DepositStake() {
     }
   }
 
-  const reignContract = useERC20(TOKEN_ADDRESSES.REIGN[chainId]);
-
-  const { data: reignAllowance, mutate: reignAllowanceMutate } =
-    useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
-
   async function approveReign() {
     const _id = toast.loading("Waiting for confirmation");
 
@@ -95,14 +109,6 @@ export default function DepositStake() {
       handleError(error, _id);
     }
   }
-
-  const reignNeedsApproval = useMemo(() => {
-    if (!!reignAllowance && depositInput.hasValue) {
-      return reignAllowance.lt(parseUnits(depositInput.value));
-    }
-
-    return;
-  }, [reignAllowance, depositInput.hasValue, depositInput.value]);
 
   return (
     <form onSubmit={depositReign} method="POST" className="space-y-4">
