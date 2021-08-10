@@ -1,4 +1,5 @@
 import { TOKEN_ADDRESSES } from "@/constants";
+import useENSName from "@/hooks/useENSName";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
@@ -30,6 +31,8 @@ export function Account() {
   const connector = useWeb3Store((state) => state.connector);
   const chainId = useWeb3Store((state) => state.chainId);
   const reset = useWeb3Store((state) => state.reset);
+
+  const ENSName = useENSName(account);
 
   const { data: sovBalance } = useTokenBalance(
     account,
@@ -74,7 +77,7 @@ export function Account() {
           <Menu.Button className="inline-flex space-x-2 w-full px-4 py-3 bg-primary-300 ring-1 ring-inset ring-white ring-opacity-10 text-sm rounded-md focus:outline-none focus-visible:ring-4">
             <Identicon address={account} />
 
-            <span>{shortenAddress(account)}</span>
+            <span>{ENSName ?? shortenAddress(account)}</span>
           </Menu.Button>
         </div>
 
