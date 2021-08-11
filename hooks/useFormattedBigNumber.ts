@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 import { commify, formatUnits } from "@ethersproject/units";
 import { useMemo } from "react";
 
