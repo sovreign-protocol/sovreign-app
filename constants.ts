@@ -60,11 +60,11 @@ export const CONTRACT_ADDRESSES: Record<
   },
   LPRewardsREIGNWETH: {
     [SupportedChainId.MAINNET]: "TOOD",
-    [SupportedChainId.RINKEBY]: "0xAD031dcb078a6237E7752dEd9261685F6a7364ac",
+    [SupportedChainId.RINKEBY]: "0x4cdf326f0cecf20c1b759c60590839e92e1b4d29",
   },
   LPRewardsSOVUSDC: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xd2e6F93050937749cF4347c07B070A92d96C4dFf",
+    [SupportedChainId.RINKEBY]: "0x04f47aa96c1f2018e7cd6df7b07b55d1c57cdaf4",
   },
 };
 
