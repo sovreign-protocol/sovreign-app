@@ -23,7 +23,14 @@ export default function Navigation() {
   return (
     <nav className="px-5 md:px-8 py-4">
       <ul className="flex items-center justify-between">
-        <li className="flex-shrink-0">
+        <li className="flex items-center md:space-x-2 flex-shrink-0">
+          <img
+            className="w-10 h-10"
+            src="/logo.png"
+            alt="Sovreign"
+            loading="eager"
+          />
+
           <div className="hidden md:block">
             <span
               className="inline-block text-2xl font-light tracking-wide leading-none cursor-default select-none"
@@ -32,15 +39,6 @@ export default function Navigation() {
             >
               Sovreign
             </span>
-          </div>
-
-          <div className="block md:hidden">
-            <img
-              className="w-10 h-10"
-              src="/logo.png"
-              alt="Sovreing"
-              loading="eager"
-            />
           </div>
         </li>
 
