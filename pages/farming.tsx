@@ -1,7 +1,19 @@
+import { MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import useERC20 from "@/hooks/contracts/useERC20";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
+import useInput from "@/hooks/useInput";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import useTokenAllowance from "@/hooks/view/useTokenAllowance";
+import useTokenBalance from "@/hooks/view/useTokenBalance";
+import handleError from "@/utils/handleError";
+import type { TransactionResponse } from "@ethersproject/providers";
+import { parseUnits } from "@ethersproject/units";
 import { Listbox, Tab } from "@headlessui/react";
 import classNames from "classnames";
-import { useState } from "react";
+import type { FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { ChevronDown } from "react-feather";
+import toast from "react-hot-toast";
 
 const TAB_KEYS = {
   DEPOSIT: "Deposit",
@@ -22,15 +34,89 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
 type Pool = {
   address: string;
   name: string;
+  symbol: string;
 };
 
 const POOLS: Pool[] = [
-  { address: "0x", name: "Uniswap REIGN/WETH" },
-  { address: "0x", name: "Uniswap SOV/USDC" },
+  {
+    address: "0x",
+    name: "REIGN/ETH SLP",
+    symbol: "REIGN_ETH",
+  },
+  {
+    address: "0x",
+    name: "SOV/USDC SLP",
+    symbol: "SOV_USDC",
+  },
 ];
 
 function FarmingPage() {
+  const account = useWeb3Store((state) => state.account);
+  const chainId = useWeb3Store((state) => state.chainId);
+
+  const depositInput = useInput();
+  const withdrawInput = useInput();
+
   const [pool, poolSet] = useState<Pool>();
+
+  const SPENDER_ADDRESS = "TODO";
+
+  const poolTokenContract = useERC20(
+    TOKEN_ADDRESSES?.[pool?.symbol]?.[chainId]
+  );
+
+  console.log(poolTokenContract);
+
+  const { data: poolTokenBalance } = useTokenBalance(
+    account,
+    TOKEN_ADDRESSES[pool?.symbol]?.[chainId]
+  );
+
+  const { data: poolTokenAllowance, mutate: poolTokenAllowanceMutate } =
+    useTokenAllowance(
+      TOKEN_ADDRESSES[pool?.symbol]?.[chainId],
+      account,
+      SPENDER_ADDRESS
+    );
+
+  const poolTokenNeedsApproval = useMemo(() => {
+    if (!!poolTokenAllowance && depositInput.hasValue) {
+      return poolTokenAllowance.lt(parseUnits(depositInput.value));
+    }
+
+    return;
+  }, [poolTokenAllowance, depositInput.hasValue, depositInput.value]);
+
+  const fmPoolTokenBalance = useFormattedBigNumber(poolTokenBalance);
+
+  async function approvePoolToken() {
+    const _id = toast.loading("Waiting for confirmation");
+
+    try {
+      const transaction: TransactionResponse = await poolTokenContract.approve(
+        SPENDER_ADDRESS,
+        MaxUint256
+      );
+
+      toast.loading(`Approve ${pool.symbol}`, { id: _id });
+
+      await transaction.wait();
+
+      toast.success(`Approve ${pool.symbol}`, { id: _id });
+
+      poolTokenAllowanceMutate();
+    } catch (error) {
+      handleError(error, _id);
+    }
+  }
+
+  async function depositPoolToken(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+  }
+
+  async function withdrawPoolToken(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+  }
 
   return (
     <section className="pt-8 md:pt-16 pb-8">
@@ -110,21 +196,180 @@ function FarmingPage() {
 
             <Tab.Panels className="p-2">
               <Tab.Panel key={TAB_KEYS.DEPOSIT} className={tabPanelClassNames}>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                  cupiditate dolores delectus incidunt, doloremque laboriosam
-                  ducimus tempore harum maiores sed pariatur dolorem commodi
-                  quis labore est nesciunt placeat ut eos!
-                </p>
+                <form onSubmit={depositPoolToken} method="POST">
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <h2 className="font-medium leading-5">
+                        Deposit {pool?.symbol}
+                      </h2>
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <div>
+                        <div className="mb-2">
+                          <div
+                            className={classNames(
+                              "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
+                            )}
+                          >
+                            <img
+                              alt={"REIGN"}
+                              className="rounded-full"
+                              height={24}
+                              src={`/tokens/REIGN.png`}
+                              width={24}
+                            />
+
+                            <span className="block truncate font-medium">
+                              {pool?.symbol}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-gray-300 h-5">
+                          {true ? (
+                            <span>{`Balance: ${fmPoolTokenBalance} ${pool?.symbol}`}</span>
+                          ) : null}
+                        </p>
+                      </div>
+
+                      <div className="flex-1">
+                        <label className="sr-only" htmlFor="deposit">
+                          Enter amount of {pool?.symbol} to deposit
+                        </label>
+
+                        <input
+                          autoComplete="off"
+                          autoCorrect="off"
+                          className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
+                          inputMode="decimal"
+                          maxLength={79}
+                          minLength={1}
+                          id="deposit"
+                          name="deposit"
+                          required
+                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          placeholder="0.0"
+                          spellCheck="false"
+                          type="number"
+                          step={0.0001}
+                          {...depositInput.eventBind}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      {poolTokenNeedsApproval && (
+                        <button
+                          type="button"
+                          className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
+                          onClick={approvePoolToken}
+                        >
+                          {`Approve Sovreign To Spend Your ${pool.symbol}`}
+                        </button>
+                      )}
+
+                      <button
+                        className={classNames(
+                          "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+                          depositInput.hasValue &&
+                            !!pool &&
+                            !poolTokenNeedsApproval
+                            ? "bg-white text-primary"
+                            : "bg-primary-300"
+                        )}
+                        disabled={
+                          !(depositInput.hasValue && !!pool) ||
+                          poolTokenNeedsApproval
+                        }
+                        type="submit"
+                      >
+                        {depositInput.hasValue && !!pool
+                          ? "Deposit"
+                          : "Enter an amount"}
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </Tab.Panel>
 
               <Tab.Panel key={TAB_KEYS.WITHDRAW} className={tabPanelClassNames}>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                  cupiditate dolores delectus incidunt, doloremque laboriosam
-                  ducimus tempore harum maiores sed pariatur dolorem commodi
-                  quis labore est nesciunt placeat ut eos!
-                </p>
+                <form onSubmit={withdrawPoolToken} method="POST">
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <h2 className="font-medium leading-5">
+                        Withdraw {pool?.symbol}
+                      </h2>
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <div>
+                        <div className="mb-2">
+                          <div
+                            className={classNames(
+                              "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
+                            )}
+                          >
+                            <img
+                              alt={"REIGN"}
+                              className="rounded-full"
+                              height={24}
+                              src={`/tokens/REIGN.png`}
+                              width={24}
+                            />
+
+                            <span className="block truncate font-medium">
+                              {pool?.symbol}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-gray-300 h-5">
+                          {true ? (
+                            <span>{`Available: ${0.0} ${pool?.symbol}`}</span>
+                          ) : null}
+                        </p>
+                      </div>
+
+                      <div className="flex-1">
+                        <label className="sr-only" htmlFor="withdraw">
+                          Enter amount of {pool?.symbol} to withdraw
+                        </label>
+
+                        <input
+                          autoComplete="off"
+                          autoCorrect="off"
+                          className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
+                          inputMode="decimal"
+                          maxLength={79}
+                          minLength={1}
+                          id="withdraw"
+                          name="withdraw"
+                          required
+                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          placeholder="0.0"
+                          spellCheck="false"
+                          type="number"
+                          step={0.0001}
+                          {...withdrawInput.eventBind}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <button
+                        className={classNames(
+                          "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
+                          false ? "bg-white text-primary" : "bg-primary-300"
+                        )}
+                        disabled={true}
+                        type="submit"
+                      >
+                        {false ? "Withdraw" : "Enter an amount"}
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
