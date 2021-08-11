@@ -23,7 +23,7 @@ export default function Navigation() {
   return (
     <nav className="px-5 md:px-8 py-4">
       <ul className="flex items-center justify-between">
-        <li className="md:flex-1 flex-shrink-0">
+        <li className="flex-shrink-0">
           <div className="hidden md:block">
             <span
               className="inline-block text-2xl font-light tracking-wide leading-none cursor-default select-none"
@@ -44,8 +44,8 @@ export default function Navigation() {
           </div>
         </li>
 
-        <li className="flex-1 flex justify-center">
-          <ul className="inline-flex justify-center space-x-2 md:space-x-4">
+        <li className="flex-1">
+          <ul className="md:ml-4 flex space-x-2 md:space-x-4">
             <li>
               <NavigationItem href="/invest" text="Invest" />
             </li>
@@ -57,6 +57,9 @@ export default function Navigation() {
             </li>
             <li>
               <NavigationItem href="/vote" text="Vote" />
+            </li>
+            <li>
+              <NavigationItem href="/farming" text="Farming" />
             </li>
             <li>
               <NavigationItem href="/harvest" text="Harvest" />
