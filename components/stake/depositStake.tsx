@@ -171,6 +171,7 @@ export default function DepositStake() {
       <div className="space-y-4">
         {reignNeedsApproval && (
           <button
+            type="button"
             className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
             onClick={approveReign}
           >
