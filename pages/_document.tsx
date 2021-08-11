@@ -32,6 +32,8 @@ class MyDocument extends Document {
           <Main />
 
           <NextScript />
+
+          <div className="background-radial-gradient" />
         </body>
       </Html>
     );
