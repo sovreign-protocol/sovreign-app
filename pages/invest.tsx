@@ -26,7 +26,7 @@ function InvestPage() {
     <section className="pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-lg mx-auto">
         <Tab.Group>
-          <Tab.List className="flex p-1 space-x-1 bg-primary-400 rounded-xl">
+          <Tab.List className="flex p-1 space-x-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10">
             <Tab key={TAB_KEYS.DEPOSIT} className={tabClassNames}>
               {TAB_KEYS.DEPOSIT}
             </Tab>
