@@ -50,7 +50,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   WrappingRewards: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x855dd13abab0e891952fd973634cefbb1c5aabac",
+    [SupportedChainId.RINKEBY]: "0x8635785602403fe2291127bf0a2f15f2b726ab9e",
   },
   ReignFacet: {
     [SupportedChainId.MAINNET]: "TODO",
