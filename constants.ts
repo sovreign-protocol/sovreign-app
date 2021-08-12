@@ -94,7 +94,7 @@ export const TOKEN_ADDRESSES: Record<
 
 export const POOL_ADDRESS: Record<SupportedChainId, string> = {
   [SupportedChainId.MAINNET]: "TODO",
-  [SupportedChainId.RINKEBY]: "0x9E850E0E1cdD1b452A694D27eB82Fa78F502C8C7",
+  [SupportedChainId.RINKEBY]: "0x1f4D666b204B0282fBe85EAb9231B13B50A03B91",
 };
 
 export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
@@ -120,3 +120,12 @@ export const MaxUint256 = BigInt(
 );
 
 export const EPOCH_DURATION = 604800;
+
+export const TOKEN_COLORS = [
+  "bg-green-500",
+  "bg-blue-500",
+  "bg-purple-500",
+  "bg-yellow-500",
+  "bg-indigo-500",
+  "bg-pink-500",
+];

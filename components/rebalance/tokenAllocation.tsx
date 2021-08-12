@@ -1,7 +1,6 @@
+import { TOKEN_COLORS } from "@/constants";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import classNames from "classnames";
-
-const TOKEN_COLORS = ["bg-green-500", "bg-blue-500", "bg-purple-500"];
 
 export default function TokenAllocation() {
   const { data: tokenAllocation } = useTokenAllocation();

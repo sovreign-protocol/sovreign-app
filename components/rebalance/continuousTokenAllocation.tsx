@@ -1,9 +1,8 @@
+import { TOKEN_COLORS } from "@/constants";
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useEpochDates from "@/hooks/view/useEpochDates";
 import classNames from "classnames";
 import { ArrowDown, ArrowUp } from "react-feather";
-
-const TOKEN_COLORS = ["bg-green-500", "bg-blue-500", "bg-purple-500"];
 
 export default function ContinuousTokenAllocation() {
   const { data: epochDates } = useEpochDates();
