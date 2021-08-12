@@ -19,11 +19,11 @@ import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
-import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
 import toast from "react-hot-toast";
+import Button from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
@@ -300,24 +300,12 @@ export default function Deposit() {
 
       <div className="space-y-4">
         {depositTokenNeedsApproval && (
-          <button
-            className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
-            onClick={approveDepositToken}
-            type="button"
-          >
+          <Button onClick={approveDepositToken}>
             {`Approve Sovreign To Spend Your ${depositToken.symbol}`}
-          </button>
+          </Button>
         )}
 
-        <button
-          className={classNames(
-            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            depositAmountInput.hasValue &&
-              !!depositToken &&
-              !depositTokenNeedsApproval
-              ? "bg-white text-primary"
-              : "bg-primary-300"
-          )}
+        <Button
           type="submit"
           disabled={
             !(depositAmountInput.hasValue && !!depositToken) ||
@@ -325,9 +313,9 @@ export default function Deposit() {
           }
         >
           {depositAmountInput.hasValue && !!depositToken
-            ? "Deposit"
-            : "Enter an amount"}
-        </button>
+            ? `Deposit`
+            : `Enter an amount`}
+        </Button>
       </div>
     </form>
   );

@@ -17,10 +17,10 @@ import handleError from "@/utils/handleError";
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import Button from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
@@ -191,22 +191,12 @@ export default function Withdraw() {
 
       <div className="space-y-4">
         {sovNeedsApproval && (
-          <button
-            className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
-            onClick={approveSOV}
-            type="button"
-          >
+          <Button onClick={approveSOV}>
             {`Approve Sovreign To Spend Your SOV`}
-          </button>
+          </Button>
         )}
 
-        <button
-          className={classNames(
-            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            withdrawAmountInput.hasValue && !!withdrawToken && !sovNeedsApproval
-              ? "bg-white text-primary"
-              : "bg-primary-300"
-          )}
+        <Button
           type="submit"
           disabled={
             !(withdrawAmountInput.hasValue && !!withdrawToken) ||
@@ -216,7 +206,7 @@ export default function Withdraw() {
           {withdrawAmountInput.hasValue && !!withdrawToken
             ? "Withdraw"
             : "Enter an amount"}
-        </button>
+        </Button>
       </div>
     </form>
   );

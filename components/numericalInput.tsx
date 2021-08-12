@@ -2,7 +2,7 @@ import escapeRegExp, { INPUT_REGEX } from "@/utils/escapeRegExp";
 import classNames from "classnames";
 import type { Dispatch, SetStateAction } from "react";
 
-type NumericalInputType = {
+type NumericalInputProps = {
   value: string | number;
   onChange: Dispatch<SetStateAction<string>>;
 } & Omit<React.HTMLProps<HTMLInputElement>, "ref" | "onChange" | "as">;
@@ -12,7 +12,7 @@ export default function NumericalInput({
   onChange,
   placeholder,
   ...rest
-}: NumericalInputType) {
+}: NumericalInputProps) {
   const cachedClassNames = classNames(
     "appearance-none bg-transparent",
     "text-right text-2xl font-normal font-mono",
