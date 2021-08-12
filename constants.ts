@@ -101,6 +101,18 @@ export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
   "0x3a85973fd194c9fb966882fee7b11481c38344fb": "sXAU",
 };
 
+export const TOKEN_CATEGORY_BY_SYMBOL: Record<
+  string,
+  "CURRENCY" | "CRYPTO" | "COMMODITY"
+> = {
+  sCHF: "CURRENCY",
+  sUSD: "CURRENCY",
+  sBTC: "CRYPTO",
+  sETH: "CRYPTO",
+  sXAU: "COMMODITY",
+  sXAG: "COMMODITY",
+};
+
 export const MaxUint256 = BigInt(
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 );

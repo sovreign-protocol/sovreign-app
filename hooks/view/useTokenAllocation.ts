@@ -1,4 +1,4 @@
-import { TOKEN_NAMES_BY_ADDRESS } from "@/constants";
+import { TOKEN_CATEGORY_BY_SYMBOL, TOKEN_NAMES_BY_ADDRESS } from "@/constants";
 import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
@@ -17,11 +17,14 @@ function getTokenAllocation(contract: Contract) {
 
         const allocation = parseFloat(formatUnits(allocationInWei));
 
+        const SYMBOL = TOKEN_NAMES_BY_ADDRESS[poolAddress.toLowerCase()];
+
         return {
           address: poolAddress,
-          symbol: TOKEN_NAMES_BY_ADDRESS[poolAddress.toLowerCase()],
+          symbol: SYMBOL,
           allocationInWei,
           allocation,
+          category: TOKEN_CATEGORY_BY_SYMBOL[SYMBOL],
         };
       })
     );
