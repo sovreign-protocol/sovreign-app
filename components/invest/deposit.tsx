@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
+import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Deposit() {
@@ -270,22 +271,11 @@ export default function Deposit() {
             Enter amount of token
           </label>
 
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-            inputMode="decimal"
-            maxLength={79}
-            minLength={1}
+          <NumericalInput
             name="depositAmount"
-            required
             id="depositAmount"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0.0"
-            spellCheck="false"
-            type="number"
-            step={0.0001}
-            {...depositAmountInput.eventBind}
+            required
+            {...depositAmountInput.valueBind}
           />
         </div>
       </div>

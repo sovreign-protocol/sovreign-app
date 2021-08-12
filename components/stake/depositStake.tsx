@@ -15,6 +15,7 @@ import type { FormEvent } from "react";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
+import NumericalInput from "../numericalInput";
 
 export default function DepositStake() {
   const account = useWeb3Store((state) => state.account);
@@ -144,26 +145,15 @@ export default function DepositStake() {
         </div>
 
         <div className="flex-1">
-          <label className="sr-only" htmlFor="stake-deposit">
+          <label className="sr-only" htmlFor="stakeDeposit">
             Enter amount of REIGN to deposit
           </label>
 
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-            inputMode="decimal"
-            maxLength={79}
-            minLength={1}
-            id="stake-deposit"
-            name="stake-deposit"
+          <NumericalInput
+            id="stakeDeposit"
+            name="stakeDeposit"
             required
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0.0"
-            spellCheck="false"
-            type="number"
-            step={0.0001}
-            {...depositInput.eventBind}
+            {...depositInput.valueBind}
           />
         </div>
       </div>

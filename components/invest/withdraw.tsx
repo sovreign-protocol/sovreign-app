@@ -20,6 +20,7 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
+import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
 
 export default function Withdraw() {
@@ -59,11 +60,11 @@ export default function Withdraw() {
     const _id = toast.loading("Waiting for confirmation");
 
     const values = event.target as typeof event.target & {
-      "withdraw-amount": { value: string };
+      withdrawAmount: { value: string };
     };
 
     try {
-      const minAmountOut = parseUnits(values["withdraw-amount"].value);
+      const minAmountOut = parseUnits(values.withdrawAmount.value);
 
       const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
         POOL_ADDRESS[chainId]
@@ -100,7 +101,7 @@ export default function Withdraw() {
 
       toast.loading(
         <TransactionToast
-          message={`Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${values.withdrawAmount.value} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -111,7 +112,7 @@ export default function Withdraw() {
 
       toast.success(
         <TransactionToast
-          message={`Withdraw ${values["withdraw-amount"].value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${values.withdrawAmount.value} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -165,26 +166,15 @@ export default function Withdraw() {
         </div>
 
         <div className="flex-1">
-          <label className="sr-only" htmlFor="withdraw-amount">
+          <label className="sr-only" htmlFor="withdrawAmount">
             Enter amount of token to receive
           </label>
 
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-            inputMode="decimal"
-            maxLength={79}
-            minLength={1}
-            name="withdraw-amount"
+          <NumericalInput
+            name="withdrawAmount"
+            id="withdrawAmount"
             required
-            id="withdraw-amount"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0.0"
-            spellCheck="false"
-            type="number"
-            step={0.0001}
-            {...withdrawAmountInput.eventBind}
+            {...withdrawAmountInput.valueBind}
           />
         </div>
       </div>

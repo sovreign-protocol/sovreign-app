@@ -14,6 +14,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
+import NumericalInput from "../numericalInput";
 
 dayjs.extend(relativeTime);
 
@@ -111,26 +112,15 @@ export default function WithdrawStake() {
         </div>
 
         <div className="flex-1">
-          <label className="sr-only" htmlFor="stake-withdraw">
+          <label className="sr-only" htmlFor="stakeWithdraw">
             Enter amount of REIGN to withdraw
           </label>
 
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-            inputMode="decimal"
-            maxLength={79}
-            minLength={1}
-            id="stake-withdraw"
-            name="stake-withdraw"
+          <NumericalInput
+            id="stakeWithdraw"
+            name="stakeWithdraw"
             required
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0.0"
-            spellCheck="false"
-            type="number"
-            step={0.0001}
-            {...withdrawInput.eventBind}
+            {...withdrawInput.valueBind}
           />
         </div>
       </div>

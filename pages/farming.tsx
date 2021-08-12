@@ -1,3 +1,4 @@
+import NumericalInput from "@/components/numericalInput";
 import { MaxUint256, TOKEN_ADDRESSES } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -238,22 +239,11 @@ function FarmingPage() {
                           Enter amount of {pool?.symbol} to deposit
                         </label>
 
-                        <input
-                          autoComplete="off"
-                          autoCorrect="off"
-                          className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-                          inputMode="decimal"
-                          maxLength={79}
-                          minLength={1}
+                        <NumericalInput
                           id="deposit"
                           name="deposit"
                           required
-                          pattern="^[0-9]*[.,]?[0-9]*$"
-                          placeholder="0.0"
-                          spellCheck="false"
-                          type="number"
-                          step={0.0001}
-                          {...depositInput.eventBind}
+                          {...depositInput.valueBind}
                         />
                       </div>
                     </div>
@@ -336,22 +326,11 @@ function FarmingPage() {
                           Enter amount of {pool?.symbol} to withdraw
                         </label>
 
-                        <input
-                          autoComplete="off"
-                          autoCorrect="off"
-                          className="w-full appearance-none bg-transparent text-right text-2xl font-normal h-10 focus:outline-none font-mono hide-number-input-arrows"
-                          inputMode="decimal"
-                          maxLength={79}
-                          minLength={1}
+                        <NumericalInput
                           id="withdraw"
                           name="withdraw"
                           required
-                          pattern="^[0-9]*[.,]?[0-9]*$"
-                          placeholder="0.0"
-                          spellCheck="false"
-                          type="number"
-                          step={0.0001}
-                          {...withdrawInput.eventBind}
+                          {...withdrawInput.valueBind}
                         />
                       </div>
                     </div>
