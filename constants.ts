@@ -30,9 +30,10 @@ type ContractNames =
   | "ReignFacet"
   | "GovRewards"
   | "LPRewardsSOVUSDC"
-  | "LPRewardsREIGNWETH";
+  | "LPRewardsREIGNWETH"
+  | "Staking";
 
-type TokenNames = "SOV" | "REIGN" | "SOV_USDC" | "REIGN_ETH";
+type TokenNames = "SOV" | "REIGN";
 
 export const CONTRACT_ADDRESSES: Record<
   ContractNames,
@@ -66,6 +67,10 @@ export const CONTRACT_ADDRESSES: Record<
     [SupportedChainId.MAINNET]: "TODO",
     [SupportedChainId.RINKEBY]: "0x04f47aa96c1f2018e7cd6df7b07b55d1c57cdaf4",
   },
+  Staking: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x5Faf8C61A65670C9472E6ef909195a76104c6356",
+  },
 };
 
 export const TOKEN_ADDRESSES: Record<
@@ -79,14 +84,6 @@ export const TOKEN_ADDRESSES: Record<
   REIGN: {
     [SupportedChainId.MAINNET]: "TODO",
     [SupportedChainId.RINKEBY]: "0x08188FC7d8F552d1D8F8d2743404e9E728425AE1",
-  },
-  SOV_USDC: {
-    [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
-  },
-  REIGN_ETH: {
-    [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
   },
 };
 

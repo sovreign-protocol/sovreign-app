@@ -1,9 +1,16 @@
 import NumericalInput from "@/components/numericalInput";
-import { MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import {
+  CONTRACT_ADDRESSES,
+  MaxUint256,
+  SupportedChainId,
+  TOKEN_ADDRESSES,
+} from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
+import useStaking from "@/hooks/contracts/useStaking";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
+import useStakingBalanceLocked from "@/hooks/view/useStakingBalanceLocked";
 import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
@@ -33,23 +40,37 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
   );
 
 type Pool = {
-  address: string;
-  name: string;
-  symbol: string;
+  address: Record<SupportedChainId, string>;
+  name: Record<SupportedChainId, string>;
 };
 
 const POOLS: Pool[] = [
   {
-    address: "0x",
-    name: "REIGN/ETH SLP",
-    symbol: "REIGN_ETH",
+    address: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
+    },
+    name: {
+      [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
+      [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
+    },
   },
   {
-    address: "0x",
-    name: "SOV/USDC SLP",
-    symbol: "SOV_USDC",
+    address: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
+    },
+    name: {
+      [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
+      [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
+    },
   },
 ];
+
+const LP_SYMBOL = {
+  [SupportedChainId.MAINNET]: "SLP",
+  [SupportedChainId.RINKEBY]: "UNI-V2",
+};
 
 function FarmingPage() {
   const account = useWeb3Store((state) => state.account);
@@ -60,25 +81,20 @@ function FarmingPage() {
 
   const [pool, poolSet] = useState<Pool>();
 
-  const SPENDER_ADDRESS = "TODO";
+  const staking = useStaking();
 
-  const poolTokenContract = useERC20(
-    TOKEN_ADDRESSES?.[pool?.symbol]?.[chainId]
-  );
+  const poolTokenContract = useERC20(pool?.address?.[chainId]);
 
   console.log(poolTokenContract);
 
-  const { data: poolTokenBalance } = useTokenBalance(
-    account,
-    TOKEN_ADDRESSES[pool?.symbol]?.[chainId]
-  );
+  const { data: poolTokenBalance, mutate: poolTokenBalanceMutate } =
+    useTokenBalance(account, pool?.address?.[chainId]);
 
   const { data: poolTokenAllowance, mutate: poolTokenAllowanceMutate } =
-    useTokenAllowance(
-      TOKEN_ADDRESSES[pool?.symbol]?.[chainId],
-      account,
-      SPENDER_ADDRESS
-    );
+    useTokenAllowance(pool?.address?.[chainId], account, staking?.address);
+
+  const { data: poolTokenBalanceLocked, mutate: poolTokenBalanceLockedMutate } =
+    useStakingBalanceLocked(account, pool?.address?.[chainId]);
 
   const poolTokenNeedsApproval = useMemo(() => {
     if (!!poolTokenAllowance && depositInput.hasValue) {
@@ -90,20 +106,24 @@ function FarmingPage() {
 
   const fmPoolTokenBalance = useFormattedBigNumber(poolTokenBalance);
 
+  const fmPoolTokenBalanceLocked = useFormattedBigNumber(
+    poolTokenBalanceLocked
+  );
+
   async function approvePoolToken() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
       const transaction: TransactionResponse = await poolTokenContract.approve(
-        SPENDER_ADDRESS,
+        staking?.address,
         MaxUint256
       );
 
-      toast.loading(`Approve ${pool.symbol}`, { id: _id });
+      toast.loading(`Approve ${LP_SYMBOL?.[chainId]}`, { id: _id });
 
       await transaction.wait();
 
-      toast.success(`Approve ${pool.symbol}`, { id: _id });
+      toast.success(`Approve ${LP_SYMBOL?.[chainId]}`, { id: _id });
 
       poolTokenAllowanceMutate();
     } catch (error) {
@@ -117,6 +137,24 @@ function FarmingPage() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      const depositAmount = parseUnits(depositInput.value);
+
+      const transaction: TransactionResponse = await staking.deposit(
+        pool?.address?.[chainId],
+        depositAmount
+      );
+
+      toast.loading(`Deposit ${depositInput.value} ${LP_SYMBOL?.[chainId]}`, {
+        id: _id,
+      });
+
+      await transaction.wait();
+
+      toast.success(`Deposit ${depositInput.value} ${LP_SYMBOL?.[chainId]}`, {
+        id: _id,
+      });
+
+      poolTokenBalanceMutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -128,6 +166,24 @@ function FarmingPage() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      const withdrawAmount = parseUnits(withdrawInput.value);
+
+      const transaction: TransactionResponse = await staking.withdraw(
+        pool?.address?.[chainId],
+        withdrawAmount
+      );
+
+      toast.loading(`Withdraw ${withdrawInput.value} ${LP_SYMBOL?.[chainId]}`, {
+        id: _id,
+      });
+
+      await transaction.wait();
+
+      toast.success(`Withdraw ${withdrawInput.value} ${LP_SYMBOL?.[chainId]}`, {
+        id: _id,
+      });
+
+      poolTokenBalanceMutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -147,7 +203,7 @@ function FarmingPage() {
                   )}
                 >
                   <span className="block truncate font-medium">
-                    {pool ? pool.name : "Select a pool"}
+                    {pool ? pool.name?.[chainId] : "Select a pool"}
                   </span>
 
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -182,7 +238,7 @@ function FarmingPage() {
                                 "block truncate leading-5"
                               )}
                             >
-                              {_pool.name}
+                              {_pool.name?.[chainId]}
                             </span>
                           </div>
                         </div>
@@ -215,7 +271,7 @@ function FarmingPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <h2 className="font-medium leading-5">
-                        Deposit {pool?.symbol}
+                        Deposit {pool?.name?.[chainId]}
                       </h2>
                     </div>
 
@@ -228,29 +284,29 @@ function FarmingPage() {
                             )}
                           >
                             <img
-                              alt={"REIGN"}
+                              alt={LP_SYMBOL?.[chainId]}
                               className="rounded-full"
                               height={24}
-                              src={`/tokens/REIGN.png`}
+                              src={`/tokens/${LP_SYMBOL?.[chainId]}.png`}
                               width={24}
                             />
 
                             <span className="block truncate font-medium">
-                              {pool?.symbol}
+                              {LP_SYMBOL?.[chainId]}
                             </span>
                           </div>
                         </div>
 
                         <p className="text-sm text-gray-300 h-5">
-                          {true ? (
-                            <span>{`Balance: ${fmPoolTokenBalance} ${pool?.symbol}`}</span>
+                          {fmPoolTokenBalance ? (
+                            <span>{`Balance: ${fmPoolTokenBalance} ${LP_SYMBOL?.[chainId]}`}</span>
                           ) : null}
                         </p>
                       </div>
 
                       <div className="flex-1">
                         <label className="sr-only" htmlFor="deposit">
-                          Enter amount of {pool?.symbol} to deposit
+                          {`Enter amount of ${LP_SYMBOL?.[chainId]} to deposit`}
                         </label>
 
                         <NumericalInput
@@ -269,7 +325,7 @@ function FarmingPage() {
                           className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
                           onClick={approvePoolToken}
                         >
-                          {`Approve Sovreign To Spend Your ${pool.symbol}`}
+                          {`Approve Sovreign To Spend Your ${LP_SYMBOL?.[chainId]}`}
                         </button>
                       )}
 
@@ -302,7 +358,7 @@ function FarmingPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <h2 className="font-medium leading-5">
-                        Withdraw {pool?.symbol}
+                        Withdraw {pool?.name?.[chainId]}
                       </h2>
                     </div>
 
@@ -315,29 +371,29 @@ function FarmingPage() {
                             )}
                           >
                             <img
-                              alt={"REIGN"}
+                              alt={LP_SYMBOL?.[chainId]}
                               className="rounded-full"
                               height={24}
-                              src={`/tokens/REIGN.png`}
+                              src={`/tokens/${LP_SYMBOL?.[chainId]}.png`}
                               width={24}
                             />
 
                             <span className="block truncate font-medium">
-                              {pool?.symbol}
+                              {LP_SYMBOL?.[chainId]}
                             </span>
                           </div>
                         </div>
 
                         <p className="text-sm text-gray-300 h-5">
-                          {true ? (
-                            <span>{`Available: ${0.0} ${pool?.symbol}`}</span>
+                          {fmPoolTokenBalanceLocked ? (
+                            <span>{`Available: ${fmPoolTokenBalanceLocked} ${LP_SYMBOL?.[chainId]}`}</span>
                           ) : null}
                         </p>
                       </div>
 
                       <div className="flex-1">
                         <label className="sr-only" htmlFor="withdraw">
-                          Enter amount of {pool?.symbol} to withdraw
+                          {`Enter amount of ${LP_SYMBOL?.[chainId]} to withdraw`}
                         </label>
 
                         <NumericalInput
