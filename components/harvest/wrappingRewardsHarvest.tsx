@@ -1,14 +1,12 @@
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import useUserRewardsWrappingRewards, {
-  useUserRewardsWrappingRewardsForCurrentEpoch,
-} from "@/hooks/view/useUserRewardsWrappingRewards";
+import useUserRewardsLPRewards from "@/hooks/view/useUserRewardsLPRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
-import classNames from "classnames";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
+import Button from "../button";
 import { TransactionToast } from "../customToast";
 
 export default function WrappingRewardsHarvest() {
@@ -17,15 +15,16 @@ export default function WrappingRewardsHarvest() {
 
   const wrappingRewards = useWrappingRewards();
 
-  const { data: userRewards, mutate: userRewardsMutate } =
-    useUserRewardsWrappingRewards(account);
+  const { data, mutate, error } = useUserRewardsLPRewards(
+    account,
+    wrappingRewards?.address
+  );
 
-  const {
-    data: userRewardsForCurrentEpoch,
-    mutate: userRewardsForCurrentEpochMutate,
-  } = useUserRewardsWrappingRewardsForCurrentEpoch(account);
+  if (error) {
+    console.error(error);
+  }
 
-  const fmUserRewards = useFormattedBigNumber(userRewards);
+  const fmRewards = useFormattedBigNumber(data);
 
   async function harvestWrappingRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,7 +37,7 @@ export default function WrappingRewardsHarvest() {
 
       toast.loading(
         <TransactionToast
-          message={`Harvest ${fmUserRewards} REIGN`}
+          message={`Harvest ${fmRewards} REIGN`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -49,15 +48,14 @@ export default function WrappingRewardsHarvest() {
 
       toast.success(
         <TransactionToast
-          message={`Harvest ${fmUserRewards} REIGN`}
+          message={`Harvest ${fmRewards} REIGN`}
           chainId={chainId}
           hash={transaction.hash}
         />,
         { id: _id }
       );
 
-      userRewardsMutate();
-      userRewardsForCurrentEpochMutate();
+      mutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -74,31 +72,18 @@ export default function WrappingRewardsHarvest() {
           <p className="leading-none">Potential Earnings</p>
 
           <p className="text-2xl leading-none font-semibold">
-            {`${fmUserRewards} REIGN`}
+            {`${fmRewards} REIGN`}
           </p>
         </div>
 
         <div className="h-px w-full bg-primary-300" />
 
         <div className="space-y-2">
-          <button
-            type="submit"
-            className={classNames(
-              "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-              userRewardsForCurrentEpoch &&
-                !userRewardsForCurrentEpoch?.isZero()
-                ? "bg-white text-primary"
-                : "bg-primary-300"
-            )}
-            disabled={
-              !userRewardsForCurrentEpoch ||
-              userRewardsForCurrentEpoch?.isZero()
-            }
-          >
-            {userRewardsForCurrentEpoch && !userRewardsForCurrentEpoch?.isZero()
+          <Button type="submit" disabled={!data || data?.isZero()}>
+            {data && !data?.isZero()
               ? "Harvest Rewards"
               : "Rewards claimable next Epoch"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
