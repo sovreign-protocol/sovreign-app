@@ -42,6 +42,7 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
 type Pool = {
   address: Record<SupportedChainId, string>;
   name: Record<SupportedChainId, string>;
+  pairs: string[];
 };
 
 const POOLS: Pool[] = [
@@ -54,6 +55,7 @@ const POOLS: Pool[] = [
       [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
       [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
     },
+    pairs: ["REIGN", "ETH"],
   },
   {
     address: {
@@ -64,6 +66,7 @@ const POOLS: Pool[] = [
       [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
       [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
     },
+    pairs: ["SOV", "USDC"],
   },
 ];
 
@@ -155,6 +158,7 @@ function FarmingPage() {
       });
 
       poolTokenBalanceMutate();
+      poolTokenBalanceLockedMutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -184,6 +188,7 @@ function FarmingPage() {
       });
 
       poolTokenBalanceMutate();
+      poolTokenBalanceLockedMutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -283,13 +288,28 @@ function FarmingPage() {
                               "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
                             )}
                           >
-                            <img
-                              alt={LP_SYMBOL?.[chainId]}
-                              className="rounded-full"
-                              height={24}
-                              src={`/tokens/${LP_SYMBOL?.[chainId]}.png`}
-                              width={24}
-                            />
+                            <div className="flex -space-x-2">
+                              {!!pool ? (
+                                pool?.pairs?.map((pair, pairIndex) => (
+                                  <div className="relative" key={pairIndex}>
+                                    <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
+
+                                    <img
+                                      width={24}
+                                      height={24}
+                                      className="rounded-full"
+                                      src={`/tokens/${pair}.png`}
+                                      alt={pair}
+                                    />
+                                  </div>
+                                ))
+                              ) : (
+                                <>
+                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+                                </>
+                              )}
+                            </div>
 
                             <span className="block truncate font-medium">
                               {LP_SYMBOL?.[chainId]}
@@ -370,13 +390,28 @@ function FarmingPage() {
                               "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
                             )}
                           >
-                            <img
-                              alt={LP_SYMBOL?.[chainId]}
-                              className="rounded-full"
-                              height={24}
-                              src={`/tokens/${LP_SYMBOL?.[chainId]}.png`}
-                              width={24}
-                            />
+                            <div className="flex -space-x-2">
+                              {!!pool ? (
+                                pool?.pairs?.map((pair, pairIndex) => (
+                                  <div className="relative" key={pairIndex}>
+                                    <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
+
+                                    <img
+                                      width={24}
+                                      height={24}
+                                      className="rounded-full"
+                                      src={`/tokens/${pair}.png`}
+                                      alt={pair}
+                                    />
+                                  </div>
+                                ))
+                              ) : (
+                                <>
+                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+                                </>
+                              )}
+                            </div>
 
                             <span className="block truncate font-medium">
                               {LP_SYMBOL?.[chainId]}
@@ -409,12 +444,21 @@ function FarmingPage() {
                       <button
                         className={classNames(
                           "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-                          false ? "bg-white text-primary" : "bg-primary-300"
+                          withdrawInput.hasValue &&
+                            !!pool &&
+                            !poolTokenNeedsApproval
+                            ? "bg-white text-primary"
+                            : "bg-primary-300"
                         )}
-                        disabled={true}
+                        disabled={
+                          !(withdrawInput.hasValue && !!pool) ||
+                          poolTokenNeedsApproval
+                        }
                         type="submit"
                       >
-                        {false ? "Withdraw" : "Enter an amount"}
+                        {withdrawInput.hasValue && !!pool
+                          ? "Withdraw"
+                          : "Enter an amount"}
                       </button>
                     </div>
                   </div>
