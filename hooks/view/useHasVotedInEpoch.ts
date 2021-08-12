@@ -21,7 +21,7 @@ export default function useHasVotedInEpoch() {
 
   const contract = useBasketBalancer();
 
-  const shouldFetch = !!contract;
+  const shouldFetch = !!contract && typeof account === "string";
 
   return useSWR(
     shouldFetch ? ["HasVotedInEpoch", account] : null,

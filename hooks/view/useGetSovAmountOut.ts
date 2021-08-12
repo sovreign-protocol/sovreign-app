@@ -13,8 +13,6 @@ function getSovAmountOut(contract: Contract) {
         1
       );
 
-    console.log(getSovAmountOutSingle.toString());
-
     return getSovAmountOutSingle;
   };
 }
