@@ -1,15 +1,31 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_smartPool", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_smartPool",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_wrappingContract",
         "type": "address"
       },
-      { "internalType": "address", "name": "_treasury", "type": "address" },
-      { "internalType": "address", "name": "_sovToken", "type": "address" },
-      { "internalType": "uint256", "name": "_protocolFee", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "_treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_sovToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_protocolFee",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -17,27 +33,49 @@
   {
     "inputs": [],
     "name": "LIQ_FEE_DECIMALS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_OUT_RATIO",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PROTOCOL_FEE_DECIMALS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "collectFeesToDAO",
     "outputs": [],
@@ -46,14 +84,26 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenIn", "type": "address" },
-      { "internalType": "uint256", "name": "tokenAmountIn", "type": "uint256" },
+      {
+        "internalType": "address",
+        "name": "tokenIn",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenAmountIn",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "minPoolAmountOut",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "liquidationFee", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "liquidationFee",
+        "type": "uint256"
+      }
     ],
     "name": "deposit",
     "outputs": [],
@@ -62,13 +112,21 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "poolAmountOut", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountOut",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256[]",
         "name": "maxTokensAmountIn",
         "type": "uint256[]"
       },
-      { "internalType": "uint256", "name": "liquidationFee", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "liquidationFee",
+        "type": "uint256"
+      }
     ],
     "name": "depositAll",
     "outputs": [],
@@ -79,14 +137,22 @@
     "inputs": [],
     "name": "getPoolTokens",
     "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenOut", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "tokenAmountOut",
@@ -100,15 +166,27 @@
     ],
     "name": "getSovAmountInSingle",
     "outputs": [
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenIn", "type": "address" },
-      { "internalType": "uint256", "name": "tokenAmountIn", "type": "uint256" },
+      {
+        "internalType": "address",
+        "name": "tokenIn",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenAmountIn",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "minPoolAmountOut",
@@ -117,15 +195,27 @@
     ],
     "name": "getSovAmountOutSingle",
     "outputs": [
-      { "internalType": "uint256", "name": "poolAmountOut", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "poolAmountOut",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenOut", "type": "address" },
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" },
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "minTokenAmountOut",
@@ -134,7 +224,11 @@
     ],
     "name": "getTokenAmountOutSingle",
     "outputs": [
-      { "internalType": "uint256", "name": "tokenAmountOut", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "tokenAmountOut",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -143,14 +237,22 @@
     "inputs": [],
     "name": "getTokenWeights",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "poolAmountOut", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountOut",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256[]",
         "name": "maxAmountsIn",
@@ -170,7 +272,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256[]",
         "name": "minAmountsOut",
@@ -195,9 +301,21 @@
         "name": "liquidatedUser",
         "type": "address"
       },
-      { "internalType": "address", "name": "tokenOut", "type": "address" },
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" },
-      { "internalType": "uint256", "name": "minAmountOut", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minAmountOut",
+        "type": "uint256"
+      }
     ],
     "name": "liquidate",
     "outputs": [],
@@ -207,14 +325,26 @@
   {
     "inputs": [],
     "name": "protocolFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "reignDao",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -222,7 +352,11 @@
     "inputs": [],
     "name": "smartPool",
     "outputs": [
-      { "internalType": "contract ISmartPool", "name": "", "type": "address" }
+      {
+        "internalType": "contract ISmartPool",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -243,15 +377,33 @@
   {
     "inputs": [],
     "name": "treasury",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenOut", "type": "address" },
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" },
-      { "internalType": "uint256", "name": "minAmountOut", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minAmountOut",
+        "type": "uint256"
+      }
     ],
     "name": "withdraw",
     "outputs": [],
@@ -260,7 +412,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "poolAmountIn", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "poolAmountIn",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256[]",
         "name": "minAmountsOut",
@@ -276,7 +432,11 @@
     "inputs": [],
     "name": "wrappingContract",
     "outputs": [
-      { "internalType": "contract ISovWrapper", "name": "", "type": "address" }
+      {
+        "internalType": "contract ISovWrapper",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
