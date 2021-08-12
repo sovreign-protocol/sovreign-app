@@ -42,11 +42,11 @@ export const CONTRACT_ADDRESSES: Record<
 > = {
   BasketBalancer: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xcab995251e50d310a4a924378c9ecde5032d75e0",
+    [SupportedChainId.RINKEBY]: "0x349884021b0df3d50c07a08edbe171789fd3c8bb",
   },
   PoolRouter: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x89e0da559126aa5ca804d4c7c30715522031b92b",
+    [SupportedChainId.RINKEBY]: "0xdd87fcefe89c598d835b412009f2f4f9209753cd",
   },
   WrappingRewards: {
     [SupportedChainId.MAINNET]: "TODO",
@@ -54,11 +54,11 @@ export const CONTRACT_ADDRESSES: Record<
   },
   ReignFacet: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xc31cb4f82f178ea0377492144035c48de119a4f8",
+    [SupportedChainId.RINKEBY]: "0xc1660f2af8d7e6f20598e18c752a955b23cf564e",
   },
   GovRewards: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x923CA1b060577e8BcDF6d82A9C4109CEECCc1122",
+    [SupportedChainId.RINKEBY]: "0x9a549A0704Bae811128877d247812EDE48095192",
   },
   LPRewardsREIGNWETH: {
     [SupportedChainId.MAINNET]: "TOOD",
@@ -84,17 +84,17 @@ export const TOKEN_ADDRESSES: Record<
 > = {
   SOV: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xfbebceb1fc57b05b2bd845d936ea23ae60861584",
+    [SupportedChainId.RINKEBY]: "0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
   },
   REIGN: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x08188FC7d8F552d1D8F8d2743404e9E728425AE1",
+    [SupportedChainId.RINKEBY]: "0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
   },
 };
 
 export const POOL_ADDRESS: Record<SupportedChainId, string> = {
   [SupportedChainId.MAINNET]: "TODO",
-  [SupportedChainId.RINKEBY]: "0x27104Bda81e14697240Cd74161A21EeE8FA00284",
+  [SupportedChainId.RINKEBY]: "0x9E850E0E1cdD1b452A694D27eB82Fa78F502C8C7",
 };
 
 export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
