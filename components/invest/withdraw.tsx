@@ -6,9 +6,11 @@ import {
 } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import useGetTokenAmountOut from "@/hooks/view/useGetTokenAmountOut";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
@@ -45,6 +47,10 @@ export default function Withdraw() {
   const withdrawAmountInput = useInput();
 
   const withdrawTokenContract = useERC20(withdrawToken?.address);
+
+  const { data: tokenAmountOut } = useGetTokenAmountOut(withdrawToken?.address);
+
+  const formattedTokenAmountOut = useFormattedBigNumber(tokenAmountOut);
 
   const sovNeedsApproval = useMemo(() => {
     if (!!sovAllowance && withdrawAmountInput.hasValue) {
@@ -162,7 +168,11 @@ export default function Withdraw() {
             />
           </div>
 
-          <div className="h-5" />
+          <p className="text-sm text-gray-300 h-5">
+            {!!withdrawToken && tokenAmountOut && formattedTokenAmountOut ? (
+              <span>{`Available: ${formattedTokenAmountOut} ${withdrawToken.symbol}`}</span>
+            ) : null}
+          </p>
         </div>
 
         <div className="flex-1">

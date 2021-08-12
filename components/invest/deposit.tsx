@@ -10,6 +10,7 @@ import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
+import useGetSovAmountOut from "@/hooks/view/useGetSovAmountOut";
 import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
@@ -49,6 +50,8 @@ export default function Deposit() {
   const { data: depositTokenAllowance, mutate: depositTokenAllowanceMutate } =
     useTokenAllowanceForPoolRouter(depositToken?.address, account);
 
+  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
+
   const depositAmountInput = useInput();
 
   const depositTokenNeedsApproval = useMemo(() => {
@@ -63,7 +66,12 @@ export default function Deposit() {
     depositAmountInput.value,
   ]);
 
-  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
+  const { data: sovAmountOut } = useGetSovAmountOut(
+    depositToken?.address,
+    depositAmountInput?.value
+  );
+
+  const formattedSovAmountOut = useFormattedBigNumber(sovAmountOut);
 
   async function tokenDeposit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -278,6 +286,16 @@ export default function Deposit() {
             {...depositAmountInput.valueBind}
           />
         </div>
+      </div>
+
+      <div className="h-px w-full bg-primary-300" />
+
+      <div className="flex justify-between">
+        <p className="leading-none">SOV Received</p>
+
+        <p className="leading-none">
+          {formattedSovAmountOut === "0.00" ? `-` : formattedSovAmountOut}
+        </p>
       </div>
 
       <div className="space-y-4">
