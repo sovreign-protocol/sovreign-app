@@ -1,10 +1,5 @@
 import NumericalInput from "@/components/numericalInput";
-import {
-  CONTRACT_ADDRESSES,
-  MaxUint256,
-  SupportedChainId,
-  TOKEN_ADDRESSES,
-} from "@/constants";
+import { MaxUint256, SupportedChainId } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useStaking from "@/hooks/contracts/useStaking";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
