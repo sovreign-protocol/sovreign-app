@@ -60,13 +60,13 @@ export function EpochProgressShort() {
         <p className="text-2xl leading-none font-semibold h-6 mb-3">
           {epochDates && timer ? (
             <>
-              <span className="mr-px">{timer.dd}</span>
+              <span className="mr-px">{String(timer.dd)}</span>
               <span className="text-xl font-medium pr-3">d</span>
-              <span className="mr-px">{timer.hh}</span>
+              <span className="mr-px">{String(timer.hh)}</span>
               <span className="text-xl font-medium pr-3">h</span>
-              <span className="mr-px">{timer.mm}</span>
+              <span className="mr-px">{String(timer.mm)}</span>
               <span className="text-xl font-medium pr-3">m</span>
-              <span className="mr-px">{timer.ss}</span>
+              <span className="mr-px">{String(timer.ss)}</span>
               <span className="text-xl font-medium">s</span>
             </>
           ) : null}
