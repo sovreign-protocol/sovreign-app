@@ -17,20 +17,29 @@ export default function TokenAllocation() {
       <p className="font-medium leading-5">Token Allocation</p>
 
       <div className="h-12 rounded w-full bg-primary flex relative overflow-hidden">
-        {tokenAllocation?.map((token, tokenIndex) => (
-          <div
-            key={token.address}
-            className={classNames(
-              "h-12 flex items-center pl-4",
-              TOKEN_COLORS[tokenIndex]
-            )}
-            style={{
-              width: `${(token.allocation / totalAllocation) * 100}%`,
-            }}
-          >
-            <span className="font-bold">{token.symbol}</span>
-          </div>
-        ))}
+        {tokenAllocation?.map((token, tokenIndex) => {
+          const percentage = `${(
+            (token.allocation / totalAllocation) *
+            100
+          ).toFixed(2)}%`;
+
+          return (
+            <div
+              key={token.address}
+              className={classNames(
+                "h-12 flex items-center justify-between px-4",
+                TOKEN_COLORS[tokenIndex]
+              )}
+              style={{
+                width: percentage,
+              }}
+            >
+              <span className="font-bold">{token.symbol}</span>
+
+              <span className="font-medium">{percentage}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
