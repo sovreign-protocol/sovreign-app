@@ -50,7 +50,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   WrappingRewards: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x855dD13AbAb0e891952Fd973634cefBb1c5AAbAC",
+    [SupportedChainId.RINKEBY]: "0x855dd13abab0e891952fd973634cefbb1c5aabac",
   },
   ReignFacet: {
     [SupportedChainId.MAINNET]: "TODO",
@@ -58,7 +58,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   GovRewards: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x9a549A0704Bae811128877d247812EDE48095192",
+    [SupportedChainId.RINKEBY]: "0x9a549a0704bae811128877d247812ede48095192",
   },
   LPRewardsREIGNWETH: {
     [SupportedChainId.MAINNET]: "TOOD",
@@ -70,11 +70,11 @@ export const CONTRACT_ADDRESSES: Record<
   },
   Staking: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x5Faf8C61A65670C9472E6ef909195a76104c6356",
+    [SupportedChainId.RINKEBY]: "0x5faf8c61a65670c9472e6ef909195a76104c6356",
   },
   ReignDAO: {
     [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x78500ee25f607Ffc906cCcD27077F15f76c01785",
+    [SupportedChainId.RINKEBY]: "0x78500ee25f607ffc906cccd27077f15f76c01785",
   },
 };
 
