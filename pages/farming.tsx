@@ -113,10 +113,24 @@ function FarmingPage() {
 
   async function depositPoolToken(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
+
+    try {
+    } catch (error) {
+      handleError(error, _id);
+    }
   }
 
   async function withdrawPoolToken(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const _id = toast.loading("Waiting for confirmation");
+
+    try {
+    } catch (error) {
+      handleError(error, _id);
+    }
   }
 
   return (
