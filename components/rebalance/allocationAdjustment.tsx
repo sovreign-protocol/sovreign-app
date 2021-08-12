@@ -2,6 +2,7 @@ import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useHasVotedInEpoch from "@/hooks/view/useHasVotedInEpoch";
+import useIsEpochInitialized from "@/hooks/view/useIsEpochInitialized";
 import useMaxDelta from "@/hooks/view/useMaxDelta";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import handleError from "@/utils/handleError";
@@ -13,11 +14,14 @@ import { useEffect, useState } from "react";
 import { Minus, Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
+import useReignDAO from "@/hooks/contracts/useReignDAO";
 
 export default function AllocationAdjustment() {
   const chainId = useWeb3Store((state) => state.chainId);
 
   const basketBalancer = useBasketBalancer();
+
+  const reignDAO = useReignDAO();
 
   const { data: hasVotedInEpoch, mutate: hasVotedInEpochMutate } =
     useHasVotedInEpoch();
@@ -52,7 +56,10 @@ export default function AllocationAdjustment() {
     );
   }, [tokenAllocation]);
 
-  const canUpdate = total === totalAllocation;
+  const { data: isEpochInitialized, mutate: isEpochInitializedMutate } =
+    useIsEpochInitialized();
+
+  const canUpdate = total === totalAllocation && isEpochInitialized;
 
   async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,6 +104,30 @@ export default function AllocationAdjustment() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      const transaction: TransactionResponse =
+        await reignDAO.triggerWeightUpdate();
+
+      toast.loading(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Initialize Current Epoch`}
+        />,
+        { id: _id }
+      );
+
+      await transaction.wait();
+
+      toast.success(
+        <TransactionToast
+          hash={transaction.hash}
+          chainId={chainId}
+          message={`Initialize Current Epoch`}
+        />,
+        { id: _id }
+      );
+
+      isEpochInitializedMutate();
     } catch (error) {
       handleError(error, _id);
     }
@@ -216,7 +247,7 @@ export default function AllocationAdjustment() {
       </div>
 
       <div className="space-y-2">
-        {true && (
+        {!isEpochInitialized && (
           <button
             type="button"
             onClick={enableVoting}

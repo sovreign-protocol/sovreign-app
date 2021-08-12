@@ -31,7 +31,8 @@ type ContractNames =
   | "GovRewards"
   | "LPRewardsSOVUSDC"
   | "LPRewardsREIGNWETH"
-  | "Staking";
+  | "Staking"
+  | "ReignDAO";
 
 type TokenNames = "SOV" | "REIGN";
 
@@ -70,6 +71,10 @@ export const CONTRACT_ADDRESSES: Record<
   Staking: {
     [SupportedChainId.MAINNET]: "TODO",
     [SupportedChainId.RINKEBY]: "0x5Faf8C61A65670C9472E6ef909195a76104c6356",
+  },
+  ReignDAO: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x78500ee25f607Ffc906cCcD27077F15f76c01785",
   },
 };
 
