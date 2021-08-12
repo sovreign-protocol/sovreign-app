@@ -95,7 +95,9 @@ export default function WrappingRewardsHarvest() {
               userRewardsForCurrentEpoch?.isZero()
             }
           >
-            Harvest Rewards
+            {userRewardsForCurrentEpoch && !userRewardsForCurrentEpoch?.isZero()
+              ? "Harvest Rewards"
+              : "Rewards claimable next Epoch"}
           </button>
         </div>
       </form>

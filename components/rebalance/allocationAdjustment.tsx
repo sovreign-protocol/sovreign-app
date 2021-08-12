@@ -93,6 +93,15 @@ export default function AllocationAdjustment() {
     }
   }
 
+  async function enableVoting() {
+    const _id = toast.loading("Waiting for confirmation");
+
+    try {
+    } catch (error) {
+      handleError(error, _id);
+    }
+  }
+
   return (
     <form method="POST" onSubmit={updateAllocationVote} className="flex-1">
       <div className="flex justify-between items-start mb-4">
@@ -207,6 +216,19 @@ export default function AllocationAdjustment() {
       </div>
 
       <div className="space-y-2">
+        {true && (
+          <button
+            type="button"
+            onClick={enableVoting}
+            className={classNames(
+              "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
+              "bg-white text-primary"
+            )}
+          >
+            {`Enable voting for this Epoch`}
+          </button>
+        )}
+
         <button
           type="submit"
           className={classNames(

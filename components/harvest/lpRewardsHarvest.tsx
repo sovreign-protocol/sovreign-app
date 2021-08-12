@@ -86,7 +86,9 @@ export default function LPRewardsHarvest({ contractAddress, title }: Props) {
             )}
             disabled={!data || data?.isZero()}
           >
-            Harvest Rewards
+            {data && !data?.isZero()
+              ? "Harvest Rewards"
+              : "Rewards claimable next Epoch"}
           </button>
         </div>
       </form>
