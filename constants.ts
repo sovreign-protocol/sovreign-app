@@ -129,3 +129,50 @@ export const TOKEN_COLORS = [
   "bg-indigo-500",
   "bg-pink-500",
 ];
+
+export type FarmingPool = {
+  address: Record<SupportedChainId, string>;
+  name: Record<SupportedChainId, string>;
+  pairs: string[];
+  link: Record<SupportedChainId, string>;
+};
+
+export const FARMING_POOLS: FarmingPool[] = [
+  {
+    address: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
+    },
+    name: {
+      [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
+      [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
+    },
+    pairs: ["REIGN", "ETH"],
+    link: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]:
+        "https://app.uniswap.org/#/add/v2/0xf65c93902ecc4c7979e92ed2cca01421e8021f77/0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
+    },
+  },
+  {
+    address: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
+    },
+    name: {
+      [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
+      [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
+    },
+    pairs: ["SOV", "USDC"],
+    link: {
+      [SupportedChainId.MAINNET]: "TODO",
+      [SupportedChainId.RINKEBY]:
+        "https://app.uniswap.org/#/add/v2/0xf65C93902eCC4c7979E92ED2cca01421e8021F77/0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
+    },
+  },
+];
+
+export const LP_SYMBOL = {
+  [SupportedChainId.MAINNET]: "SLP",
+  [SupportedChainId.RINKEBY]: "UNI-V2",
+};

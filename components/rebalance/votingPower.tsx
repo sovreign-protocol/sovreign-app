@@ -27,7 +27,7 @@ export default function VotingPower() {
     <>
       <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
         <div className="flex justify-between mb-4">
-          <h2 className="font-medium leading-5">This epoch’s Voting Power</h2>
+          <h2 className="font-medium leading-5">Total Voting Power</h2>
 
           <Link href="/stake">
             <a>
@@ -45,7 +45,7 @@ export default function VotingPower() {
 
       <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
         <div className="flex justify-between mb-4">
-          <h2 className="font-medium leading-5">Total Voting Power</h2>
+          <h2 className="font-medium leading-5">Current Voting Power</h2>
         </div>
 
         <p className="text-2xl leading-none font-semibold">

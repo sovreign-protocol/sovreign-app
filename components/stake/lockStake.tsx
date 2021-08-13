@@ -141,7 +141,14 @@ export default function LockStake() {
                   placeholder="1"
                   step={1}
                   type="number"
-                  {...lockupPeriod.eventBind}
+                  value={lockupPeriod.value}
+                  onChange={(event) =>
+                    lockupPeriod.setValue(
+                      event.target.valueAsNumber >= 356 * 2
+                        ? String(365 * 2)
+                        : event.target.value
+                    )
+                  }
                 />
                 <span>Days</span>
               </div>

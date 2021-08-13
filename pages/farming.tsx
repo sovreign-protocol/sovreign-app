@@ -1,7 +1,7 @@
 import Button from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
-import { MaxUint256, SupportedChainId } from "@/constants";
+import { FarmingPool, FARMING_POOLS, LP_SYMBOL, MaxUint256 } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useStaking from "@/hooks/contracts/useStaking";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -36,42 +36,6 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
       : "text-gray-300 hover:bg-primary-300 hover:text-white"
   );
 
-type Pool = {
-  address: Record<SupportedChainId, string>;
-  name: Record<SupportedChainId, string>;
-  pairs: string[];
-};
-
-const POOLS: Pool[] = [
-  {
-    address: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
-    },
-    name: {
-      [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
-      [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
-    },
-    pairs: ["REIGN", "ETH"],
-  },
-  {
-    address: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
-    },
-    name: {
-      [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
-      [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
-    },
-    pairs: ["SOV", "USDC"],
-  },
-];
-
-const LP_SYMBOL = {
-  [SupportedChainId.MAINNET]: "SLP",
-  [SupportedChainId.RINKEBY]: "UNI-V2",
-};
-
 function FarmingPage() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
@@ -79,7 +43,7 @@ function FarmingPage() {
   const depositInput = useInput();
   const withdrawInput = useInput();
 
-  const [pool, poolSet] = useState<Pool>();
+  const [pool, poolSet] = useState<FarmingPool>();
 
   const staking = useStaking();
 
@@ -225,7 +189,7 @@ function FarmingPage() {
                 </Listbox.Button>
 
                 <Listbox.Options className="absolute w-full max-h-60 mt-2 overflow-auto bg-primary-300 ring-1 ring-inset ring-white ring-opacity-20 rounded-lg focus:outline-none p-1">
-                  {POOLS.map((_pool, _poolIndex) => (
+                  {FARMING_POOLS.map((_pool, _poolIndex) => (
                     <Listbox.Option
                       key={_poolIndex}
                       className={({ active }) =>
