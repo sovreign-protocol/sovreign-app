@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is the Liquidation Fee?",
+    "answer": "The Liquidation Fee is the percentage price another user needs to pay to buy the Liquidity Position. This fee is paid in any of the tokens in the Pool"
+  },
+  {
+    "question": "When can I get Liquidated?",
+    "answer": "Liquidations serve as a security mechanism in case the SOV token de-pegs from the value of Net-Asset-Value of the basket. Liquidations allow any user to withdraw liquidity on behalf of another user if they pay the liquidation fee to the original owner"
+  },
+  {
+    "question": "Why can I not withdraw Assets with SOV bought on the secondary Markets?",
+    "answer": "Liquidity Positions are bound to the users depositing into the basket. Only the users who minted the SOV can burn them again."
+  },
+  {
+    "question": "Why do I have 0 voting power even after depositing?",
+    "answer": "To be more resilient to flashloan attacks Voting Power for Rebalancing is calculated at the end of each Epoch, you will see your Voting Power at the start of the next epoch"
+  },
+  {
+    "question": "Why do I have 0 rewards even after depositing?",
+    "answer": "Rewards are calculated at the end of each Epoch, you will see your Rewards at the start of the next epoch"
+  }
+]
