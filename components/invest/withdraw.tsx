@@ -20,7 +20,7 @@ import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import Button from "../button";
+import Button, { MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
@@ -192,15 +192,7 @@ export default function Withdraw() {
           {!!withdrawToken && tokenAmountOut && formattedTokenAmountOut ? (
             <>
               <span>{`Available: ${formattedTokenAmountOut} ${withdrawToken.symbol}`}</span>{" "}
-              {!inputIsMax && (
-                <button
-                  type="button"
-                  className="text-indigo-500 focus:outline-none focus:underline hover:underline"
-                  onClick={setMax}
-                >
-                  {`(Max)`}
-                </button>
-              )}
+              {!inputIsMax && <MaxButton onClick={setMax} />}
             </>
           ) : null}
         </p>

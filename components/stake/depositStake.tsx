@@ -14,7 +14,7 @@ import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
-import Button from "../button";
+import Button, { MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import { TokenSingle } from "../tokenSelect";
@@ -148,15 +148,7 @@ export default function DepositStake() {
           {reignBalance && formattedReignBalance ? (
             <>
               <span>{`Balance: ${formattedReignBalance} REIGN`}</span>{" "}
-              {!inputIsMax && (
-                <button
-                  type="button"
-                  className="text-indigo-500 focus:outline-none focus:underline hover:underline"
-                  onClick={setMax}
-                >
-                  {`(Max)`}
-                </button>
-              )}
+              {!inputIsMax && <MaxButton onClick={setMax} />}
             </>
           ) : null}
         </p>

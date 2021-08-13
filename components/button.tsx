@@ -32,3 +32,25 @@ export default function Button({
     />
   );
 }
+
+type MaxButtonProps = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
+
+export function MaxButton({
+  type = "button",
+  className = "",
+  ...rest
+}: MaxButtonProps) {
+  const cachedClassNames = classNames(
+    className,
+    "text-indigo-500 focus:outline-none focus:underline hover:underline"
+  );
+
+  return (
+    <button type={type} className={cachedClassNames} {...rest}>
+      {`(Max)`}
+    </button>
+  );
+}

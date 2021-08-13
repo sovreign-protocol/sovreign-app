@@ -1,4 +1,4 @@
-import Button from "@/components/button";
+import Button, { MaxButton } from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
 import { FarmingPool, FARMING_POOLS, LP_SYMBOL, MaxUint256 } from "@/constants";
@@ -289,13 +289,7 @@ function FarmingPage() {
                           <>
                             <span>{`Balance: ${fmPoolTokenBalance} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
                             {!depositInputIsMax && (
-                              <button
-                                type="button"
-                                className="text-indigo-500 focus:outline-none focus:underline hover:underline"
-                                onClick={setDepositMax}
-                              >
-                                {`(Max)`}
-                              </button>
+                              <MaxButton onClick={setDepositMax} />
                             )}
                           </>
                         ) : null}
@@ -371,13 +365,7 @@ function FarmingPage() {
                           <>
                             <span>{`Available: ${fmPoolTokenBalanceLocked} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
                             {!withdrawInputIsMax && (
-                              <button
-                                type="button"
-                                className="text-indigo-500 focus:outline-none focus:underline hover:underline"
-                                onClick={setWithdrawMax}
-                              >
-                                {`(Max)`}
-                              </button>
+                              <MaxButton onClick={setWithdrawMax} />
                             )}
                           </>
                         ) : null}

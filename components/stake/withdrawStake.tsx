@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
+import { MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import { TokenSingle } from "../tokenSelect";
@@ -114,15 +115,7 @@ export default function WithdrawStake() {
           {reignStaked && formattedReignStaked ? (
             <>
               <span>{`Available: ${formattedReignStaked} REIGN`}</span>{" "}
-              {!inputIsMax && (
-                <button
-                  type="button"
-                  className="text-indigo-500 focus:outline-none focus:underline hover:underline"
-                  onClick={setMax}
-                >
-                  {`(Max)`}
-                </button>
-              )}
+              {!inputIsMax && <MaxButton onClick={setMax} />}
             </>
           ) : null}
         </p>
