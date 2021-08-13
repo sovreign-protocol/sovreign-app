@@ -28,7 +28,7 @@ function getUserRewardsLPRewards(contract: Contract) {
       ) {
         console.log(
           contract.address,
-          "getUserRewardsForEpoch for Epoch index",
+          "getUserRewardsForEpoch for epoch index",
           index
         );
 

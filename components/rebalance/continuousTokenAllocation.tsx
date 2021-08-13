@@ -21,7 +21,9 @@ export default function ContinuousTokenAllocation() {
         <p className="font-medium leading-5 mb-1">Continuous Allocation</p>
 
         <p className="text-sm text-gray-300">
-          Epoch ends in {epochDates ? epochDates.relative : "..."}
+          {`Allocation Change is applied at the end of the epoch in ${
+            epochDates ? epochDates.relative : "..."
+          }`}
         </p>
       </div>
 

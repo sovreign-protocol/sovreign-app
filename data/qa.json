@@ -13,10 +13,10 @@
   },
   {
     "question": "Why do I have 0 voting power even after depositing?",
-    "answer": "To be more resilient to flashloan attacks Voting Power for Rebalancing is calculated at the end of each Epoch, you will see your Voting Power at the start of the next epoch"
+    "answer": "To be more resilient to flashloan attacks Voting Power for Rebalancing is calculated at the end of each epoch, you will see your Voting Power at the start of the next epoch"
   },
   {
     "question": "Why do I have 0 rewards even after depositing?",
-    "answer": "Rewards are calculated at the end of each Epoch, you will see your Rewards at the start of the next epoch"
+    "answer": "Rewards are calculated at the end of each epoch, you will see your Rewards at the start of the next epoch"
   }
 ]

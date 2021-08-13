@@ -257,7 +257,7 @@ export default function AllocationAdjustment() {
       <div className="space-y-2">
         {!isEpochInitialized && (
           <Button onClick={enableVoting}>
-            {`Enable voting for this Epoch`}
+            {`Enable voting for this epoch`}
           </Button>
         )}
 

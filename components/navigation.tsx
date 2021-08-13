@@ -48,19 +48,19 @@ export default function Navigation() {
               <NavigationItem href="/invest" text="Invest" />
             </li>
             <li>
-              <NavigationItem href="/rebalance" text="Rebalance" />
-            </li>
-            <li>
               <NavigationItem href="/stake" text="Stake" />
             </li>
             <li>
-              <NavigationItem href="/vote" text="Vote" />
+              <NavigationItem href="/rebalance" text="Rebalance" />
             </li>
             <li>
               <NavigationItem href="/farming" text="Farming" />
             </li>
             <li>
               <NavigationItem href="/harvest" text="Harvest" />
+            </li>
+            <li>
+              <NavigationItem href="/vote" text="Vote" />
             </li>
           </ul>
         </li>

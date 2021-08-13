@@ -8,7 +8,13 @@ export default function EpochProgress() {
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <p className="font-medium leading-5 mb-4">Time until Next Epoch</p>
+      <div className="mb-4">
+        <p className="font-medium leading-5 mb-1">Time until next epoch</p>
+
+        <p className="text-sm text-gray-300">
+          Harvestable Rewards are calculated at the end of each epoch
+        </p>
+      </div>
 
       <p className="text-4xl leading-none font-semibold h-9 mb-4">
         {epochDates && timer ? (
@@ -54,7 +60,7 @@ export function EpochProgressShort() {
 
   return (
     <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-      <p className="font-medium leading-5 mb-4">Time Until Next Epoch</p>
+      <p className="font-medium leading-5 mb-4">Time until next epoch</p>
 
       <div className="h-12">
         <p className="text-2xl leading-none font-semibold h-6 mb-3">

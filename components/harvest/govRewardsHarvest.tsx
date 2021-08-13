@@ -81,7 +81,7 @@ export default function GovRewardsHarvest() {
           <Button type="submit" disabled={!data || data?.isZero()}>
             {data && !data?.isZero()
               ? "Harvest Rewards"
-              : "Rewards claimable next Epoch"}
+              : "Rewards claimable next epoch"}
           </Button>
         </div>
       </form>
