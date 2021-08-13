@@ -1,6 +1,7 @@
 import {
   CONTRACT_ADDRESSES,
   MaxUint256,
+  MIN_INPUT_VALUE,
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
@@ -70,6 +71,12 @@ export default function Withdraw() {
     };
 
     try {
+      if (Number(values.withdrawAmount.value) <= MIN_INPUT_VALUE) {
+        throw new Error(
+          `Minium Withdraw: ${MIN_INPUT_VALUE} ${withdrawToken.symbol}`
+        );
+      }
+
       const minAmountOut = parseUnits(values.withdrawAmount.value);
 
       const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(

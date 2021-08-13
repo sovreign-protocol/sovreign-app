@@ -1,6 +1,7 @@
 import {
   CONTRACT_ADDRESSES,
   MaxUint256,
+  MIN_INPUT_VALUE,
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
@@ -81,6 +82,12 @@ export default function Deposit() {
     };
 
     try {
+      if (Number(values.depositAmount.value) <= MIN_INPUT_VALUE) {
+        throw new Error(
+          `Minium Deposit: ${MIN_INPUT_VALUE} ${depositToken.symbol}`
+        );
+      }
+
       const depositAmount = parseUnits(values.depositAmount.value);
 
       const liquidationFee = hasValue(values.liquidationFee?.value)

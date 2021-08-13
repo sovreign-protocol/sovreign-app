@@ -1,7 +1,13 @@
 import Button, { MaxButton } from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
-import { FarmingPool, FARMING_POOLS, LP_SYMBOL, MaxUint256 } from "@/constants";
+import {
+  FarmingPool,
+  FARMING_POOLS,
+  LP_SYMBOL,
+  MaxUint256,
+  MIN_INPUT_VALUE,
+} from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useStaking from "@/hooks/contracts/useStaking";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -99,6 +105,12 @@ function FarmingPage() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      if (Number(depositInput.value) <= MIN_INPUT_VALUE) {
+        throw new Error(
+          `Minium Deposit: ${MIN_INPUT_VALUE} ${LP_SYMBOL?.[chainId]}`
+        );
+      }
+
       const depositAmount = parseUnits(depositInput.value);
 
       const transaction: TransactionResponse = await staking.deposit(
@@ -129,6 +141,12 @@ function FarmingPage() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
+        throw new Error(
+          `Minium Withdraw: ${MIN_INPUT_VALUE} ${LP_SYMBOL?.[chainId]}`
+        );
+      }
+
       const withdrawAmount = parseUnits(withdrawInput.value);
 
       const transaction: TransactionResponse = await staking.withdraw(

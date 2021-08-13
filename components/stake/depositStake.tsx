@@ -1,4 +1,9 @@
-import { CONTRACT_ADDRESSES, MaxUint256, TOKEN_ADDRESSES } from "@/constants";
+import {
+  CONTRACT_ADDRESSES,
+  MaxUint256,
+  MIN_INPUT_VALUE,
+  TOKEN_ADDRESSES,
+} from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -55,6 +60,10 @@ export default function DepositStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      if (Number(depositInput.value) <= MIN_INPUT_VALUE) {
+        throw new Error(`Minium Deposit: ${MIN_INPUT_VALUE} REIGN`);
+      }
+
       const depositAmount = parseUnits(depositInput.value);
 
       if (depositAmount.gt(reignBalance)) {

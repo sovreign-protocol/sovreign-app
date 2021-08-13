@@ -1,4 +1,4 @@
-import { TOKEN_ADDRESSES } from "@/constants";
+import { MIN_INPUT_VALUE, TOKEN_ADDRESSES } from "@/constants";
 import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -43,6 +43,10 @@ export default function WithdrawStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
+        throw new Error(`Minium Withdraw: ${MIN_INPUT_VALUE} REIGN`);
+      }
+
       const amountToWithdraw = parseUnits(withdrawInput.value);
 
       if (amountToWithdraw.gt(reignStaked)) {
