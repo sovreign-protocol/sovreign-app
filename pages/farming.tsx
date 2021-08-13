@@ -1,4 +1,6 @@
+import Button from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
+import { TokenPair } from "@/components/tokenSelect";
 import { MaxUint256, SupportedChainId } from "@/constants";
 import useERC20 from "@/hooks/contracts/useERC20";
 import useStaking from "@/hooks/contracts/useStaking";
@@ -10,7 +12,7 @@ import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Listbox, Tab } from "@headlessui/react";
 import classNames from "classnames";
 import type { FormEvent } from "react";
@@ -82,8 +84,6 @@ function FarmingPage() {
   const staking = useStaking();
 
   const poolTokenContract = useERC20(pool?.address?.[chainId]);
-
-  console.log(poolTokenContract);
 
   const { data: poolTokenBalance, mutate: poolTokenBalanceMutate } =
     useTokenBalance(account, pool?.address?.[chainId]);
@@ -189,6 +189,19 @@ function FarmingPage() {
     }
   }
 
+  const depositInputIsMax =
+    poolTokenBalance && depositInput.value === formatUnits(poolTokenBalance);
+  const setDepositMax = () => {
+    depositInput.setValue(formatUnits(poolTokenBalance));
+  };
+
+  const withdrawInputIsMax =
+    poolTokenBalanceLocked &&
+    withdrawInput.value === formatUnits(poolTokenBalanceLocked);
+  const setWithdrawMax = () => {
+    withdrawInput.setValue(formatUnits(poolTokenBalanceLocked));
+  };
+
   return (
     <section className="pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-lg mx-auto mb-4">
@@ -275,84 +288,53 @@ function FarmingPage() {
                       </h2>
                     </div>
 
-                    <div className="flex space-x-4">
-                      <div>
-                        <div className="mb-2">
-                          <div
-                            className={classNames(
-                              "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
-                            )}
-                          >
-                            <div className="flex -space-x-2">
-                              {!!pool ? (
-                                pool?.pairs?.map((pair, pairIndex) => (
-                                  <div className="relative" key={pairIndex}>
-                                    <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
-
-                                    <img
-                                      width={24}
-                                      height={24}
-                                      className="rounded-full"
-                                      src={`/tokens/${pair}.png`}
-                                      alt={pair}
-                                    />
-                                  </div>
-                                ))
-                              ) : (
-                                <>
-                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
-                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
-                                </>
-                              )}
-                            </div>
-
-                            <span className="block truncate font-medium">
-                              {LP_SYMBOL?.[chainId]}
-                            </span>
-                          </div>
-                        </div>
-
-                        <p className="text-sm text-gray-300 h-5">
-                          {fmPoolTokenBalance ? (
-                            <span>{`Balance: ${fmPoolTokenBalance} ${LP_SYMBOL?.[chainId]}`}</span>
-                          ) : null}
-                        </p>
-                      </div>
-
-                      <div className="flex-1">
-                        <label className="sr-only" htmlFor="deposit">
-                          {`Enter amount of ${LP_SYMBOL?.[chainId]} to deposit`}
-                        </label>
-
-                        <NumericalInput
-                          id="deposit"
-                          name="deposit"
-                          required
-                          {...depositInput.valueBind}
+                    <div>
+                      <div className="flex space-x-4 mb-2">
+                        <TokenPair
+                          pairs={pool?.pairs}
+                          symbol={LP_SYMBOL?.[chainId]}
                         />
+
+                        <div className="flex-1">
+                          <label className="sr-only" htmlFor="deposit">
+                            {`Enter amount of ${LP_SYMBOL?.[chainId]} to deposit`}
+                          </label>
+
+                          <NumericalInput
+                            id="deposit"
+                            name="deposit"
+                            required
+                            {...depositInput.valueBind}
+                          />
+                        </div>
                       </div>
+
+                      <p className="text-sm text-gray-300 h-5">
+                        {poolTokenBalance && fmPoolTokenBalance ? (
+                          <>
+                            <span>{`Balance: ${fmPoolTokenBalance} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
+                            {!depositInputIsMax && (
+                              <button
+                                type="button"
+                                className="text-indigo-500"
+                                onClick={setDepositMax}
+                              >
+                                {`(Max)`}
+                              </button>
+                            )}
+                          </>
+                        ) : null}
+                      </p>
                     </div>
 
                     <div className="space-y-4">
                       {poolTokenNeedsApproval && (
-                        <button
-                          type="button"
-                          className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
-                          onClick={approvePoolToken}
-                        >
+                        <Button onClick={approvePoolToken}>
                           {`Approve Sovreign To Spend Your ${LP_SYMBOL?.[chainId]}`}
-                        </button>
+                        </Button>
                       )}
 
-                      <button
-                        className={classNames(
-                          "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-                          depositInput.hasValue &&
-                            !!pool &&
-                            !poolTokenNeedsApproval
-                            ? "bg-white text-primary"
-                            : "bg-primary-300"
-                        )}
+                      <Button
                         disabled={
                           !(depositInput.hasValue && !!pool) ||
                           poolTokenNeedsApproval
@@ -362,7 +344,7 @@ function FarmingPage() {
                         {depositInput.hasValue && !!pool
                           ? "Deposit"
                           : "Enter an amount"}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </form>
@@ -377,74 +359,47 @@ function FarmingPage() {
                       </h2>
                     </div>
 
-                    <div className="flex space-x-4">
-                      <div>
-                        <div className="mb-2">
-                          <div
-                            className={classNames(
-                              "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
-                            )}
-                          >
-                            <div className="flex -space-x-2">
-                              {!!pool ? (
-                                pool?.pairs?.map((pair, pairIndex) => (
-                                  <div className="relative" key={pairIndex}>
-                                    <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
-
-                                    <img
-                                      width={24}
-                                      height={24}
-                                      className="rounded-full"
-                                      src={`/tokens/${pair}.png`}
-                                      alt={pair}
-                                    />
-                                  </div>
-                                ))
-                              ) : (
-                                <>
-                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
-                                  <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
-                                </>
-                              )}
-                            </div>
-
-                            <span className="block truncate font-medium">
-                              {LP_SYMBOL?.[chainId]}
-                            </span>
-                          </div>
-                        </div>
-
-                        <p className="text-sm text-gray-300 h-5">
-                          {fmPoolTokenBalanceLocked ? (
-                            <span>{`Available: ${fmPoolTokenBalanceLocked} ${LP_SYMBOL?.[chainId]}`}</span>
-                          ) : null}
-                        </p>
-                      </div>
-
-                      <div className="flex-1">
-                        <label className="sr-only" htmlFor="withdraw">
-                          {`Enter amount of ${LP_SYMBOL?.[chainId]} to withdraw`}
-                        </label>
-
-                        <NumericalInput
-                          id="withdraw"
-                          name="withdraw"
-                          required
-                          {...withdrawInput.valueBind}
+                    <div>
+                      <div className="flex space-x-4 mb-2">
+                        <TokenPair
+                          pairs={pool?.pairs}
+                          symbol={LP_SYMBOL?.[chainId]}
                         />
+
+                        <div className="flex-1">
+                          <label className="sr-only" htmlFor="withdraw">
+                            {`Enter amount of ${LP_SYMBOL?.[chainId]} to withdraw`}
+                          </label>
+
+                          <NumericalInput
+                            id="withdraw"
+                            name="withdraw"
+                            required
+                            {...withdrawInput.valueBind}
+                          />
+                        </div>
                       </div>
+
+                      <p className="text-sm text-gray-300 h-5">
+                        {poolTokenBalanceLocked && fmPoolTokenBalanceLocked ? (
+                          <>
+                            <span>{`Available: ${fmPoolTokenBalanceLocked} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
+                            {!withdrawInputIsMax && (
+                              <button
+                                type="button"
+                                className="text-indigo-500"
+                                onClick={setWithdrawMax}
+                              >
+                                {`(Max)`}
+                              </button>
+                            )}
+                          </>
+                        ) : null}
+                      </p>
                     </div>
 
                     <div className="space-y-4">
-                      <button
-                        className={classNames(
-                          "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-                          withdrawInput.hasValue &&
-                            !!pool &&
-                            !poolTokenNeedsApproval
-                            ? "bg-white text-primary"
-                            : "bg-primary-300"
-                        )}
+                      <Button
                         disabled={
                           !(withdrawInput.hasValue && !!pool) ||
                           poolTokenNeedsApproval
@@ -454,7 +409,7 @@ function FarmingPage() {
                         {withdrawInput.hasValue && !!pool
                           ? "Withdraw"
                           : "Enter an amount"}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </form>

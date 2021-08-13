@@ -176,6 +176,14 @@ export default function Deposit() {
     }
   }
 
+  const inputIsMax =
+    !!depositTokenBalance &&
+    depositAmountInput.value === formatUnits(depositTokenBalance);
+
+  const setMax = () => {
+    depositAmountInput.setValue(formatUnits(depositTokenBalance));
+  };
+
   return (
     <form className="space-y-4" onSubmit={tokenDeposit}>
       <div className="flex justify-between">
@@ -255,37 +263,44 @@ export default function Deposit() {
         </Popover>
       </div>
 
-      <div className="flex space-x-4">
-        <div>
-          <div className="mb-2">
-            <TokenSelect
-              value={depositToken}
-              onChange={depositTokenSet}
-              tokens={poolTokens}
+      <div>
+        <div className="flex space-x-4 mb-2">
+          <TokenSelect
+            value={depositToken}
+            onChange={depositTokenSet}
+            tokens={poolTokens}
+          />
+
+          <div className="flex-1">
+            <label className="sr-only" htmlFor="depositAmount">
+              Enter amount of token
+            </label>
+
+            <NumericalInput
+              name="depositAmount"
+              id="depositAmount"
+              required
+              {...depositAmountInput.valueBind}
             />
           </div>
-
-          <p className="text-sm text-gray-300 h-5">
-            {!!depositToken &&
-            depositTokenBalance &&
-            formattedDepositBalance ? (
-              <span>{`Balance: ${formattedDepositBalance} ${depositToken.symbol}`}</span>
-            ) : null}
-          </p>
         </div>
 
-        <div className="flex-1">
-          <label className="sr-only" htmlFor="depositAmount">
-            Enter amount of token
-          </label>
-
-          <NumericalInput
-            name="depositAmount"
-            id="depositAmount"
-            required
-            {...depositAmountInput.valueBind}
-          />
-        </div>
+        <p className="text-sm text-gray-300 h-5">
+          {!!depositToken && depositTokenBalance && formattedDepositBalance ? (
+            <>
+              <span>{`Balance: ${formattedDepositBalance} ${depositToken.symbol}`}</span>{" "}
+              {!inputIsMax && (
+                <button
+                  type="button"
+                  className="text-indigo-500"
+                  onClick={setMax}
+                >
+                  {`(Max)`}
+                </button>
+              )}
+            </>
+          ) : null}
+        </p>
       </div>
 
       <div className="h-px w-full bg-primary-300" />

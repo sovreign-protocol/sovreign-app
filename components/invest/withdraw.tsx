@@ -152,41 +152,58 @@ export default function Withdraw() {
     }
   }
 
+  const inputIsMax =
+    !!tokenAmountOut &&
+    withdrawAmountInput.value === formatUnits(tokenAmountOut);
+
+  const setMax = () => {
+    withdrawAmountInput.setValue(formatUnits(tokenAmountOut));
+  };
+
   return (
     <form className="space-y-4" onSubmit={tokenWithdraw}>
       <div className="flex justify-between">
         <h2 className="font-medium leading-5">Withdraw</h2>
       </div>
 
-      <div className="flex space-x-4">
-        <div>
-          <div className="mb-2">
-            <TokenSelect
-              value={withdrawToken}
-              onChange={withdrawTokenSet}
-              tokens={poolTokens}
+      <div>
+        <div className="flex space-x-4 mb-2">
+          <TokenSelect
+            value={withdrawToken}
+            onChange={withdrawTokenSet}
+            tokens={poolTokens}
+          />
+
+          <div className="flex-1">
+            <label className="sr-only" htmlFor="withdrawAmount">
+              Enter amount of token to receive
+            </label>
+
+            <NumericalInput
+              name="withdrawAmount"
+              id="withdrawAmount"
+              required
+              {...withdrawAmountInput.valueBind}
             />
           </div>
-
-          <p className="text-sm text-gray-300 h-5">
-            {!!withdrawToken && tokenAmountOut && formattedTokenAmountOut ? (
-              <span>{`Available: ${formattedTokenAmountOut} ${withdrawToken.symbol}`}</span>
-            ) : null}
-          </p>
         </div>
 
-        <div className="flex-1">
-          <label className="sr-only" htmlFor="withdrawAmount">
-            Enter amount of token to receive
-          </label>
-
-          <NumericalInput
-            name="withdrawAmount"
-            id="withdrawAmount"
-            required
-            {...withdrawAmountInput.valueBind}
-          />
-        </div>
+        <p className="text-sm text-gray-300 h-5">
+          {!!withdrawToken && tokenAmountOut && formattedTokenAmountOut ? (
+            <>
+              <span>{`Available: ${formattedTokenAmountOut} ${withdrawToken.symbol}`}</span>{" "}
+              {!inputIsMax && (
+                <button
+                  type="button"
+                  className="text-indigo-500"
+                  onClick={setMax}
+                >
+                  {`(Max)`}
+                </button>
+              )}
+            </>
+          ) : null}
+        </p>
       </div>
 
       <div className="space-y-4">

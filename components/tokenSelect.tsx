@@ -106,3 +106,56 @@ export default function TokenSelect({
     </Listbox>
   );
 }
+
+export function TokenSingle({ symbol }: { symbol: string }) {
+  return (
+    <div className="relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary">
+      <img
+        alt={symbol}
+        className="rounded-full"
+        height={24}
+        src={`/tokens/${symbol}.png`}
+        width={24}
+      />
+
+      <span className="block truncate font-medium">{symbol}</span>
+    </div>
+  );
+}
+
+export function TokenPair({
+  pairs,
+  symbol,
+}: {
+  pairs: string[];
+  symbol: string;
+}) {
+  return (
+    <div className="relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary">
+      <div className="flex -space-x-2">
+        {!!pairs ? (
+          pairs?.map((pair, pairIndex) => (
+            <div className="relative" key={pairIndex}>
+              <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
+
+              <img
+                width={24}
+                height={24}
+                className="rounded-full"
+                src={`/tokens/${pair}.png`}
+                alt={pair}
+              />
+            </div>
+          ))
+        ) : (
+          <>
+            <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+            <div className="ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6 bg-primary-400" />
+          </>
+        )}
+      </div>
+
+      <span className="block truncate font-medium">{symbol}</span>
+    </div>
+  );
+}

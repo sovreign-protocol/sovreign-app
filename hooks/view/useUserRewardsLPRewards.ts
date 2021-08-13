@@ -8,15 +8,7 @@ function getUserRewardsLPRewards(contract: Contract) {
     const lastEpochIdHarvested: BigNumber =
       await contract.userLastEpochIdHarvested();
 
-    console.log(
-      contract.address,
-      "lastEpochIdHarvested",
-      lastEpochIdHarvested.toNumber()
-    );
-
     const currentEpoch: BigNumber = await contract.getCurrentEpoch();
-
-    console.log(contract.address, "currentEpoch", currentEpoch.toNumber());
 
     const getTotalRewards = async () => {
       let _total = BigNumber.from(0);
@@ -26,23 +18,8 @@ function getUserRewardsLPRewards(contract: Contract) {
         index < currentEpoch.toNumber();
         index++
       ) {
-        console.log(
-          contract.address,
-          "getUserRewardsForEpoch for epoch index",
-          index
-        );
-
         const userRewardsForEpoch: BigNumber =
           await contract.getUserRewardsForEpoch(index);
-
-        console.log(
-          contract.address,
-          "userRewardsForEpoch:",
-          index,
-          "(",
-          userRewardsForEpoch.toNumber(),
-          ")"
-        );
 
         _total.add(userRewardsForEpoch);
       }

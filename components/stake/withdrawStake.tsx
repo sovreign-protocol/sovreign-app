@@ -7,7 +7,7 @@ import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,6 +15,7 @@ import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
+import { TokenSingle } from "../tokenSelect";
 
 dayjs.extend(relativeTime);
 
@@ -78,51 +79,53 @@ export default function WithdrawStake() {
     }
   }
 
+  const inputIsMax =
+    !!reignStaked && withdrawInput.value === formatUnits(reignStaked);
+
+  const setMax = () => {
+    withdrawInput.setValue(formatUnits(reignStaked));
+  };
+
   return (
     <form method="POST" onSubmit={withdrawReign} className="space-y-4">
       <div className="flex justify-between">
         <h2 className="font-medium leading-5">Withdraw Stake</h2>
       </div>
 
-      <div className="flex space-x-4">
-        <div>
-          <div className="mb-2">
-            <div
-              className={classNames(
-                "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
-              )}
-            >
-              <img
-                alt={"REIGN"}
-                className="rounded-full"
-                height={24}
-                src={`/tokens/REIGN.png`}
-                width={24}
-              />
+      <div>
+        <div className="flex space-x-4 mb-2">
+          <TokenSingle symbol="REIGN" />
 
-              <span className="block truncate font-medium">{"REIGN"}</span>
-            </div>
+          <div className="flex-1">
+            <label className="sr-only" htmlFor="stakeWithdraw">
+              Enter amount of REIGN to withdraw
+            </label>
+
+            <NumericalInput
+              id="stakeWithdraw"
+              name="stakeWithdraw"
+              required
+              {...withdrawInput.valueBind}
+            />
           </div>
-
-          <p className="text-sm text-gray-300 h-5">
-            {formattedReignStaked ? (
-              <span>{`Staked: ${formattedReignStaked} REIGN`}</span>
-            ) : null}
-          </p>
         </div>
 
-        <div className="flex-1">
-          <label className="sr-only" htmlFor="stakeWithdraw">
-            Enter amount of REIGN to withdraw
-          </label>
-
-          <NumericalInput
-            id="stakeWithdraw"
-            name="stakeWithdraw"
-            required
-            {...withdrawInput.valueBind}
-          />
-        </div>
+        <p className="text-sm text-gray-300 h-5">
+          {reignStaked && formattedReignStaked ? (
+            <>
+              <span>{`Available: ${formattedReignStaked} REIGN`}</span>{" "}
+              {!inputIsMax && (
+                <button
+                  type="button"
+                  className="text-indigo-500"
+                  onClick={setMax}
+                >
+                  {`(Max)`}
+                </button>
+              )}
+            </>
+          ) : null}
+        </p>
       </div>
 
       <div className="space-y-4">

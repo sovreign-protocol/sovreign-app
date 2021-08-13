@@ -9,13 +9,15 @@ import { useTokenAllowanceForReignFacet } from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import Button from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
+import { TokenSingle } from "../tokenSelect";
 
 export default function DepositStake() {
   const account = useWeb3Store((state) => state.account);
@@ -111,76 +113,68 @@ export default function DepositStake() {
     }
   }
 
+  const inputIsMax =
+    !!reignBalance && depositInput.value === formatUnits(reignBalance);
+
+  const setMax = () => {
+    depositInput.setValue(formatUnits(reignBalance));
+  };
+
   return (
     <form onSubmit={depositReign} method="POST" className="space-y-4">
       <div className="flex justify-between">
         <h2 className="font-medium leading-5">Deposit Stake</h2>
       </div>
 
-      <div className="flex space-x-4">
-        <div>
-          <div className="mb-2">
-            <div
-              className={classNames(
-                "relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary"
-              )}
-            >
-              <img
-                alt={"REIGN"}
-                className="rounded-full"
-                height={24}
-                src={`/tokens/REIGN.png`}
-                width={24}
-              />
+      <div>
+        <div className="flex space-x-4 mb-2">
+          <TokenSingle symbol="REIGN" />
 
-              <span className="block truncate font-medium">{"REIGN"}</span>
-            </div>
+          <div className="flex-1">
+            <label className="sr-only" htmlFor="stakeDeposit">
+              Enter amount of REIGN to deposit
+            </label>
+
+            <NumericalInput
+              id="stakeDeposit"
+              name="stakeDeposit"
+              required
+              {...depositInput.valueBind}
+            />
           </div>
-
-          <p className="text-sm text-gray-300 h-5">
-            {formattedReignBalance ? (
-              <span>{`Balance: ${formattedReignBalance} REIGN`}</span>
-            ) : null}
-          </p>
         </div>
 
-        <div className="flex-1">
-          <label className="sr-only" htmlFor="stakeDeposit">
-            Enter amount of REIGN to deposit
-          </label>
-
-          <NumericalInput
-            id="stakeDeposit"
-            name="stakeDeposit"
-            required
-            {...depositInput.valueBind}
-          />
-        </div>
+        <p className="text-sm text-gray-300 h-5">
+          {reignBalance && formattedReignBalance ? (
+            <>
+              <span>{`Balance: ${formattedReignBalance} REIGN`}</span>{" "}
+              {!inputIsMax && (
+                <button
+                  type="button"
+                  className="text-indigo-500"
+                  onClick={setMax}
+                >
+                  {`(Max)`}
+                </button>
+              )}
+            </>
+          ) : null}
+        </p>
       </div>
 
       <div className="space-y-4">
         {reignNeedsApproval && (
-          <button
-            type="button"
-            className="p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4 bg-white text-primary"
-            onClick={approveReign}
-          >
-            Approve Sovreign To Spend Your REIGN
-          </button>
+          <Button onClick={approveReign}>
+            {`Approve Sovreign To Spend Your REIGN`}
+          </Button>
         )}
 
-        <button
-          className={classNames(
-            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            depositInput.hasValue && !reignNeedsApproval
-              ? "bg-white text-primary"
-              : "bg-primary-300"
-          )}
+        <Button
           disabled={!depositInput.hasValue || reignNeedsApproval}
           type="submit"
         >
           {depositInput.hasValue ? "Deposit" : "Enter an amount"}
-        </button>
+        </Button>
       </div>
     </form>
   );
