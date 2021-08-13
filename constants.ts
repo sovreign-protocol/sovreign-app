@@ -176,3 +176,5 @@ export const LP_SYMBOL = {
   [SupportedChainId.MAINNET]: "SLP",
   [SupportedChainId.RINKEBY]: "UNI-V2",
 };
+
+export const MIN_INPUT_VALUE = 0.00000000000000001;

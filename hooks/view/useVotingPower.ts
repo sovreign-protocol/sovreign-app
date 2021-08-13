@@ -24,10 +24,10 @@ const getVotingPower =
     );
 
     return {
-      votingPowerAtLastEpoch: votingPowerAtTs,
-      currentVotingPower: votingPower,
-      total: reignStaked,
-      totalAtLastEpoch: reignStakedAtTs,
+      votingPowerAtTs,
+      votingPower,
+      reignStaked,
+      reignStakedAtTs,
     };
   };
 
