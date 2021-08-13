@@ -15,7 +15,9 @@ function getTokenAllocation(contract: Contract) {
           poolAddress
         );
 
-        const allocation = parseFloat(formatUnits(allocationInWei));
+        const allocation = parseFloat(
+          parseFloat(formatUnits(allocationInWei)).toFixed(2)
+        );
 
         const SYMBOL = TOKEN_NAMES_BY_ADDRESS[poolAddress.toLowerCase()];
 

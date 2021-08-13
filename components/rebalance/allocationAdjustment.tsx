@@ -15,6 +15,8 @@ import { Minus, Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 import useReignDAO from "@/hooks/contracts/useReignDAO";
+import useReignStaked from "@/hooks/view/useReignStaked";
+import Button from "../button";
 
 export default function AllocationAdjustment() {
   const chainId = useWeb3Store((state) => state.chainId);
@@ -22,6 +24,8 @@ export default function AllocationAdjustment() {
   const basketBalancer = useBasketBalancer();
 
   const reignDAO = useReignDAO();
+
+  const { data: reignStaked } = useReignStaked();
 
   const { data: hasVotedInEpoch, mutate: hasVotedInEpochMutate } =
     useHasVotedInEpoch();
@@ -59,7 +63,11 @@ export default function AllocationAdjustment() {
   const { data: isEpochInitialized, mutate: isEpochInitializedMutate } =
     useIsEpochInitialized();
 
-  const canUpdate = total === totalAllocation && isEpochInitialized;
+  const canUpdate =
+    total === totalAllocation &&
+    isEpochInitialized &&
+    !reignStaked.isZero() &&
+    !hasVotedInEpoch;
 
   async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -248,32 +256,14 @@ export default function AllocationAdjustment() {
 
       <div className="space-y-2">
         {!isEpochInitialized && (
-          <button
-            type="button"
-            onClick={enableVoting}
-            className={classNames(
-              "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-              "bg-white text-primary"
-            )}
-          >
+          <Button onClick={enableVoting}>
             {`Enable voting for this Epoch`}
-          </button>
+          </Button>
         )}
 
-        <button
-          type="submit"
-          className={classNames(
-            "px-4 py-2 w-full rounded-md font-medium focus:outline-none focus:ring-4",
-            canUpdate && !hasVotedInEpoch
-              ? "bg-white text-primary"
-              : "bg-primary-300"
-          )}
-          disabled={!canUpdate || hasVotedInEpoch}
-        >
-          {canUpdate
-            ? "Cast vote"
-            : `Total allocation must equal ${totalAllocation}`}
-        </button>
+        <Button small type="submit" disabled={!canUpdate}>
+          {`Cast vote`}
+        </Button>
       </div>
     </form>
   );

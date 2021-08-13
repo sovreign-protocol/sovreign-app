@@ -1,6 +1,7 @@
 import useReignFacet from "@/hooks/contracts/useReignFacet";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
+import useReignStaked from "@/hooks/view/useReignStaked";
 import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import handleError from "@/utils/handleError";
@@ -23,6 +24,8 @@ export default function LockStake() {
   const { data: userLockedUntil, mutate: userLockedUntilMutate } =
     useUserLockedUntil();
 
+  const { data: reignStaked } = useReignStaked();
+
   const isLockupPeriodAfterCurrentLockedTimestamp = useMemo(() => {
     if (typeof userLockedUntil === "undefined") {
       return;
@@ -39,6 +42,10 @@ export default function LockStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
+      if (reignStaked.isZero()) {
+        throw new Error("No Balance To Lock");
+      }
+
       const days = Number(lockupPeriod.value);
 
       if (days > 365 * 2) {
