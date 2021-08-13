@@ -195,7 +195,7 @@ export default function Withdraw() {
               {!inputIsMax && (
                 <button
                   type="button"
-                  className="text-indigo-500"
+                  className="text-indigo-500 focus:outline-none focus:underline hover:underline"
                   onClick={setMax}
                 >
                   {`(Max)`}

@@ -17,7 +17,7 @@ import { Listbox, Tab } from "@headlessui/react";
 import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
-import { ChevronDown } from "react-feather";
+import { ChevronDown, ExternalLink } from "react-feather";
 import toast from "react-hot-toast";
 
 const TAB_KEYS = {
@@ -250,6 +250,17 @@ function FarmingPage() {
                       <h2 className="font-medium leading-5">
                         Deposit {pool?.name?.[chainId]}
                       </h2>
+
+                      {!!pool && (
+                        <a
+                          href={pool.link?.[chainId]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block h-5 w-5 rounded focus:outline-none focus:ring-4"
+                        >
+                          <ExternalLink size={20} />
+                        </a>
+                      )}
                     </div>
 
                     <div>
@@ -280,7 +291,7 @@ function FarmingPage() {
                             {!depositInputIsMax && (
                               <button
                                 type="button"
-                                className="text-indigo-500"
+                                className="text-indigo-500 focus:outline-none focus:underline hover:underline"
                                 onClick={setDepositMax}
                               >
                                 {`(Max)`}
@@ -321,6 +332,17 @@ function FarmingPage() {
                       <h2 className="font-medium leading-5">
                         Withdraw {pool?.name?.[chainId]}
                       </h2>
+
+                      {!!pool && (
+                        <a
+                          href={pool.link?.[chainId]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block h-5 w-5 rounded focus:outline-none focus:ring-4"
+                        >
+                          <ExternalLink size={20} />
+                        </a>
+                      )}
                     </div>
 
                     <div>
@@ -351,7 +373,7 @@ function FarmingPage() {
                             {!withdrawInputIsMax && (
                               <button
                                 type="button"
-                                className="text-indigo-500"
+                                className="text-indigo-500 focus:outline-none focus:underline hover:underline"
                                 onClick={setWithdrawMax}
                               >
                                 {`(Max)`}
