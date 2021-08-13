@@ -60,11 +60,11 @@ function FarmingPage() {
 
   const poolTokenNeedsApproval = useMemo(() => {
     if (!!poolTokenAllowance && depositInput.hasValue) {
-      return poolTokenAllowance.lt(parseUnits(depositInput.value));
+      return poolTokenAllowance.isZero();
     }
 
     return;
-  }, [poolTokenAllowance, depositInput.hasValue, depositInput.value]);
+  }, [poolTokenAllowance, depositInput.hasValue]);
 
   const fmPoolTokenBalance = useFormattedBigNumber(poolTokenBalance);
 

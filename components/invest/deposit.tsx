@@ -56,15 +56,11 @@ export default function Deposit() {
 
   const depositTokenNeedsApproval = useMemo(() => {
     if (!!depositTokenAllowance && depositAmountInput.hasValue) {
-      return depositTokenAllowance.lt(parseUnits(depositAmountInput.value));
+      return depositTokenAllowance.isZero();
     }
 
     return;
-  }, [
-    depositTokenAllowance,
-    depositAmountInput.hasValue,
-    depositAmountInput.value,
-  ]);
+  }, [depositTokenAllowance, depositAmountInput.hasValue]);
 
   const { data: sovAmountOut } = useGetSovAmountOut(
     depositToken?.address,

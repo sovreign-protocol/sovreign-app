@@ -43,11 +43,11 @@ export default function DepositStake() {
 
   const reignNeedsApproval = useMemo(() => {
     if (!!reignAllowance && depositInput.hasValue) {
-      return reignAllowance.lt(parseUnits(depositInput.value));
+      return reignAllowance.isZero();
     }
 
     return;
-  }, [reignAllowance, depositInput.hasValue, depositInput.value]);
+  }, [reignAllowance, depositInput.hasValue]);
 
   async function depositReign(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -54,11 +54,11 @@ export default function Withdraw() {
 
   const sovNeedsApproval = useMemo(() => {
     if (!!sovAllowance && withdrawAmountInput.hasValue) {
-      return sovAllowance.lt(parseUnits(withdrawAmountInput.value));
+      return sovAllowance.isZero();
     }
 
     return;
-  }, [sovAllowance, withdrawAmountInput.hasValue, withdrawAmountInput.value]);
+  }, [sovAllowance, withdrawAmountInput.hasValue]);
 
   async function tokenWithdraw(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
