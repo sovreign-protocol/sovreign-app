@@ -64,10 +64,7 @@ export default function AllocationAdjustment() {
     useIsEpochInitialized();
 
   const canUpdate =
-    total === totalAllocation &&
-    isEpochInitialized &&
-    !reignStaked.isZero() &&
-    !hasVotedInEpoch;
+    isEpochInitialized && !reignStaked.isZero() && !hasVotedInEpoch;
 
   async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -262,7 +259,11 @@ export default function AllocationAdjustment() {
         )}
 
         <Button small type="submit" disabled={!canUpdate}>
-          {`Cast vote`}
+          {canUpdate
+            ? total === totalAllocation
+              ? `Cast vote`
+              : `Total allocation must be ${totalAllocation}`
+            : `Cast vote`}
         </Button>
       </div>
     </form>
