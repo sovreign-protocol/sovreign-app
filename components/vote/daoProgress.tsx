@@ -13,7 +13,7 @@ export default function DAOProgress() {
       return 0;
     }
 
-    const totalStaked = parseFloat(formatUnits(votingPower.total));
+    const totalStaked = parseFloat(formatUnits(votingPower.reignStaked));
 
     const percentage = (totalStaked / THRESHOLD) * 100;
 
@@ -24,7 +24,7 @@ export default function DAOProgress() {
     return percentage;
   }, [votingPower]);
 
-  const fmTotal = useFormattedBigNumber(votingPower?.total, 0);
+  const fmTotal = useFormattedBigNumber(votingPower?.reignStaked, 0);
 
   return (
     <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
