@@ -32,7 +32,6 @@
     "@radix-ui/react-slider": "^0.0.17",
     "@walletconnect/qrcode-modal": "^1.5.5",
     "@walletconnect/web3-provider": "^1.5.5",
-    "big.js": "^6.1.1",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.6",
     "eth-rpc-errors": "^4.0.3",
