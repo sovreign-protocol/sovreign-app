@@ -1,7 +1,9 @@
-import { useREIGNWETHRewards } from "@/hooks/contracts/useLPRewards";
+import {
+  useREIGNWETHLPRewardsAPY,
+  useREIGNWETHRewards,
+} from "@/hooks/reignWeth";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useREIGNWETHLPRewardsAPY } from "@/hooks/useLPRewardsAPY";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
