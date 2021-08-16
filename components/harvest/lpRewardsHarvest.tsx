@@ -1,24 +1,34 @@
+import { CONTRACT_ADDRESSES, FARMING_POOL_NAMES } from "@/constants";
 import useLPRewards from "@/hooks/contracts/useLPRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
+import useLPRewardsAPY from "@/hooks/view/useLPRewardsAPY";
 import useUserRewardsLPRewards from "@/hooks/view/useUserRewardsLPRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import classNames from "classnames";
 import type { FormEvent } from "react";
+import { useMemo } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 
 type Props = {
   title: string;
-  contractAddress: string;
+  pool: FARMING_POOL_NAMES;
 };
 
-export default function LPRewardsHarvest({ contractAddress, title }: Props) {
+export default function LPRewardsHarvest({ title, pool }: Props) {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
+  const contractAddress = useMemo(
+    () => CONTRACT_ADDRESSES[pool][chainId],
+    [pool, chainId]
+  );
+
   const lpRewards = useLPRewards(contractAddress);
+
+  const { data: apy } = useLPRewardsAPY(pool);
 
   const { data, mutate } = useUserRewardsLPRewards(account, contractAddress);
 
@@ -63,6 +73,12 @@ export default function LPRewardsHarvest({ contractAddress, title }: Props) {
       <form className="space-y-4" onSubmit={harvest}>
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">{title}</h2>
+        </div>
+
+        <div className="flex justify-between items-end">
+          <p className="leading-none">APY</p>
+
+          <p className="leading-none">{`${apy?.toFixed(2) ?? 0}%`}</p>
         </div>
 
         <div className="flex justify-between items-end">

@@ -2,25 +2,9 @@ import EpochProgress from "@/components/harvest/epochProgress";
 import GovRewardsHarvest from "@/components/harvest/govRewardsHarvest";
 import LPRewardsHarvest from "@/components/harvest/lpRewardsHarvest";
 import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest";
-import { CONTRACT_ADDRESSES } from "@/constants";
-import useWeb3Store, { State } from "@/hooks/useWeb3Store";
-import { useMemo } from "react";
-
-const selector = (state: State) => state.chainId;
+import { FARMING_POOL_NAMES } from "@/constants";
 
 function HarvestPage() {
-  const chainId = useWeb3Store(selector);
-
-  const LPRewardsREIGNWETH = useMemo<string>(
-    () => CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId],
-    [chainId]
-  );
-
-  const LPRewardsSOVUSDC = useMemo<string>(
-    () => CONTRACT_ADDRESSES.LPRewardsSOVUSDC[chainId],
-    [chainId]
-  );
-
   return (
     <section className="pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-4xl mx-auto">
@@ -34,12 +18,12 @@ function HarvestPage() {
           <GovRewardsHarvest />
 
           <LPRewardsHarvest
-            contractAddress={LPRewardsREIGNWETH}
+            pool={FARMING_POOL_NAMES.REIGNWETH}
             title="REIGN/WETH Pool Rewards"
           />
 
           <LPRewardsHarvest
-            contractAddress={LPRewardsSOVUSDC}
+            pool={FARMING_POOL_NAMES.SOVUSDC}
             title="SOV/USDC Pool Rewards"
           />
         </div>

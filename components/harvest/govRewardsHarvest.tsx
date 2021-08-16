@@ -1,6 +1,7 @@
 import useGovRewards from "@/hooks/contracts/useGovRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
+import useGovRewardsAPY from "@/hooks/view/useGovRewardsAPY";
 import useUserRewardsLPRewards from "@/hooks/view/useUserRewardsLPRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
@@ -14,15 +15,12 @@ export default function GovRewardsHarvest() {
   const chainId = useWeb3Store((state) => state.chainId);
 
   const govRewards = useGovRewards();
+  const { data: apy } = useGovRewardsAPY();
 
-  const { data, mutate, error } = useUserRewardsLPRewards(
+  const { data, mutate } = useUserRewardsLPRewards(
     account,
     govRewards?.address
   );
-
-  if (error) {
-    console.error(error);
-  }
 
   const fmRewards = useFormattedBigNumber(data);
 
@@ -65,6 +63,12 @@ export default function GovRewardsHarvest() {
       <form className="space-y-4" onSubmit={harvestGovRewards}>
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">Governance Rewards</h2>
+        </div>
+
+        <div className="flex justify-between items-end">
+          <p className="leading-none">APY</p>
+
+          <p className="leading-none">{`${apy?.toFixed(2) ?? 0}%`}</p>
         </div>
 
         <div className="flex justify-between items-end">

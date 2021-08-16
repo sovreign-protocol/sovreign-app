@@ -130,6 +130,25 @@ export const TOKEN_COLORS = [
   "bg-pink-500",
 ];
 
+export enum FARMING_POOL_NAMES {
+  REIGNWETH = "LPRewardsREIGNWETH",
+  SOVUSDC = "LPRewardsSOVUSDC",
+}
+
+export const FARMING_POOL_TOKEN_ADDRESSES: Record<
+  FARMING_POOL_NAMES,
+  Record<SupportedChainId, string>
+> = {
+  LPRewardsREIGNWETH: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
+  },
+  LPRewardsSOVUSDC: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
+  },
+};
+
 export type FarmingPool = {
   address: Record<SupportedChainId, string>;
   name: Record<SupportedChainId, string>;
@@ -137,39 +156,37 @@ export type FarmingPool = {
   link: Record<SupportedChainId, string>;
 };
 
+const LPRewardsREIGNWETHPool: FarmingPool = {
+  address: FARMING_POOL_TOKEN_ADDRESSES.LPRewardsREIGNWETH,
+  name: {
+    [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
+    [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
+  },
+  pairs: ["REIGN", "ETH"],
+  link: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]:
+      "https://app.uniswap.org/#/add/v2/0xf65c93902ecc4c7979e92ed2cca01421e8021f77/0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
+  },
+};
+
+const LPRewardsSOVUSDCPool: FarmingPool = {
+  address: FARMING_POOL_TOKEN_ADDRESSES.LPRewardsSOVUSDC,
+  name: {
+    [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
+    [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
+  },
+  pairs: ["SOV", "USDC"],
+  link: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]:
+      "https://app.uniswap.org/#/add/v2/0xf65C93902eCC4c7979E92ED2cca01421e8021F77/0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
+  },
+};
+
 export const FARMING_POOLS: FarmingPool[] = [
-  {
-    address: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
-    },
-    name: {
-      [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
-      [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
-    },
-    pairs: ["REIGN", "ETH"],
-    link: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]:
-        "https://app.uniswap.org/#/add/v2/0xf65c93902ecc4c7979e92ed2cca01421e8021f77/0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
-    },
-  },
-  {
-    address: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
-    },
-    name: {
-      [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
-      [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",
-    },
-    pairs: ["SOV", "USDC"],
-    link: {
-      [SupportedChainId.MAINNET]: "TODO",
-      [SupportedChainId.RINKEBY]:
-        "https://app.uniswap.org/#/add/v2/0xf65C93902eCC4c7979E92ED2cca01421e8021F77/0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
-    },
-  },
+  LPRewardsREIGNWETHPool,
+  LPRewardsSOVUSDCPool,
 ];
 
 export const LP_SYMBOL = {
@@ -178,3 +195,15 @@ export const LP_SYMBOL = {
 };
 
 export const MIN_INPUT_VALUE = 0.00000000000000001;
+
+/**
+ * @name EPOCH_REWARDS
+ * @note Will be this value for the next two years as of August 16, 2021
+ */
+export const EPOCH_REWARDS = 2403846.153;
+
+/**
+ * @name LP_EPOCH_REWARDS
+ * @note Will be this value for the next two years as of August 16, 2021
+ */
+export const LP_EPOCH_REWARDS = 96153.84;
