@@ -4,7 +4,7 @@ import type { Contract } from "@ethersproject/contracts";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import useERC20 from "./contracts/useERC20";
-import useSovWrapper from "./contracts/useSOVWrapper";
+import useSovWrapper from "./contracts/useSovWrapper";
 import useWeb3Store from "./useWeb3Store";
 
 function getWrappingRewardsExpectedRewards(
