@@ -130,25 +130,6 @@ export const TOKEN_COLORS = [
   "bg-pink-500",
 ];
 
-export enum FARMING_POOL_NAMES {
-  REIGNWETH = "LPRewardsREIGNWETH",
-  SOVUSDC = "LPRewardsSOVUSDC",
-}
-
-export const FARMING_POOL_TOKEN_ADDRESSES: Record<
-  FARMING_POOL_NAMES,
-  Record<SupportedChainId, string>
-> = {
-  LPRewardsREIGNWETH: {
-    [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
-  },
-  LPRewardsSOVUSDC: {
-    [SupportedChainId.MAINNET]: "TODO",
-    [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
-  },
-};
-
 export type FarmingPool = {
   address: Record<SupportedChainId, string>;
   name: Record<SupportedChainId, string>;
@@ -157,7 +138,10 @@ export type FarmingPool = {
 };
 
 const LPRewardsREIGNWETHPool: FarmingPool = {
-  address: FARMING_POOL_TOKEN_ADDRESSES.LPRewardsREIGNWETH,
+  address: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0x1ef52788392d940a39d09ac26cfe3c3a6f6fae47",
+  },
   name: {
     [SupportedChainId.MAINNET]: "SushiSwap REIGN/ETH LP",
     [SupportedChainId.RINKEBY]: "Uniswap REIGN/ETH LP",
@@ -171,7 +155,10 @@ const LPRewardsREIGNWETHPool: FarmingPool = {
 };
 
 const LPRewardsSOVUSDCPool: FarmingPool = {
-  address: FARMING_POOL_TOKEN_ADDRESSES.LPRewardsSOVUSDC,
+  address: {
+    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.RINKEBY]: "0xd2805867258db181b608dbc757a1ce363b71c45f",
+  },
   name: {
     [SupportedChainId.MAINNET]: "SushiSwap SOV/USDC LP",
     [SupportedChainId.RINKEBY]: "Uniswap SOV/USDC LP",

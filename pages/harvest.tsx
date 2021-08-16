@@ -1,8 +1,8 @@
 import EpochProgress from "@/components/harvest/epochProgress";
 import GovRewardsHarvest from "@/components/harvest/govRewardsHarvest";
-import LPRewardsHarvest from "@/components/harvest/lpRewardsHarvest";
+import REIGNWETHRewardsHarvest from "@/components/harvest/reignWethRewardsHarvest";
+import SOVUSDCRewardsHarvest from "@/components/harvest/sovUsdcRewardsHarvest";
 import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest";
-import { FARMING_POOL_NAMES } from "@/constants";
 
 function HarvestPage() {
   return (
@@ -17,15 +17,9 @@ function HarvestPage() {
 
           <GovRewardsHarvest />
 
-          <LPRewardsHarvest
-            pool={FARMING_POOL_NAMES.REIGNWETH}
-            title="REIGN/WETH Pool Rewards"
-          />
+          <SOVUSDCRewardsHarvest />
 
-          <LPRewardsHarvest
-            pool={FARMING_POOL_NAMES.SOVUSDC}
-            title="SOV/USDC Pool Rewards"
-          />
+          <REIGNWETHRewardsHarvest />
         </div>
       </div>
     </section>

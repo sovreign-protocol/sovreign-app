@@ -1,9 +1,10 @@
+import LPRewards from "@/contracts/LPRewards.json";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
-import useLPRewards from "../contracts/useLPRewards";
+import useContract from "../useContract";
 
-function getUserRewardsLPRewards(contract: Contract) {
+function getUserRewards(contract: Contract) {
   return async () => {
     const lastEpochIdHarvested: BigNumber =
       await contract.userLastEpochIdHarvested();
@@ -31,17 +32,17 @@ function getUserRewardsLPRewards(contract: Contract) {
   };
 }
 
-export default function useUserRewardsLPRewards(
+export default function useUserRewards(
   userAddress: string,
   contractAddress: string
 ) {
-  const contract = useLPRewards(contractAddress);
+  const contract = useContract(contractAddress, LPRewards);
 
   const shouldFetch = !!contract && typeof userAddress === "string";
 
   return useSWR(
-    shouldFetch ? ["UserRewardsLPRewards", userAddress, contractAddress] : null,
-    getUserRewardsLPRewards(contract),
+    shouldFetch ? ["UserRewards", userAddress, contractAddress] : null,
+    getUserRewards(contract),
     {
       shouldRetryOnError: false,
     }

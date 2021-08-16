@@ -1,4 +1,3 @@
-import { CONTRACT_ADDRESSES } from "@/constants";
 import UniswapV2Pair from "@/contracts/UniswapV2Pair.json";
 import { getETHPrice } from "@/lib/coingecko";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -6,7 +5,7 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useLPRewards from "./contracts/useLPRewards";
+import { useREIGNWETHRewards } from "./contracts/useLPRewards";
 import useWeb3Store from "./useWeb3Store";
 
 function getReignPrice(lpRewards: Contract, library: Web3Provider) {
@@ -41,9 +40,7 @@ export default function useReignPrice() {
   const library = useWeb3Store((state) => state.library);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const lpRewards = useLPRewards(
-    CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId]
-  );
+  const lpRewards = useREIGNWETHRewards();
 
   const shouldFetch = !!library && !!lpRewards && typeof chainId === "number";
 

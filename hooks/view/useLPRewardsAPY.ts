@@ -1,16 +1,15 @@
-import {
-  CONTRACT_ADDRESSES,
-  FARMING_POOL_NAMES,
-  LP_EPOCH_REWARDS,
-} from "@/constants";
+import { CONTRACT_ADDRESSES, LP_EPOCH_REWARDS } from "@/constants";
 import ERC20 from "@/contracts/ERC20.json";
 import type { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useLPRewards from "../contracts/useLPRewards";
-import useLPPrice from "../useLPPrice";
+import {
+  useREIGNWETHRewards,
+  useSOVUSDCRewards,
+} from "../contracts/useLPRewards";
+import { useREIGNWETHLPPrice, useSOVUSDCLPPrice } from "../useLPPrice";
 import useReignPrice from "../useReignPrice";
 import useWeb3Store from "../useWeb3Store";
 
@@ -46,14 +45,14 @@ function getLPRewardsAPY(lpRewards: Contract, library: Web3Provider) {
   };
 }
 
-export default function useLPRewardsAPY(pool: FARMING_POOL_NAMES) {
+export function useSOVUSDCLPRewardsAPY() {
   const library = useWeb3Store((state) => state.library);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const lpRewards = useLPRewards(CONTRACT_ADDRESSES[pool][chainId]);
+  const lpRewards = useSOVUSDCRewards();
 
   const { data: reignPrice } = useReignPrice();
-  const { data: lpPrice } = useLPPrice(pool);
+  const { data: lpPrice } = useSOVUSDCLPPrice();
 
   const shouldFetch =
     !!lpRewards &&
@@ -63,7 +62,31 @@ export default function useLPRewardsAPY(pool: FARMING_POOL_NAMES) {
     typeof chainId === "number";
 
   return useSWR(
-    shouldFetch ? ["LPRewardsAPY", reignPrice, lpPrice, chainId] : null,
+    shouldFetch ? ["SOVUSDCLPRewardsAPY", reignPrice, lpPrice, chainId] : null,
+    getLPRewardsAPY(lpRewards, library)
+  );
+}
+
+export function useREIGNWETHLPRewardsAPY() {
+  const library = useWeb3Store((state) => state.library);
+  const chainId = useWeb3Store((state) => state.chainId);
+
+  const lpRewards = useREIGNWETHRewards();
+
+  const { data: reignPrice } = useReignPrice();
+  const { data: lpPrice } = useREIGNWETHLPPrice();
+
+  const shouldFetch =
+    !!lpRewards &&
+    !!library &&
+    typeof reignPrice === "number" &&
+    typeof lpPrice === "number" &&
+    typeof chainId === "number";
+
+  return useSWR(
+    shouldFetch
+      ? ["REIGNWETHLPRewardsAPY", reignPrice, lpPrice, chainId]
+      : null,
     getLPRewardsAPY(lpRewards, library)
   );
 }

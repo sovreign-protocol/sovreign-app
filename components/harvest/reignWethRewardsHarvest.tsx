@@ -1,42 +1,34 @@
-import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
+import { useREIGNWETHRewards } from "@/hooks/contracts/useLPRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import useIsBoosted from "@/hooks/view/useIsBoosted";
+import { useREIGNWETHLPRewardsAPY } from "@/hooks/view/useLPRewardsAPY";
 import useUserRewards from "@/hooks/view/useUserRewards";
-import useWrappingRewardsAPY from "@/hooks/view/useWrappingRewardsAPY";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
-import Link from "next/link";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
 import HarvestRewardsCard from "./harvestRewardsCard";
 
-export default function WrappingRewardsHarvest() {
+export default function REIGNWETHRewardsHarvest() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const wrappingRewards = useWrappingRewards();
+  const lpRewards = useREIGNWETHRewards();
 
-  const { data: apy } = useWrappingRewardsAPY();
+  const { data: apy } = useREIGNWETHLPRewardsAPY();
 
-  const { data: isBoosted } = useIsBoosted(account);
-
-  const { data: rewards, mutate } = useUserRewards(
-    account,
-    wrappingRewards?.address
-  );
+  const { data: rewards, mutate } = useUserRewards(account, lpRewards?.address);
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
-  async function harvestWrappingRewards(event: FormEvent<HTMLFormElement>) {
+  async function harvest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse =
-        await wrappingRewards.massHarvest();
+      const transaction: TransactionResponse = await lpRewards.massHarvest();
 
       toast.loading(
         <TransactionToast
@@ -68,21 +60,9 @@ export default function WrappingRewardsHarvest() {
     <HarvestRewardsCard
       apy={apy}
       formattedRewards={formattedRewards}
-      onSubmit={harvestWrappingRewards}
+      onSubmit={harvest}
       rewards={rewards}
-      slot={
-        typeof isBoosted === "boolean" &&
-        (true ? (
-          <p className="font-semibold leading-5 text-indigo-500">{`+3%`}</p>
-        ) : (
-          <Link href="/rebalance">
-            <a className="font-semibold leading-5 text-indigo-500 hover:underline">
-              {`Get +3% For Voting`}
-            </a>
-          </Link>
-        ))
-      }
-      title="Deposit Rewards"
+      title="REIGN/ETH Pool Rewards"
     />
   );
 }
