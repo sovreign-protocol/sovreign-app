@@ -4,9 +4,9 @@ import {
   LP_EPOCH_REWARDS,
 } from "@/constants";
 import ERC20 from "@/contracts/ERC20.json";
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
-import { Web3Provider } from "@ethersproject/providers";
+import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import useLPRewards from "../contracts/useLPRewards";
@@ -21,41 +21,28 @@ function getLPRewardsAPY(lpRewards: Contract, library: Web3Provider) {
     lpPrice: number,
     chainId: number
   ) => {
-    try {
-      const poolAddress: string = await lpRewards.depositLP();
+    const poolAddress: string = await lpRewards.depositLP();
 
-      const poolTokenContract = new Contract(
-        poolAddress,
-        ERC20,
-        library.getSigner()
-      );
+    const poolTokenContract = new Contract(
+      poolAddress,
+      ERC20,
+      library.getSigner()
+    );
 
-      const totalStaked: BigNumber = await poolTokenContract.balanceOf(
-        CONTRACT_ADDRESSES.Staking[chainId]
-      );
+    const totalStaked: BigNumber = await poolTokenContract.balanceOf(
+      CONTRACT_ADDRESSES.Staking[chainId]
+    );
 
-      const totalUSDValueStaked =
-        parseFloat(formatUnits(totalStaked, 18)) * lpPrice;
+    const totalUSDValueStaked =
+      parseFloat(formatUnits(totalStaked, 18)) * lpPrice;
 
-      const totalRewards = LP_EPOCH_REWARDS * 52;
+    const totalRewards = LP_EPOCH_REWARDS * 52;
 
-      const totalUSDRewards = totalRewards * reignPrice;
+    const totalUSDRewards = totalRewards * reignPrice;
 
-      console.log({
-        totalUSDValueStaked,
-        totalUSDRewards,
-      });
+    const apy = (totalUSDRewards / totalUSDValueStaked) * 100;
 
-      const apy = (totalUSDValueStaked / totalUSDRewards) * 100;
-
-      console.log({ apy });
-
-      return apy;
-    } catch (error) {
-      console.error(error);
-
-      throw error;
-    }
+    return apy;
   };
 }
 
