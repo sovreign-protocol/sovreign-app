@@ -1,11 +1,13 @@
 import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import useIsBoosted from "@/hooks/view/useIsBoosted";
-import useUserRewards from "@/hooks/view/useUserRewards";
 import useWrappingRewardsAPY from "@/hooks/useWrappingRewardsAPY";
+import useIsBoosted from "@/hooks/view/useIsBoosted";
+import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
+import useWrappingRewardsExpectedRewards from "@/hooks/wrappingRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
+import { commify } from "@ethersproject/units";
 import Link from "next/link";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -22,12 +24,18 @@ export default function WrappingRewardsHarvest() {
 
   const { data: isBoosted } = useIsBoosted(account);
 
-  const { data: rewards, mutate } = useUserRewards(
+  const { data: rewards, mutate } = useHarvestableUserRewards(
     account,
     wrappingRewards?.address
   );
 
+  const { data: expectedRewards } = useWrappingRewardsExpectedRewards(account);
+
   const formattedRewards = useFormattedBigNumber(rewards);
+
+  const formattedExpectedRewards = expectedRewards
+    ? commify(Number(expectedRewards).toFixed(2))
+    : Number(0).toFixed(2);
 
   async function harvestWrappingRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,10 +77,11 @@ export default function WrappingRewardsHarvest() {
       apy={apy}
       formattedRewards={formattedRewards}
       onSubmit={harvestWrappingRewards}
+      formattedExpectedRewards={formattedExpectedRewards}
       rewards={rewards}
       slot={
         typeof isBoosted === "boolean" &&
-        (true ? (
+        (isBoosted ? (
           <p className="font-semibold leading-5 text-indigo-500">{`+3%`}</p>
         ) : (
           <Link href="/rebalance">

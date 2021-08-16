@@ -1,8 +1,9 @@
 import useGovRewards from "@/hooks/contracts/useGovRewards";
+import useGovRewardsExpectedRewards from "@/hooks/govRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
-import useWeb3Store from "@/hooks/useWeb3Store";
 import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";
-import useUserRewards from "@/hooks/view/useUserRewards";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import type { FormEvent } from "react";
@@ -18,12 +19,16 @@ export default function GovRewardsHarvest() {
 
   const { data: apy } = useGovRewardsAPY();
 
-  const { data: rewards, mutate } = useUserRewards(
+  const { data: rewards, mutate } = useHarvestableUserRewards(
     account,
     govRewards?.address
   );
 
+  const { data: expectedRewards } = useGovRewardsExpectedRewards(account);
+
   const formattedRewards = useFormattedBigNumber(rewards);
+
+  const formattedExpectedRewards = useFormattedBigNumber(expectedRewards);
 
   async function harvestGovRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,6 +67,7 @@ export default function GovRewardsHarvest() {
   return (
     <HarvestRewardsCard
       apy={apy}
+      formattedExpectedRewards={formattedExpectedRewards}
       formattedRewards={formattedRewards}
       onSubmit={harvestGovRewards}
       rewards={rewards}

@@ -4,7 +4,7 @@ import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
 import useContract from "../useContract";
 
-function getUserRewards(contract: Contract) {
+function getHarvestableUserRewards(contract: Contract) {
   return async () => {
     const lastEpochIdHarvested: BigNumber =
       await contract.userLastEpochIdHarvested();
@@ -32,7 +32,7 @@ function getUserRewards(contract: Contract) {
   };
 }
 
-export default function useUserRewards(
+export default function useHarvestableUserRewards(
   userAddress: string,
   contractAddress: string
 ) {
@@ -41,8 +41,10 @@ export default function useUserRewards(
   const shouldFetch = !!contract && typeof userAddress === "string";
 
   return useSWR(
-    shouldFetch ? ["UserRewards", userAddress, contractAddress] : null,
-    getUserRewards(contract),
+    shouldFetch
+      ? ["HarvestableUserRewards", userAddress, contractAddress]
+      : null,
+    getHarvestableUserRewards(contract),
     {
       shouldRetryOnError: false,
     }

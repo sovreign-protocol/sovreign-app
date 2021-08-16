@@ -4,6 +4,7 @@ import Button from "../button";
 
 type HarvestRewardsCardProps = {
   apy: number;
+  formattedExpectedRewards?: string;
   formattedRewards: string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   rewards: BigNumber;
@@ -13,6 +14,7 @@ type HarvestRewardsCardProps = {
 
 export default function HarvestRewardsCard({
   apy,
+  formattedExpectedRewards,
   formattedRewards,
   onSubmit,
   rewards,
@@ -34,8 +36,18 @@ export default function HarvestRewardsCard({
           <p className="leading-none">{`${apy ? apy.toFixed(2) : 0}%`}</p>
         </div>
 
+        {formattedExpectedRewards && (
+          <div className="flex justify-between items-end">
+            <p className="leading-none">Expected Earnings</p>
+
+            <p className="leading-none">
+              {`${formattedExpectedRewards} REIGN`}
+            </p>
+          </div>
+        )}
+
         <div className="flex justify-between items-end">
-          <p className="leading-none">Potential Earnings</p>
+          <p className="leading-none">Harvestable Earnings</p>
 
           <p className="text-2xl leading-none font-semibold">
             {`${formattedRewards} REIGN`}

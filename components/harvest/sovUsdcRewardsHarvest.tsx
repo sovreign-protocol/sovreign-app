@@ -1,7 +1,7 @@
 import { useSOVUSDCLPRewardsAPY, useSOVUSDCRewards } from "@/hooks/sovUsdc";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import useUserRewards from "@/hooks/view/useUserRewards";
+import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import type { FormEvent } from "react";
@@ -17,7 +17,10 @@ export default function SOVUSDCRewardsHarvest() {
 
   const { data: apy } = useSOVUSDCLPRewardsAPY();
 
-  const { data: rewards, mutate } = useUserRewards(account, lpRewards?.address);
+  const { data: rewards, mutate } = useHarvestableUserRewards(
+    account,
+    lpRewards?.address
+  );
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
