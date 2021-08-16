@@ -5,7 +5,7 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import { useREIGNWETHRewards } from "./contracts/useLPRewards";
+import { useREIGNWETHRewards } from "./reignWeth";
 import useWeb3Store from "./useWeb3Store";
 
 function getReignPrice(lpRewards: Contract, library: Web3Provider) {
