@@ -8,6 +8,7 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
+import useStaking from "./contracts/useStaking";
 import useContract from "./useContract";
 import useReignPrice from "./useReignPrice";
 import useWeb3Store, { State } from "./useWeb3Store";
@@ -116,5 +117,57 @@ export function useREIGNWETHLPRewardsAPY() {
       ? ["REIGNWETHLPRewardsAPY", reignPrice, lpPrice, chainId]
       : null,
     getREIGNWETHLPRewardsAPY(lpRewards, library)
+  );
+}
+
+function getREIGNWETHLPRewardsExpectedRewards(
+  staking: Contract,
+  lpRewards: Contract,
+  library: Web3Provider
+) {
+  return async (_: string, userAddress: string) => {
+    const poolAddress: string = await lpRewards.depositLP();
+
+    const poolTokenContract = new Contract(
+      poolAddress,
+      ERC20,
+      library.getSigner()
+    );
+
+    const balanceLocked: BigNumber = await staking.balanceLocked(
+      userAddress,
+      poolAddress
+    );
+
+    const balanceOf: BigNumber = await poolTokenContract.balanceOf(
+      staking.address
+    );
+
+    return (
+      (parseFloat(formatUnits(balanceLocked, 18)) /
+        parseFloat(formatUnits(balanceOf, 18))) *
+      LP_EPOCH_REWARDS
+    );
+  };
+}
+
+export default function useREIGNWETHLPRewardsExpectedRewards(
+  userAddress: string
+) {
+  const library = useWeb3Store((state) => state.library);
+
+  const staking = useStaking();
+
+  const lpRewards = useREIGNWETHRewards();
+
+  const shouldFetch =
+    !!library && !!staking && !!lpRewards && typeof userAddress === "string";
+
+  return useSWR(
+    shouldFetch ? ["REIGNWETHLPRewardsExpectedRewards", userAddress] : null,
+    getREIGNWETHLPRewardsExpectedRewards(staking, lpRewards, library),
+    {
+      shouldRetryOnError: false,
+    }
   );
 }

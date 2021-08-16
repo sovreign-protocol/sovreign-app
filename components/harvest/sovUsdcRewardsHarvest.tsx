@@ -1,9 +1,13 @@
-import { useSOVUSDCLPRewardsAPY, useSOVUSDCRewards } from "@/hooks/sovUsdc";
+import useSOVUSDCLPRewardsExpectedRewards, {
+  useSOVUSDCLPRewardsAPY,
+  useSOVUSDCRewards,
+} from "@/hooks/sovUsdc";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
+import { commify } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
@@ -22,7 +26,13 @@ export default function SOVUSDCRewardsHarvest() {
     lpRewards?.address
   );
 
+  const { data: expectedRewards } = useSOVUSDCLPRewardsExpectedRewards(account);
+
   const formattedRewards = useFormattedBigNumber(rewards);
+
+  const formattedExpectedRewards = expectedRewards
+    ? commify(Number(expectedRewards).toFixed(2))
+    : Number(0).toFixed(2);
 
   async function harvest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,6 +72,7 @@ export default function SOVUSDCRewardsHarvest() {
     <HarvestRewardsCard
       apy={apy}
       formattedRewards={formattedRewards}
+      formattedExpectedRewards={formattedExpectedRewards}
       onSubmit={harvest}
       rewards={rewards}
       title="SOV/USDC Pool Rewards"

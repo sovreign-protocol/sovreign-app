@@ -29,23 +29,11 @@ export default function HarvestRewardsCard({
 
           {slot ?? null}
         </div>
-
         <div className="flex justify-between items-end">
           <p className="leading-none">APY</p>
 
           <p className="leading-none">{`${apy ? apy.toFixed(2) : 0}%`}</p>
         </div>
-
-        {formattedExpectedRewards && (
-          <div className="flex justify-between items-end">
-            <p className="leading-none">Expected Earnings</p>
-
-            <p className="leading-none">
-              {`${formattedExpectedRewards} REIGN`}
-            </p>
-          </div>
-        )}
-
         <div className="flex justify-between items-end">
           <p className="leading-none">Harvestable Earnings</p>
 
@@ -53,9 +41,17 @@ export default function HarvestRewardsCard({
             {`${formattedRewards} REIGN`}
           </p>
         </div>
+        {formattedExpectedRewards && (
+          <div className="flex justify-between items-end">
+            <p className="leading-none">This Epoch&apos;s Earnings</p>
+
+            <p className="leading-none">
+              {`+ ${formattedExpectedRewards} REIGN`}
+            </p>
+          </div>
+        )}
 
         <div className="h-px w-full bg-primary-300" />
-
         <div className="space-y-2">
           <Button type="submit" disabled={!rewards || rewards?.isZero()}>
             {!!rewards && !rewards?.isZero()
