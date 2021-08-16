@@ -3,10 +3,10 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useERC20 from "../contracts/useERC20";
-import useWeb3Store from "../useWeb3Store";
-import useReignPrice from "../useReignPrice";
-import useSovPrice from "../useSovPrice";
+import useERC20 from "./contracts/useERC20";
+import useWeb3Store from "./useWeb3Store";
+import useReignPrice from "./useReignPrice";
+import useSovPrice from "./useSovPrice";
 
 function getWrappingRewardsAPY(sovToken: Contract) {
   return async (_: string, sovPrice: number, reignPrice: number) => {

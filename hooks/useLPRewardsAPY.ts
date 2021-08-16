@@ -8,10 +8,10 @@ import useSWR from "swr";
 import {
   useREIGNWETHRewards,
   useSOVUSDCRewards,
-} from "../contracts/useLPRewards";
-import { useREIGNWETHLPPrice, useSOVUSDCLPPrice } from "../useLPPrice";
-import useReignPrice from "../useReignPrice";
-import useWeb3Store from "../useWeb3Store";
+} from "./contracts/useLPRewards";
+import { useREIGNWETHLPPrice, useSOVUSDCLPPrice } from "./useLPPrice";
+import useReignPrice from "./useReignPrice";
+import useWeb3Store from "./useWeb3Store";
 
 function getLPRewardsAPY(lpRewards: Contract, library: Web3Provider) {
   return async (

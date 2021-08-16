@@ -1,7 +1,7 @@
 import { useSOVUSDCRewards } from "@/hooks/contracts/useLPRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import { useSOVUSDCLPRewardsAPY } from "@/hooks/view/useLPRewardsAPY";
+import { useSOVUSDCLPRewardsAPY } from "@/hooks/useLPRewardsAPY";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";

@@ -3,7 +3,7 @@ import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useIsBoosted from "@/hooks/view/useIsBoosted";
 import useUserRewards from "@/hooks/view/useUserRewards";
-import useWrappingRewardsAPY from "@/hooks/view/useWrappingRewardsAPY";
+import useWrappingRewardsAPY from "@/hooks/useWrappingRewardsAPY";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import Link from "next/link";

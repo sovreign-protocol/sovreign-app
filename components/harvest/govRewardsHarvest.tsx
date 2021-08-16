@@ -1,7 +1,7 @@
 import useGovRewards from "@/hooks/contracts/useGovRewards";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
-import useGovRewardsAPY from "@/hooks/view/useGovRewardsAPY";
+import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";
 import useUserRewards from "@/hooks/view/useUserRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";

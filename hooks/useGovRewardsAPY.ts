@@ -2,7 +2,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useGovRewards from "../contracts/useGovRewards";
+import useGovRewards from "./contracts/useGovRewards";
 
 function getGovRewardsAPY(contract: Contract) {
   return async () => {
