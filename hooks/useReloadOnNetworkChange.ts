@@ -1,3 +1,4 @@
+import type { Network } from "@ethersproject/providers";
 import { useEffect } from "react";
 import useWeb3Store from "./useWeb3Store";
 
@@ -9,14 +10,16 @@ export default function useReloadOnNetworkChange() {
       return;
     }
 
-    function handleNetworkEvent(newNetwork, oldNetwork) {
-      console.log({ newNetwork, oldNetwork });
+    function handleOnNetwork(_: Network, old: Network) {
+      if (old) {
+        window.location.reload();
+      }
     }
 
-    library.on("network", handleNetworkEvent);
+    library.on("network", handleOnNetwork);
 
     return () => {
-      library.off("network", handleNetworkEvent);
+      library.off("network", handleOnNetwork);
     };
   }, [library]);
 }
