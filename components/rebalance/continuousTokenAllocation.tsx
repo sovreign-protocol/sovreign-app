@@ -18,7 +18,7 @@ export default function ContinuousTokenAllocation() {
   return (
     <div className="space-y-4">
       <div>
-        <p className="font-medium leading-5 mb-1">Continuous Allocation</p>
+        <p className="font-medium leading-5 mb-1">Epoch Allocation Vote</p>
 
         <p className="text-sm text-gray-300">
           {`Allocation Change is applied at the end of the epoch in ${
