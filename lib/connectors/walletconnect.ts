@@ -130,5 +130,5 @@ export default class WalletConnectConnector {
 }
 
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: [4],
+  supportedChainIds: [1, 4],
 });

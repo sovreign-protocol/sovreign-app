@@ -173,5 +173,5 @@ export default class MetaMaskConnector {
 }
 
 export const injected = new MetaMaskConnector({
-  supportedChainIds: [4],
+  supportedChainIds: [1, 4],
 });
