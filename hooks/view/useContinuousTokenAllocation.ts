@@ -1,22 +1,20 @@
 import { TOKEN_NAMES_BY_ADDRESS } from "@/constants";
-import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { BasketBalancer } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
+import { useBasketBalancer } from "../useContract";
 
-function getContinuousTokenAllocation(contract: Contract) {
+function getContinuousTokenAllocation(contract: BasketBalancer) {
   return async () => {
-    const tokens: string[] = await contract.getTokens();
+    const tokens = await contract.getTokens();
 
     const tokenAllocations = await Promise.all(
       tokens.map(async (poolAddress) => {
-        const targetAllocationInWei: BigNumber =
-          await contract.getTargetAllocation(poolAddress);
-
-        const continuousVoteInWei: BigNumber = await contract.continuousVote(
+        const targetAllocationInWei = await contract.getTargetAllocation(
           poolAddress
         );
+
+        const continuousVoteInWei = await contract.continuousVote(poolAddress);
 
         const continuousVote = parseFloat(formatUnits(continuousVoteInWei));
 

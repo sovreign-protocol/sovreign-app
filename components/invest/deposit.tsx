@@ -5,14 +5,13 @@ import {
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import usePoolRouter from "@/hooks/contracts/usePoolRouter";
-import { useTokenContract } from "@/hooks/useContract";
+import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import useGetSovAmountOut from "@/hooks/view/useGetSovAmountOut";
-import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
+import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import hasValue from "@/utils/hasValue";
@@ -49,7 +48,11 @@ export default function Deposit() {
   const { data: depositTokenBalance, mutate: depositTokenBalanceMutate } =
     useTokenBalance(account, depositToken?.address);
   const { data: depositTokenAllowance, mutate: depositTokenAllowanceMutate } =
-    useTokenAllowanceForPoolRouter(depositToken?.address, account);
+    useTokenAllowance(
+      depositToken?.address,
+      account,
+      CONTRACT_ADDRESSES.PoolRouter[chainId]
+    );
 
   const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 

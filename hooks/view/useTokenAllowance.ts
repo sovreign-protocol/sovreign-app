@@ -1,14 +1,11 @@
-import { CONTRACT_ADDRESSES } from "@/constants";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ERC20 } from "@/contracts/types";
 import useSWR from "swr";
 import { useTokenContract } from "../useContract";
-import useWeb3Store from "../useWeb3Store";
 
 const getTokenAllowance =
-  (contract: Contract) =>
+  (contract: ERC20) =>
   async (_: string, __: string, owner: string, spender: string) => {
-    const value: BigNumber = await contract.allowance(owner, spender);
+    const value = await contract.allowance(owner, spender);
 
     return value;
   };
@@ -29,31 +26,5 @@ export default function useTokenAllowance(
   return useSWR(
     shouldFetch ? ["TokenBalance", tokenAddress, owner, spender] : null,
     getTokenAllowance(contract)
-  );
-}
-
-export function useTokenAllowanceForPoolRouter(
-  tokenAddress: string,
-  owner: string
-) {
-  const chainId = useWeb3Store((state) => state.chainId);
-
-  return useTokenAllowance(
-    tokenAddress,
-    owner,
-    CONTRACT_ADDRESSES.PoolRouter[chainId]
-  );
-}
-
-export function useTokenAllowanceForReignFacet(
-  tokenAddress: string,
-  owner: string
-) {
-  const chainId = useWeb3Store((state) => state.chainId);
-
-  return useTokenAllowance(
-    tokenAddress,
-    owner,
-    CONTRACT_ADDRESSES.ReignFacet[chainId]
   );
 }

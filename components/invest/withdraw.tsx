@@ -5,14 +5,13 @@ import {
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import usePoolRouter from "@/hooks/contracts/usePoolRouter";
-import { useTokenContract } from "@/hooks/useContract";
+import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import useGetTokenAmountOut from "@/hooks/view/useGetTokenAmountOut";
-import { useTokenAllowanceForPoolRouter } from "@/hooks/view/useTokenAllowance";
+import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { BigNumber } from "@ethersproject/bignumber";
@@ -40,8 +39,11 @@ export default function Withdraw() {
     account,
     TOKEN_ADDRESSES.SOV[chainId]
   );
-  const { data: sovAllowance, mutate: sovAllowanceMutate } =
-    useTokenAllowanceForPoolRouter(TOKEN_ADDRESSES.SOV[chainId], account);
+  const { data: sovAllowance, mutate: sovAllowanceMutate } = useTokenAllowance(
+    TOKEN_ADDRESSES.SOV[chainId],
+    account,
+    CONTRACT_ADDRESSES.PoolRouter[chainId]
+  );
 
   const [withdrawToken, withdrawTokenSet] = useState<Token>();
 

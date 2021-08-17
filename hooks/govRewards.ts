@@ -1,17 +1,15 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import { GovRewards, ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import useGovRewards from "./contracts/useGovRewards";
-import useReignFacet from "./contracts/useReignFacet";
+import { useGovRewards, useReignFacet } from "./useContract";
 
 function getGovRewardsExpectedRewards(
-  reignFacet: Contract,
-  govRewards: Contract
+  reignFacet: ReignFacet,
+  govRewards: GovRewards
 ) {
   return async (_: string, userAddress: string) => {
-    const balanceOf: BigNumber = await reignFacet.balanceOf(userAddress);
+    const balanceOf = await reignFacet.balanceOf(userAddress);
 
-    const reignStaked: BigNumber = await reignFacet.reignStaked();
+    const reignStaked = await reignFacet.reignStaked();
 
     const rewardsForEpoch = await govRewards.getRewardsForEpoch();
 

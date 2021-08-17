@@ -1,4 +1,4 @@
-import useReignFacet from "@/hooks/contracts/useReignFacet";
+import { useReignFacet } from "@/hooks/useContract";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";

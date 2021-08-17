@@ -1,18 +1,15 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ReignFacet } from "@/contracts/types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import useSWR from "swr";
-import useReignFacet from "../contracts/useReignFacet";
+import { useReignFacet } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 dayjs.extend(utc);
 
-const getUserLockedUntil =
-  (contract: Contract) => async (_: string, address: string) => {
-    const lockedUntilTimestamp: BigNumber = await contract.userLockedUntil(
-      address
-    );
+function getUserLockedUntil(contract: ReignFacet) {
+  return async (_: string, address: string) => {
+    const lockedUntilTimestamp = await contract.userLockedUntil(address);
 
     const timestamp = lockedUntilTimestamp.toNumber();
 
@@ -31,6 +28,7 @@ const getUserLockedUntil =
       isLocked,
     };
   };
+}
 
 export default function useUserLockedUntil() {
   const account = useWeb3Store((state) => state.account);

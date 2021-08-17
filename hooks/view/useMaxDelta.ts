@@ -1,12 +1,11 @@
-import useSWR from "swr";
-import useBasketBalancer from "../contracts/useBasketBalancer";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { BasketBalancer } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
+import useSWR from "swr";
+import { useBasketBalancer } from "../useContract";
 
-function getMaxDelta(contract: Contract) {
+function getMaxDelta(contract: BasketBalancer) {
   return async () => {
-    const delta: BigNumber = await contract.maxDelta();
+    const delta = await contract.maxDelta();
 
     return parseFloat(formatUnits(delta));
   };

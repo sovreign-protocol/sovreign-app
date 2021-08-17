@@ -4,13 +4,12 @@ import {
   MIN_INPUT_VALUE,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import useReignFacet from "@/hooks/contracts/useReignFacet";
-import { useTokenContract } from "@/hooks/useContract";
+import { useReignFacet, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
-import { useTokenAllowanceForReignFacet } from "@/hooks/view/useTokenAllowance";
+import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
@@ -43,7 +42,11 @@ export default function DepositStake() {
   const reignContract = useTokenContract(TOKEN_ADDRESSES.REIGN[chainId]);
 
   const { data: reignAllowance, mutate: reignAllowanceMutate } =
-    useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);
+    useTokenAllowance(
+      TOKEN_ADDRESSES.REIGN[chainId],
+      account,
+      CONTRACT_ADDRESSES.ReignFacet[chainId]
+    );
 
   const reignNeedsApproval = useMemo(() => {
     if (!!reignAllowance && depositInput.hasValue) {

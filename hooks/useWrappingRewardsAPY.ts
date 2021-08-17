@@ -1,6 +1,5 @@
 import { EPOCH_REWARDS, TOKEN_ADDRESSES } from "@/constants";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ERC20 } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import { useTokenContract } from "./useContract";
@@ -8,9 +7,9 @@ import useReignPrice from "./useReignPrice";
 import useSovPrice from "./useSovPrice";
 import useWeb3Store from "./useWeb3Store";
 
-function getWrappingRewardsAPY(sovToken: Contract) {
+function getWrappingRewardsAPY(sovToken: ERC20) {
   return async (_: string, sovPrice: number, reignPrice: number) => {
-    const totalSupply: BigNumber = await sovToken.totalSupply();
+    const totalSupply = await sovToken.totalSupply();
 
     const totalUSDValueSov = parseFloat(formatUnits(totalSupply)) * sovPrice;
 

@@ -1,5 +1,5 @@
 import { MIN_INPUT_VALUE, TOKEN_ADDRESSES } from "@/constants";
-import useReignFacet from "@/hooks/contracts/useReignFacet";
+import { useReignFacet } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";

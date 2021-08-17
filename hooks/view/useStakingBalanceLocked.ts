@@ -1,11 +1,10 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { Staking } from "@/contracts/types";
 import useSWR from "swr";
-import useStaking from "../contracts/useStaking";
+import { useStaking } from "../useContract";
 
-function getStakingBalanceLocked(contract: Contract) {
+function getStakingBalanceLocked(contract: Staking) {
   return async (_: string, user: string, token: string) => {
-    const balanceLocked: BigNumber = await contract.balanceLocked(user, token);
+    const balanceLocked = await contract.balanceLocked(user, token);
 
     return balanceLocked;
   };

@@ -1,22 +1,18 @@
 import { EPOCH_REWARDS, TOKEN_ADDRESSES } from "@/constants";
-import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ERC20, SovWrapper } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useSovWrapper from "./contracts/useSovWrapper";
-import { useTokenContract } from "./useContract";
+import { useSovWrapper, useTokenContract } from "./useContract";
 import useWeb3Store from "./useWeb3Store";
 
 function getWrappingRewardsExpectedRewards(
-  sovWrapper: Contract,
-  sovToken: Contract
+  sovWrapper: SovWrapper,
+  sovToken: ERC20
 ) {
   return async (_: string, userAddress: string) => {
-    const balanceLocked: BigNumber = await sovWrapper.balanceLocked(
-      userAddress
-    );
+    const balanceLocked = await sovWrapper.balanceLocked(userAddress);
 
-    const totalSupply: BigNumber = await sovToken.totalSupply();
+    const totalSupply = await sovToken.totalSupply();
 
     return (
       (parseFloat(formatUnits(balanceLocked, 18)) /

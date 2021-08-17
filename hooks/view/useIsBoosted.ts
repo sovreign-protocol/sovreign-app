@@ -1,13 +1,12 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { WrappingRewards } from "@/contracts/types";
 import useSWR from "swr";
-import useWrappingRewards from "../contracts/useWrappingRewards";
+import { useWrappingRewards } from "../useContract";
 
-function getIsBoosted(contract: Contract) {
+function getIsBoosted(contract: WrappingRewards) {
   return async (_: string, user: string) => {
-    const currentEpoch: BigNumber = await contract.getCurrentEpoch();
+    const currentEpoch = await contract.getCurrentEpoch();
 
-    const isBoosted: boolean = await contract.isBoosted(user, currentEpoch);
+    const isBoosted = await contract.isBoosted(user, currentEpoch);
 
     return isBoosted;
   };

@@ -1,13 +1,12 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { BasketBalancer } from "@/contracts/types";
 import useSWR from "swr";
-import useBasketBalancer from "../contracts/useBasketBalancer";
+import { useBasketBalancer } from "../useContract";
 
-function getIsEpochInitialized(contract: Contract) {
+function getIsEpochInitialized(contract: BasketBalancer) {
   return async () => {
-    const currentEpoch: BigNumber = await contract.getCurrentEpoch();
+    const currentEpoch = await contract.getCurrentEpoch();
 
-    const lastEpochUpdate: BigNumber = await contract.lastEpochUpdate();
+    const lastEpochUpdate = await contract.lastEpochUpdate();
 
     return currentEpoch.toNumber() === lastEpochUpdate.toNumber();
   };

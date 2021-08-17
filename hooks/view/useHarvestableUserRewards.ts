@@ -1,15 +1,14 @@
-import LPRewards from "@/contracts/LPRewards.json";
+import LPRewards_ABI from "@/contracts/LPRewards.json";
+import type { LPRewards } from "@/contracts/types";
 import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
 import useContract from "../useContract";
 
-function getHarvestableUserRewards(contract: Contract) {
+function getHarvestableUserRewards(contract: LPRewards) {
   return async () => {
-    const lastEpochIdHarvested: BigNumber =
-      await contract.userLastEpochIdHarvested();
+    const lastEpochIdHarvested = await contract.userLastEpochIdHarvested();
 
-    const currentEpoch: BigNumber = await contract.getCurrentEpoch();
+    const currentEpoch = await contract.getCurrentEpoch();
 
     const getTotalRewards = async () => {
       let _total = BigNumber.from(0);
@@ -19,8 +18,9 @@ function getHarvestableUserRewards(contract: Contract) {
         index < currentEpoch.toNumber();
         index++
       ) {
-        const userRewardsForEpoch: BigNumber =
-          await contract.getUserRewardsForEpoch(index);
+        const userRewardsForEpoch = await contract.getUserRewardsForEpoch(
+          index
+        );
 
         _total.add(userRewardsForEpoch);
       }
@@ -36,7 +36,7 @@ export default function useHarvestableUserRewards(
   userAddress: string,
   contractAddress: string
 ) {
-  const contract = useContract(contractAddress, LPRewards);
+  const contract = useContract<LPRewards>(contractAddress, LPRewards_ABI);
 
   const shouldFetch = !!contract && typeof userAddress === "string";
 

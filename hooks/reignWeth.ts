@@ -1,15 +1,19 @@
 import { CONTRACT_ADDRESSES, LP_EPOCH_REWARDS } from "@/constants";
-import ERC20 from "@/contracts/ERC20.json";
-import LPRewards from "@/contracts/LPRewards.json";
-import UniswapV2Pair from "@/contracts/UniswapV2Pair.json";
+import ERC20_ABI from "@/contracts/ERC20.json";
+import LPRewards_ABI from "@/contracts/LPRewards.json";
+import type {
+  ERC20,
+  LPRewards,
+  Staking,
+  UniswapV2Pair,
+} from "@/contracts/types";
+import UniswapV2Pair_ABI from "@/contracts/UniswapV2Pair.json";
 import { getETHPrice } from "@/lib/coingecko";
-import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useStaking from "./contracts/useStaking";
-import useContract from "./useContract";
+import useContract, { useStaking } from "./useContract";
 import useReignPrice from "./useReignPrice";
 import useWeb3Store, { State } from "./useWeb3Store";
 
@@ -18,23 +22,25 @@ const selector = (state: State) => state.chainId;
 export function useREIGNWETHRewards() {
   const chainId = useWeb3Store(selector);
 
-  return useContract(CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId], LPRewards);
+  return useContract<LPRewards>(
+    CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId],
+    LPRewards_ABI
+  );
 }
 
-function getREIGNWETHLPPrice(lpRewards: Contract, library: Web3Provider) {
+function getREIGNWETHLPPrice(lpRewards: LPRewards, library: Web3Provider) {
   return async () => {
-    const poolAddress: string = await lpRewards.depositLP();
+    const poolAddress = await lpRewards.depositLP();
 
     const uniswapV2Pair = new Contract(
       poolAddress,
-      UniswapV2Pair,
+      UniswapV2Pair_ABI,
       library.getSigner()
-    );
+    ) as UniswapV2Pair;
 
-    const totalSupply: BigNumber = await uniswapV2Pair.totalSupply();
+    const totalSupply = await uniswapV2Pair.totalSupply();
 
-    const reserves: [BigNumber, BigNumber, number] =
-      await uniswapV2Pair.getReserves();
+    const reserves = await uniswapV2Pair.getReserves();
 
     const [, reserve1] = reserves;
 
@@ -64,22 +70,22 @@ export function useREIGNWETHLPPrice() {
   );
 }
 
-function getREIGNWETHLPRewardsAPY(lpRewards: Contract, library: Web3Provider) {
+function getREIGNWETHLPRewardsAPY(lpRewards: LPRewards, library: Web3Provider) {
   return async (
     _: string,
     reignPrice: number,
     lpPrice: number,
     chainId: number
   ) => {
-    const poolAddress: string = await lpRewards.depositLP();
+    const poolAddress = await lpRewards.depositLP();
 
     const poolTokenContract = new Contract(
       poolAddress,
-      ERC20,
+      ERC20_ABI,
       library.getSigner()
-    );
+    ) as ERC20;
 
-    const totalStaked: BigNumber = await poolTokenContract.balanceOf(
+    const totalStaked = await poolTokenContract.balanceOf(
       CONTRACT_ADDRESSES.Staking[chainId]
     );
 
@@ -121,27 +127,22 @@ export function useREIGNWETHLPRewardsAPY() {
 }
 
 function getREIGNWETHLPRewardsExpectedRewards(
-  staking: Contract,
-  lpRewards: Contract,
+  staking: Staking,
+  lpRewards: LPRewards,
   library: Web3Provider
 ) {
   return async (_: string, userAddress: string) => {
-    const poolAddress: string = await lpRewards.depositLP();
+    const poolAddress = await lpRewards.depositLP();
 
     const poolTokenContract = new Contract(
       poolAddress,
-      ERC20,
+      ERC20_ABI,
       library.getSigner()
-    );
+    ) as ERC20;
 
-    const balanceLocked: BigNumber = await staking.balanceLocked(
-      userAddress,
-      poolAddress
-    );
+    const balanceLocked = await staking.balanceLocked(userAddress, poolAddress);
 
-    const balanceOf: BigNumber = await poolTokenContract.balanceOf(
-      staking.address
-    );
+    const balanceOf = await poolTokenContract.balanceOf(staking.address);
 
     return (
       (parseFloat(formatUnits(balanceLocked, 18)) /

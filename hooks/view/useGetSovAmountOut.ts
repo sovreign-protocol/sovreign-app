@@ -1,17 +1,15 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { PoolRouter } from "@/contracts/types";
 import { parseUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import usePoolRouter from "../contracts/usePoolRouter";
+import { usePoolRouter } from "../useContract";
 
-function getSovAmountOut(contract: Contract) {
+function getSovAmountOut(contract: PoolRouter) {
   return async (_: string, depositAmount: string, depositToken: string) => {
-    const getSovAmountOutSingle: BigNumber =
-      await contract.getSovAmountOutSingle(
-        depositToken,
-        parseUnits(depositAmount),
-        1
-      );
+    const getSovAmountOutSingle = await contract.getSovAmountOutSingle(
+      depositToken,
+      parseUnits(depositAmount),
+      1
+    );
 
     return getSovAmountOutSingle;
   };

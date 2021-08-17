@@ -1,6 +1,6 @@
-import UniswapV2Pair from "@/contracts/UniswapV2Pair.json";
+import type { LPRewards, UniswapV2Pair } from "@/contracts/types";
+import UniswapV2Pair_ABI from "@/contracts/UniswapV2Pair.json";
 import { getETHPrice } from "@/lib/coingecko";
-import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
@@ -8,18 +8,17 @@ import useSWR from "swr";
 import { useREIGNWETHRewards } from "./reignWeth";
 import useWeb3Store from "./useWeb3Store";
 
-function getReignPrice(lpRewards: Contract, library: Web3Provider) {
+function getReignPrice(lpRewards: LPRewards, library: Web3Provider) {
   return async () => {
-    const poolAddress: string = await lpRewards.depositLP();
+    const poolAddress = await lpRewards.depositLP();
 
     const uniswapV2Pair = new Contract(
       poolAddress,
-      UniswapV2Pair,
+      UniswapV2Pair_ABI,
       library.getSigner()
-    );
+    ) as UniswapV2Pair;
 
-    const reserves: [BigNumber, BigNumber, number] =
-      await uniswapV2Pair.getReserves();
+    const reserves = await uniswapV2Pair.getReserves();
 
     const [reserve0, reserve1] = reserves;
 

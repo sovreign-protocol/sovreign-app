@@ -1,15 +1,14 @@
 import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants";
+import type { ERC20, PoolRouter } from "@/contracts/types";
 import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
-import usePoolRouter from "../contracts/usePoolRouter";
-import { useTokenContract } from "../useContract";
+import { usePoolRouter, useTokenContract } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 import useTokenBalance from "./useTokenBalance";
 
 function getGetTokenAmountOut(
-  poolRouter: Contract,
-  withdrawTokenContract: Contract
+  poolRouter: PoolRouter,
+  withdrawTokenContract: ERC20
 ) {
   return async (
     _: string,
@@ -17,10 +16,13 @@ function getGetTokenAmountOut(
     sovAmountIn: BigNumber,
     chainId: number
   ) => {
-    const getTokenAmountOutSingle: BigNumber =
-      await poolRouter.getTokenAmountOutSingle(withdrawToken, sovAmountIn, 1);
+    const getTokenAmountOutSingle = await poolRouter.getTokenAmountOutSingle(
+      withdrawToken,
+      sovAmountIn,
+      1
+    );
 
-    const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
+    const poolBalance = await withdrawTokenContract.balanceOf(
       POOL_ADDRESS[chainId]
     );
 

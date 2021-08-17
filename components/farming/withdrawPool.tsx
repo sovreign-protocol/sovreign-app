@@ -2,7 +2,7 @@ import Button, { MaxButton } from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
 import { FarmingPool, LP_SYMBOL, MIN_INPUT_VALUE } from "@/constants";
-import useStaking from "@/hooks/contracts/useStaking";
+import { useStaking } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";

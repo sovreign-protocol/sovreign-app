@@ -1,18 +1,17 @@
 import { EPOCH_DURATION } from "@/constants";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { GovRewards } from "@/contracts/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import useSWR from "swr";
-import useGovRewards from "../contracts/useGovRewards";
+import { useGovRewards } from "../useContract";
 
 dayjs.extend(relativeTime);
 
-function getEpochDates(contract: Contract) {
+function getEpochDates(contract: GovRewards) {
   return async (_: string) => {
-    const epochStart: BigNumber = await contract.epochStart();
+    const epochStart = await contract.epochStart();
 
-    const currentEpoch: BigNumber = await contract.getCurrentEpoch();
+    const currentEpoch = await contract.getCurrentEpoch();
 
     const startDate =
       epochStart.toNumber() + (currentEpoch.toNumber() - 1) * EPOCH_DURATION;

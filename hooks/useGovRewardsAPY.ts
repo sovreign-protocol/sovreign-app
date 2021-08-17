@@ -1,10 +1,10 @@
+import type { GovRewards } from "@/contracts/types";
 import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useGovRewards from "./contracts/useGovRewards";
+import { useGovRewards } from "./useContract";
 
-function getGovRewardsAPY(contract: Contract) {
+function getGovRewardsAPY(contract: GovRewards) {
   return async () => {
     const totalStake: BigNumber = await contract.getPoolSizeAtTs(Date.now());
 

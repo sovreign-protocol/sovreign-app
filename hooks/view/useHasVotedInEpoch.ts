@@ -1,14 +1,14 @@
-import type { Contract } from "@ethersproject/contracts";
+import type { BasketBalancer } from "@/contracts/types";
 import useSWR from "swr";
-import useBasketBalancer from "../contracts/useBasketBalancer";
+import { useBasketBalancer } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
-function getHasVotedInEpoch(contract: Contract) {
-  return async (_: string, account: string) => {
-    const epoch: number = await contract.getCurrentEpoch();
+function getHasVotedInEpoch(contract: BasketBalancer) {
+  return async (_: string, user: string) => {
+    const epoch = await contract.getCurrentEpoch();
 
     const hasVotedInEpoch: boolean = await contract.hasVotedInEpoch(
-      account,
+      user,
       epoch
     );
 

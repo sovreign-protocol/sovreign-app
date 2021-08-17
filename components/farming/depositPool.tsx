@@ -7,8 +7,7 @@ import {
   MaxUint256,
   MIN_INPUT_VALUE,
 } from "@/constants";
-import useStaking from "@/hooks/contracts/useStaking";
-import { useTokenContract } from "@/hooks/useContract";
+import { useStaking, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";

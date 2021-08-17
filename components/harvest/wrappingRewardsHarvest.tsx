@@ -1,9 +1,9 @@
-import useWrappingRewards from "@/hooks/contracts/useWrappingRewards";
+import { useWrappingRewards } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useWrappingRewardsAPY from "@/hooks/useWrappingRewardsAPY";
-import useIsBoosted from "@/hooks/view/useIsBoosted";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
+import useIsBoosted from "@/hooks/view/useIsBoosted";
 import useWrappingRewardsExpectedRewards from "@/hooks/wrappingRewards";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";

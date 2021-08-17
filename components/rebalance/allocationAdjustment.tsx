@@ -1,22 +1,20 @@
-import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
+import { useBasketBalancer, useReignDAO } from "@/hooks/useContract";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useHasVotedInEpoch from "@/hooks/view/useHasVotedInEpoch";
 import useIsEpochInitialized from "@/hooks/view/useIsEpochInitialized";
 import useMaxDelta from "@/hooks/view/useMaxDelta";
+import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { Minus, Plus } from "react-feather";
 import toast from "react-hot-toast";
-import { TransactionToast } from "../customToast";
-import useReignDAO from "@/hooks/contracts/useReignDAO";
-import useReignStaked from "@/hooks/view/useReignStaked";
 import Button from "../button";
+import { TransactionToast } from "../customToast";
 
 export default function AllocationAdjustment() {
   const chainId = useWeb3Store((state) => state.chainId);

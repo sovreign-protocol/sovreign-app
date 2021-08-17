@@ -1,19 +1,16 @@
 import { TOKEN_CATEGORY_BY_SYMBOL, TOKEN_NAMES_BY_ADDRESS } from "@/constants";
-import useBasketBalancer from "@/hooks/contracts/useBasketBalancer";
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { BasketBalancer } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
+import { useBasketBalancer } from "../useContract";
 
-function getTokenAllocation(contract: Contract) {
+function getTokenAllocation(contract: BasketBalancer) {
   return async () => {
-    const tokens: string[] = await contract.getTokens();
+    const tokens = await contract.getTokens();
 
     const tokenAllocations = await Promise.all(
       tokens.map(async (poolAddress) => {
-        const allocationInWei: BigNumber = await contract.getTargetAllocation(
-          poolAddress
-        );
+        const allocationInWei = await contract.getTargetAllocation(poolAddress);
 
         const allocation = parseFloat(
           parseFloat(formatUnits(allocationInWei)).toFixed(2)

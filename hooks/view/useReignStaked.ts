@@ -1,15 +1,15 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import useReignFacet from "../contracts/useReignFacet";
+import { useReignFacet } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
-const getReignStaked =
-  (contract: Contract) => async (_: string, user: string) => {
-    const value: BigNumber = await contract.balanceOf(user);
+function getReignStaked(contract: ReignFacet) {
+  return async (_: string, user: string) => {
+    const value = await contract.balanceOf(user);
 
     return value;
   };
+}
 
 export default function useReignStaked() {
   const account = useWeb3Store((state) => state.account);
