@@ -150,7 +150,7 @@ export default function AllocationAdjustment() {
       </div>
 
       <div className="mb-4">
-        <ul className="grid grid-cols-2 gap-4">
+        <ul className="grid md:grid-cols-2 gap-4">
           {inputObject &&
             tokenAllocation &&
             tokenAllocation?.map((token) => {
