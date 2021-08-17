@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
     "format-staged": "pretty-quick --staged",
     "lint-staged": "lint-staged",
-    "postinstall": "husky install",
+    "postinstall": "husky install && yarn compile-contract-types",
     "analyze": "ANALYZE=true next build",
     "compile-contract-types": "typechain --target ethers-v5 --out-dir './contracts/types' './contracts/*.json'"
   },
