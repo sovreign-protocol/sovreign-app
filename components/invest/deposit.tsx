@@ -16,7 +16,6 @@ import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import hasValue from "@/utils/hasValue";
 import { BigNumber } from "@ethersproject/bignumber";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
 import type { FormEvent } from "react";
@@ -126,7 +125,7 @@ export default function Deposit() {
         .mul(100 - Number(slippage))
         .div(100);
 
-      const transaction: TransactionResponse = await poolRouter.deposit(
+      const transaction = await poolRouter.deposit(
         depositToken.address,
         depositAmount,
         minPoolAmountOut,
@@ -164,11 +163,10 @@ export default function Deposit() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse =
-        await depositTokenContract.approve(
-          CONTRACT_ADDRESSES.PoolRouter[chainId],
-          MaxUint256
-        );
+      const transaction = await depositTokenContract.approve(
+        CONTRACT_ADDRESSES.PoolRouter[chainId],
+        MaxUint256
+      );
 
       toast.loading(`Approve ${depositToken.symbol}`, { id: _id });
 

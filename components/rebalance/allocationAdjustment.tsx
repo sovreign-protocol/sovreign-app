@@ -7,7 +7,6 @@ import useMaxDelta from "@/hooks/view/useMaxDelta";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
@@ -70,11 +69,10 @@ export default function AllocationAdjustment() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse =
-        await basketBalancer.updateAllocationVote(
-          Object.keys(inputObject),
-          Object.values(inputObject).map((el) => parseUnits(el.toString()))
-        );
+      const transaction = await basketBalancer.updateAllocationVote(
+        Object.keys(inputObject),
+        Object.values(inputObject).map((el) => parseUnits(el.toString()))
+      );
 
       toast.loading(
         <TransactionToast
@@ -107,8 +105,7 @@ export default function AllocationAdjustment() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse =
-        await reignDAO.triggerWeightUpdate();
+      const transaction = await reignDAO.triggerWeightUpdate();
 
       toast.loading(
         <TransactionToast

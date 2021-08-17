@@ -15,7 +15,6 @@ import useStakingBalanceLocked from "@/hooks/view/useStakingBalanceLocked";
 import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { useMemo } from "react";
@@ -57,7 +56,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse = await poolTokenContract.approve(
+      const transaction = await poolTokenContract.approve(
         staking?.address,
         MaxUint256
       );
@@ -88,7 +87,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
       const depositAmount = parseUnits(depositInput.value);
 
-      const transaction: TransactionResponse = await staking.deposit(
+      const transaction = await staking.deposit(
         pool?.address?.[chainId],
         depositAmount
       );

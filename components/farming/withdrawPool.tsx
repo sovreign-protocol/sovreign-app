@@ -9,7 +9,6 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useStakingBalanceLocked from "@/hooks/view/useStakingBalanceLocked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { ExternalLink } from "react-feather";
@@ -49,7 +48,7 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
 
       const withdrawAmount = parseUnits(withdrawInput.value);
 
-      const transaction: TransactionResponse = await staking.withdraw(
+      const transaction = await staking.withdraw(
         pool?.address?.[chainId],
         withdrawAmount
       );

@@ -5,7 +5,6 @@ import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
@@ -36,7 +35,7 @@ export default function GovRewardsHarvest() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse = await govRewards.massHarvest();
+      const transaction = await govRewards.massHarvest();
 
       toast.loading(
         <TransactionToast

@@ -12,7 +12,6 @@ import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { useMemo } from "react";
@@ -72,9 +71,7 @@ export default function DepositStake() {
         throw new Error(`Maximum Deposit: ${formattedReignBalance} REIGN`);
       }
 
-      const transaction: TransactionResponse = await reignFacet.deposit(
-        depositAmount
-      );
+      const transaction = await reignFacet.deposit(depositAmount);
 
       toast.loading(
         <TransactionToast
@@ -107,7 +104,7 @@ export default function DepositStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse = await reignContract.approve(
+      const transaction = await reignContract.approve(
         CONTRACT_ADDRESSES.ReignFacet[chainId],
         MaxUint256
       );

@@ -6,7 +6,6 @@ import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import useIsBoosted from "@/hooks/view/useIsBoosted";
 import useWrappingRewardsExpectedRewards from "@/hooks/wrappingRewards";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { commify } from "@ethersproject/units";
 import Link from "next/link";
 import type { FormEvent } from "react";
@@ -43,8 +42,7 @@ export default function WrappingRewardsHarvest() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse =
-        await wrappingRewards.massHarvest();
+      const transaction = await wrappingRewards.massHarvest();
 
       toast.loading(
         <TransactionToast

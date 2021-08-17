@@ -6,7 +6,6 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -53,9 +52,7 @@ export default function WithdrawStake() {
         throw new Error(`Maximum Withdraw: ${formattedReignStaked} REIGN`);
       }
 
-      const transaction: TransactionResponse = await reignFacet.withdraw(
-        amountToWithdraw
-      );
+      const transaction = await reignFacet.withdraw(amountToWithdraw);
 
       toast.loading(
         <TransactionToast

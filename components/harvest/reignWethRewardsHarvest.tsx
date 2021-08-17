@@ -6,7 +6,6 @@ import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import handleError from "@/utils/handleError";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { commify } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -41,7 +40,7 @@ export default function REIGNWETHRewardsHarvest() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse = await lpRewards.massHarvest();
+      const transaction = await lpRewards.massHarvest();
 
       toast.loading(
         <TransactionToast

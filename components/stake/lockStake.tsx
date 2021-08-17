@@ -6,7 +6,6 @@ import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import handleError from "@/utils/handleError";
 import { BigNumber } from "@ethersproject/bignumber";
-import type { TransactionResponse } from "@ethersproject/providers";
 import * as Slider from "@radix-ui/react-slider";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -59,7 +58,7 @@ export default function LockStake() {
         days === 365 * 2 ? days - 1 : days
       );
 
-      const transaction: TransactionResponse = await reignFacet.lock(
+      const transaction = await reignFacet.lock(
         BigNumber.from(futureTimestamp)
       );
 

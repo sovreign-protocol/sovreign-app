@@ -15,7 +15,6 @@ import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { BigNumber } from "@ethersproject/bignumber";
-import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
@@ -105,7 +104,7 @@ export default function Withdraw() {
         throw new Error("Not Enough SOV");
       }
 
-      const transaction: TransactionResponse = await poolRouter.withdraw(
+      const transaction = await poolRouter.withdraw(
         withdrawToken.address,
         poolAmountIn,
         /**
@@ -144,7 +143,7 @@ export default function Withdraw() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      const transaction: TransactionResponse = await sovContract.approve(
+      const transaction = await sovContract.approve(
         CONTRACT_ADDRESSES.PoolRouter[chainId],
         MaxUint256
       );
