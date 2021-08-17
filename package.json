@@ -5,14 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "yarn compile-contract-types && next start",
     "lint": "next lint",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
     "format-staged": "pretty-quick --staged",
     "lint-staged": "lint-staged",
     "postinstall": "husky install",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "compile-contract-types": "typechain --target ethers-v5 --out-dir './contracts/types' './contracts/*.json'"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^11.1.0",
+    "@typechain/ethers-v5": "^7.0.1",
     "@types/classnames": "^2.3.1",
     "@types/lodash.omit": "^4.5.6",
     "@types/react": "^17.0.17",
@@ -55,12 +57,14 @@
     "eip1193-provider": "^1.0.1",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.0",
+    "ethers": "^5.4.4",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "pretty-quick": "^3.1.1",
     "tailwindcss": "^2.2.7",
+    "typechain": "^5.1.2",
     "typescript": "^4.3.5"
   }
 }

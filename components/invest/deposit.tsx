@@ -5,8 +5,8 @@ import {
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import { useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -44,7 +44,7 @@ export default function Deposit() {
 
   const [depositToken, depositTokenSet] = useState<Token>();
 
-  const depositTokenContract = useERC20(depositToken?.address);
+  const depositTokenContract = useTokenContract(depositToken?.address);
 
   const { data: depositTokenBalance, mutate: depositTokenBalanceMutate } =
     useTokenBalance(account, depositToken?.address);

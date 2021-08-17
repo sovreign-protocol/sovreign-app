@@ -7,8 +7,8 @@ import {
   MaxUint256,
   MIN_INPUT_VALUE,
 } from "@/constants";
-import useERC20 from "@/hooks/contracts/useERC20";
 import useStaking from "@/hooks/contracts/useStaking";
+import { useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -31,7 +31,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
   const depositInput = useInput();
 
-  const poolTokenContract = useERC20(pool?.address?.[chainId]);
+  const poolTokenContract = useTokenContract(pool?.address?.[chainId]);
 
   const { data: poolTokenBalance, mutate: poolTokenBalanceMutate } =
     useTokenBalance(account, pool?.address?.[chainId]);

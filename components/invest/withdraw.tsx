@@ -5,8 +5,8 @@ import {
   POOL_ADDRESS,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import useERC20 from "@/hooks/contracts/useERC20";
 import usePoolRouter from "@/hooks/contracts/usePoolRouter";
+import { useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -34,7 +34,7 @@ export default function Withdraw() {
 
   const { data: poolTokens } = useGetPoolTokens();
 
-  const sovContract = useERC20(TOKEN_ADDRESSES.SOV[chainId]);
+  const sovContract = useTokenContract(TOKEN_ADDRESSES.SOV[chainId]);
 
   const { data: sovBalance, mutate: sovBalanceMutate } = useTokenBalance(
     account,
@@ -47,7 +47,7 @@ export default function Withdraw() {
 
   const withdrawAmountInput = useInput();
 
-  const withdrawTokenContract = useERC20(withdrawToken?.address);
+  const withdrawTokenContract = useTokenContract(withdrawToken?.address);
 
   const { data: tokenAmountOut } = useGetTokenAmountOut(withdrawToken?.address);
 

@@ -2,8 +2,8 @@ import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
-import useERC20 from "../contracts/useERC20";
 import usePoolRouter from "../contracts/usePoolRouter";
+import { useTokenContract } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 import useTokenBalance from "./useTokenBalance";
 
@@ -45,7 +45,7 @@ export default function useGetTokenAmountOut(withdrawToken: string) {
 
   const poolRouter = usePoolRouter();
 
-  const withdrawTokenContract = useERC20(withdrawToken);
+  const withdrawTokenContract = useTokenContract(withdrawToken);
 
   const shouldFetch =
     !!poolRouter &&

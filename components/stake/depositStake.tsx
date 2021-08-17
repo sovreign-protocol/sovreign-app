@@ -4,8 +4,8 @@ import {
   MIN_INPUT_VALUE,
   TOKEN_ADDRESSES,
 } from "@/constants";
-import useERC20 from "@/hooks/contracts/useERC20";
 import useReignFacet from "@/hooks/contracts/useReignFacet";
+import { useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -15,7 +15,6 @@ import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import classNames from "classnames";
 import type { FormEvent } from "react";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
@@ -41,7 +40,7 @@ export default function DepositStake() {
 
   const depositInput = useInput();
 
-  const reignContract = useERC20(TOKEN_ADDRESSES.REIGN[chainId]);
+  const reignContract = useTokenContract(TOKEN_ADDRESSES.REIGN[chainId]);
 
   const { data: reignAllowance, mutate: reignAllowanceMutate } =
     useTokenAllowanceForReignFacet(TOKEN_ADDRESSES.REIGN[chainId], account);

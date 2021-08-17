@@ -3,8 +3,8 @@ import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useERC20 from "./contracts/useERC20";
 import useSovWrapper from "./contracts/useSovWrapper";
+import { useTokenContract } from "./useContract";
 import useWeb3Store from "./useWeb3Store";
 
 function getWrappingRewardsExpectedRewards(
@@ -29,7 +29,7 @@ function getWrappingRewardsExpectedRewards(
 export default function useWrappingRewardsExpectedRewards(userAddress: string) {
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const sovToken = useERC20(TOKEN_ADDRESSES.SOV[chainId]);
+  const sovToken = useTokenContract(TOKEN_ADDRESSES.SOV[chainId]);
 
   const sovWrapper = useSovWrapper();
 

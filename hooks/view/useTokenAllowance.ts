@@ -2,7 +2,7 @@ import { CONTRACT_ADDRESSES } from "@/constants";
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "@ethersproject/contracts";
 import useSWR from "swr";
-import useERC20 from "../contracts/useERC20";
+import { useTokenContract } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 const getTokenAllowance =
@@ -18,7 +18,7 @@ export default function useTokenAllowance(
   owner: string,
   spender: string
 ) {
-  const contract = useERC20(tokenAddress);
+  const contract = useTokenContract(tokenAddress);
 
   const shouldFetch =
     !!contract &&

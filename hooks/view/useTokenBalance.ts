@@ -1,18 +1,17 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "@ethersproject/contracts";
+import type { ERC20 } from "@/contracts/types";
 import useSWR from "swr";
-import useERC20 from "../contracts/useERC20";
+import { useTokenContract } from "../useContract";
 import useKeepSWRDataLiveAsBlocksArrive from "../useKeepSWRDataLiveAsBlocksArrive";
 
 const getTokenBalance =
-  (contract: Contract) => async (_: string, address: string) => {
-    const value: BigNumber = await contract.balanceOf(address);
+  (contract: ERC20) => async (_: string, address: string) => {
+    const value = await contract.balanceOf(address);
 
     return value;
   };
 
 export default function useTokenBalance(address: string, tokenAddress: string) {
-  const contract = useERC20(tokenAddress);
+  const contract = useTokenContract(tokenAddress);
 
   const shouldFetch =
     !!contract &&
