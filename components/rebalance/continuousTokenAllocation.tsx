@@ -32,7 +32,7 @@ export default function ContinuousTokenAllocation() {
           <div
             key={token.address}
             className={classNames(
-              "h-12 flex items-center justify-between px-4",
+              "h-12 flex items-center justify-between px-4 text-sm",
               TOKEN_COLORS[tokenIndex]
             )}
             style={{
