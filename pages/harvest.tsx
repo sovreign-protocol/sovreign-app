@@ -1,29 +1,13 @@
-import EpochProgress from "@/components/harvest/epochProgress";
-import GovRewardsHarvest from "@/components/harvest/govRewardsHarvest";
-import REIGNWETHRewardsHarvest from "@/components/harvest/reignWethRewardsHarvest";
-import SOVUSDCRewardsHarvest from "@/components/harvest/sovUsdcRewardsHarvest";
-import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest";
+import ConnectAccount from "@/components/connectAccount";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import HarvestView from "@/views/harvest";
 
 function HarvestPage() {
-  return (
-    <section className="pt-8 md:pt-16 pb-8">
-      <div className="px-5 max-w-4xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="md:col-span-2">
-            <EpochProgress />
-          </div>
+  const account = useWeb3Store((state) => state.account);
 
-          <WrappingRewardsHarvest />
+  if (account) return <HarvestView />;
 
-          <GovRewardsHarvest />
-
-          <SOVUSDCRewardsHarvest />
-
-          <REIGNWETHRewardsHarvest />
-        </div>
-      </div>
-    </section>
-  );
+  return <ConnectAccount />;
 }
 
 export default HarvestPage;

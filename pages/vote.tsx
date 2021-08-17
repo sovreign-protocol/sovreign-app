@@ -1,13 +1,13 @@
-import DAOProgress from "@/components/vote/daoProgress";
+import ConnectAccount from "@/components/connectAccount";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import VoteView from "@/views/vote";
 
 function VotePage() {
-  return (
-    <section className="pt-8 md:pt-16 pb-8">
-      <div className="px-5 max-w-4xl mx-auto mb-4">
-        <DAOProgress />
-      </div>
-    </section>
-  );
+  const account = useWeb3Store((state) => state.account);
+
+  if (account) return <VoteView />;
+
+  return <ConnectAccount />;
 }
 
 export default VotePage;

@@ -1,37 +1,13 @@
-import { EpochProgressShort } from "@/components/harvest/epochProgress";
-import AllocationAdjustment from "@/components/rebalance/allocationAdjustment";
-import ContinuousTokenAllocation from "@/components/rebalance/continuousTokenAllocation";
-import TokenAllocation from "@/components/rebalance/tokenAllocation";
-import VotingPower from "@/components/rebalance/votingPower";
+import ConnectAccount from "@/components/connectAccount";
+import useWeb3Store from "@/hooks/useWeb3Store";
+import RebalanceView from "@/views/rebalance";
 
 function RebalancePage() {
-  return (
-    <section className="pt-8 md:pt-16 pb-8">
-      <div className="px-5 max-w-4xl mx-auto mb-4">
-        <div className="space-y-4 md:space-y-0 md:flex md:space-x-4">
-          <VotingPower />
+  const account = useWeb3Store((state) => state.account);
 
-          <EpochProgressShort />
-        </div>
-      </div>
+  if (account) return <RebalanceView />;
 
-      <div className="px-5 max-w-4xl mx-auto mb-4">
-        <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
-          <div className="space-y-4">
-            <TokenAllocation />
-
-            <div className="h-px w-full bg-primary-300" />
-
-            <ContinuousTokenAllocation />
-
-            <div className="h-px w-full bg-primary-300" />
-
-            <AllocationAdjustment />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+  return <ConnectAccount />;
 }
 
 export default RebalancePage;

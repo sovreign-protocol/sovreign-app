@@ -1,6 +1,6 @@
 import qa from "@/data/qa.json";
 
-function FAQs() {
+function FAQPage() {
   return (
     <section className="pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-lg mx-auto">
@@ -28,4 +28,4 @@ function FAQs() {
   );
 }
 
-export default FAQs;
+export default FAQPage;
