@@ -57,7 +57,7 @@ export const CONTRACT_ADDRESSES: Record<
     [SupportedChainId.RINKEBY]: "0x8635785602403fe2291127bf0a2f15f2b726ab9e",
   },
   ReignFacet: {
-    [SupportedChainId.MAINNET]: "0x75664ea9d5975a0ac4f2300c93bb1377500a61de",
+    [SupportedChainId.MAINNET]: "0x43fad3bd3fae2b445bcfd0d20acadc24ba12aec0",
     [SupportedChainId.RINKEBY]: "0xc1660f2af8d7e6f20598e18c752a955b23cf564e",
   },
   GovRewards: {
