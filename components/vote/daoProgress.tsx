@@ -24,7 +24,7 @@ export default function DAOProgress() {
     }
 
     return percentage;
-  }, [votingPower]);
+  }, [votingPower, chainId]);
 
   const fmTotal = useFormattedBigNumber(votingPower?.reignStaked, 0);
 
