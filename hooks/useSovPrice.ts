@@ -6,6 +6,7 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import { useREIGNWETHRewards } from "./reignWeth";
+import { useSOVUSDCRewards } from "./sovUsdc";
 import useWeb3Store from "./useWeb3Store";
 
 function getSovPrice(lpRewards: LPRewards, library: Web3Provider) {
@@ -38,7 +39,7 @@ export default function useSovPrice() {
   const library = useWeb3Store((state) => state.library);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const lpRewards = useREIGNWETHRewards();
+  const lpRewards = useSOVUSDCRewards();
 
   const shouldFetch = !!library && !!lpRewards && typeof chainId === "number";
 
