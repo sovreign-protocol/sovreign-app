@@ -123,7 +123,7 @@ export function Account() {
           <Menu.Item>
             {({ active }) => (
               <a
-                href="https://discord.com"
+                href="https://discord.gg/pBRqDmMEDu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(menuItemClassNames, active && "bg-white/[0.10]")}
