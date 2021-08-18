@@ -8,7 +8,7 @@ function NavigationItem({ text, href }: { text: string; href: string }) {
   const { asPath } = useRouter();
 
   const cachedClassNames = classNames(
-    "font-medium leading-5 flex items-center justify-center py-2 px-2 text-center leading-5 focus:outline-none rounded",
+    "font-medium leading-5 flex items-center justify-center py-2 px-2 text-center leading-5 focus:outline-none focus:text-gray-300 rounded transition-colors",
     asPath === href ? "text-white " : "text-gray-500"
   );
 
@@ -25,7 +25,7 @@ export default function Navigation() {
       <ul className="flex items-center justify-between">
         <li className="flex-shrink-0">
           <Link href="/invest">
-            <a className="flex items-center md:space-x-2">
+            <a className="flex items-center md:space-x-2 focus:outline-none focus:text-gray-300 hover:text-gray-300 transition-colors">
               <img
                 className="w-10 h-10"
                 src="/logo.png"

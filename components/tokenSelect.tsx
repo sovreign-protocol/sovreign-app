@@ -60,7 +60,7 @@ export default function TokenSelect({
               key={tokenIndex}
               className={({ active }) =>
                 classNames(
-                  "cursor-default select-none relative p-2 rounded-md text-white",
+                  "cursor-default select-none relative p-2 rounded text-white",
                   active ? "bg-white/[0.10]" : ""
                 )
               }
@@ -77,7 +77,7 @@ export default function TokenSelect({
                   <div className="flex items-center space-x-2">
                     <img
                       alt={token.symbol}
-                      className="rounded-full bg-primary"
+                      className="rounded-full bg-primary h-5 w-5"
                       decoding="async"
                       height={20}
                       loading="lazy"
@@ -112,7 +112,7 @@ export function TokenSingle({ symbol }: { symbol: string }) {
     <div className="relative inline-flex py-2 pl-2 pr-3 text-left rounded-xl cursor-default focus:outline-none focus-visible:ring-4 text-lg leading-6 items-center space-x-2 bg-primary">
       <img
         alt={symbol}
-        className="rounded-full"
+        className="rounded-full h-6 w-6"
         height={24}
         src={`/tokens/${symbol}.png`}
         width={24}
@@ -136,12 +136,12 @@ export function TokenPair({
         {!!pairs ? (
           pairs?.map((pair, pairIndex) => (
             <div className="relative" key={pairIndex}>
-              <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full inset-0" />
+              <div className="absolute ring-1 ring-inset ring-white ring-opacity-20 rounded-full w-6 h-6" />
 
               <img
                 width={24}
                 height={24}
-                className="rounded-full"
+                className="rounded-full w-6 h-6"
                 src={`/tokens/${pair}.png`}
                 alt={pair}
               />

@@ -38,7 +38,7 @@ export default function PoolSelect({ value, onChange }: PoolSelectProps) {
                 key={farmingPoolIndex}
                 className={({ active }) =>
                   classNames(
-                    "cursor-default select-none relative p-2 rounded-md text-white",
+                    "cursor-default select-none relative p-2 rounded text-white",
                     active ? "bg-white/[0.10]" : ""
                   )
                 }
