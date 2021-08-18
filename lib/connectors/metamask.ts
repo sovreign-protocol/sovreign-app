@@ -13,7 +13,7 @@ export class NoEthereumProviderError extends Error {
   public constructor() {
     super();
     this.name = this.constructor.name;
-    this.message = "No Ethereum provider was found on window.ethereum.";
+    this.message = "No Ethereum provider found";
   }
 }
 
@@ -40,9 +40,11 @@ export default class MetaMaskConnector {
       console.log("[activate]");
     }
 
-    const provider = (await detectEthereumProvider()) as EIP1193Provider;
+    const provider = (await detectEthereumProvider({
+      timeout: 1000,
+    })) as EIP1193Provider;
 
-    if (typeof provider === "undefined") {
+    if (!provider) {
       throw new NoEthereumProviderError();
     }
 
