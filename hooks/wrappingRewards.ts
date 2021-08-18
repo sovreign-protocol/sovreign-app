@@ -1,7 +1,7 @@
-import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { EPOCH_REWARDS } from "@/constants/numbers";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import type { ERC20, SovWrapper } from "@/contracts/types";
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import { useSovWrapper, useTokenContract } from "./useContract";
 import useWeb3Store from "./useWeb3Store";
@@ -15,9 +15,13 @@ function getWrappingRewardsExpectedRewards(
 
     const totalSupply = await sovToken.totalSupply();
 
+    const totalSupplyWithoutSeededSupply = totalSupply.sub(
+      parseUnits("3000", 18)
+    );
+
     return (
       (parseFloat(formatUnits(balanceLocked, 18)) /
-        parseFloat(formatUnits(totalSupply, 18))) *
+        parseFloat(formatUnits(totalSupplyWithoutSeededSupply, 18))) *
       EPOCH_REWARDS
     );
   };
