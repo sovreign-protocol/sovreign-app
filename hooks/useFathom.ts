@@ -9,7 +9,7 @@ export default function useFathom() {
 
   useEffect(() => {
     Fathom.load(SITE_ID, {
-      includedDomains: ["sovreign.org"],
+      includedDomains: ["app.sovreign.org"],
     });
 
     function onRouteChangeComplete() {
