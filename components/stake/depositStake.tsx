@@ -41,7 +41,7 @@ export default function DepositStake() {
     useTokenAllowance(
       TOKEN_ADDRESSES.REIGN[chainId],
       account,
-      CONTRACT_ADDRESSES.ReignFacet[chainId]
+      CONTRACT_ADDRESSES.ReignFacetProxy[chainId]
     );
 
   const reignNeedsApproval = useMemo(() => {
@@ -102,7 +102,7 @@ export default function DepositStake() {
 
     try {
       const transaction = await reignContract.approve(
-        CONTRACT_ADDRESSES.ReignFacet[chainId],
+        CONTRACT_ADDRESSES.ReignFacetProxy[chainId],
         MaxUint256
       );
 

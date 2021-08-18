@@ -86,6 +86,8 @@ export default class MetaMaskConnector {
       console.log("[handleChainChanged]", chainId);
     }
 
+    window.location.reload();
+
     try {
       const _chainId = normalizeChainId(chainId);
 
