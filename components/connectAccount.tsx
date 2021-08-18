@@ -1,8 +1,12 @@
+import useMetaMaskOnboarding from "@/hooks/useMetaMaskOnboarding";
 import { injected } from "@/lib/connectors/metamask";
 import toast from "react-hot-toast";
 import Button from "./button";
 
 export default function ConnectAccount() {
+  const { isMetaMaskInstalled, isWeb3Available, startOnboarding } =
+    useMetaMaskOnboarding();
+
   async function connect() {
     try {
       await injected.activate();
@@ -31,7 +35,13 @@ export default function ConnectAccount() {
               <p>Please use at your own risk and discretion</p>
             </div>
 
-            <Button onClick={connect}>Connect Wallet</Button>
+            <Button onClick={isWeb3Available ? connect : startOnboarding}>
+              {isWeb3Available
+                ? isMetaMaskInstalled
+                  ? `Connect with MetaMask`
+                  : `Connect Wallet`
+                : `Install MetaMask`}
+            </Button>
           </div>
         </div>
       </div>

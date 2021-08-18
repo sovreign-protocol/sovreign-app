@@ -1,5 +1,6 @@
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import useENSName from "@/hooks/useENSName";
+import useMetaMaskOnboarding from "@/hooks/useMetaMaskOnboarding";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import { injected } from "@/lib/connectors/metamask";
@@ -31,6 +32,9 @@ export function Account() {
   const connector = useWeb3Store((state) => state.connector);
   const chainId = useWeb3Store((state) => state.chainId);
   const reset = useWeb3Store((state) => state.reset);
+
+  const { isMetaMaskInstalled, isWeb3Available, startOnboarding } =
+    useMetaMaskOnboarding();
 
   const ENSName = useENSName(account);
 
@@ -145,9 +149,13 @@ export function Account() {
   return (
     <button
       className="bg-white text-primary rounded-lg block ml-auto px-4 py-3 text-sm font-medium"
-      onClick={connect}
+      onClick={isWeb3Available ? connect : startOnboarding}
     >
-      Connect Wallet
+      {isWeb3Available
+        ? isMetaMaskInstalled
+          ? `Connect with MetaMask`
+          : `Connect Wallet`
+        : `Install MetaMask`}
     </button>
   );
 }
