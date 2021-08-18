@@ -35,7 +35,10 @@ type ContractNames =
   | "ReignDAO"
   | "SovWrapper";
 
-type TokenNames = "SOV" | "REIGN";
+export enum TokenNames {
+  SOV = "SOV",
+  REIGN = "REIGN",
+}
 
 export const CONTRACT_ADDRESSES: Record<
   ContractNames,
@@ -87,11 +90,11 @@ export const TOKEN_ADDRESSES: Record<
   TokenNames,
   Record<SupportedChainId, string>
 > = {
-  SOV: {
+  [TokenNames.SOV]: {
     [SupportedChainId.MAINNET]: "0x0afee744b6d9ff2b78f76fe10b3e0199c413fd34",
     [SupportedChainId.RINKEBY]: "0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
   },
-  REIGN: {
+  [TokenNames.REIGN]: {
     [SupportedChainId.MAINNET]: "0xf34c55b03e4bd6c541786743e9c67ef1abd9ec67",
     [SupportedChainId.RINKEBY]: "0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
   },
@@ -211,4 +214,40 @@ export const LP_EPOCH_REWARDS = 96153.84;
 export const DAO_THRESHOLD = {
   [SupportedChainId.MAINNET]: 15_000_000,
   [SupportedChainId.RINKEBY]: 4_000_000,
+};
+
+export type Token = {
+  address: string;
+  decimals: number;
+  symbol: string;
+};
+
+export const TOKEN_ASSETS: Record<
+  TokenNames,
+  Record<SupportedChainId, Token>
+> = {
+  [TokenNames.REIGN]: {
+    [SupportedChainId.MAINNET]: {
+      address: TOKEN_ADDRESSES[TokenNames.REIGN][SupportedChainId.MAINNET],
+      decimals: 18,
+      symbol: TokenNames.REIGN,
+    },
+    [SupportedChainId.RINKEBY]: {
+      address: TOKEN_ADDRESSES[TokenNames.REIGN][SupportedChainId.RINKEBY],
+      decimals: 18,
+      symbol: TokenNames.REIGN,
+    },
+  },
+  [TokenNames.SOV]: {
+    [SupportedChainId.MAINNET]: {
+      address: TOKEN_ADDRESSES[TokenNames.SOV][SupportedChainId.MAINNET],
+      decimals: 18,
+      symbol: TokenNames.SOV,
+    },
+    [SupportedChainId.RINKEBY]: {
+      address: TOKEN_ADDRESSES[TokenNames.SOV][SupportedChainId.RINKEBY],
+      decimals: 18,
+      symbol: TokenNames.SOV,
+    },
+  },
 };
