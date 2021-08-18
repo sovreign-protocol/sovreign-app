@@ -15,7 +15,7 @@ export const TOKEN_ADDRESSES: TokenAddresses = {
     [SupportedChainId.RINKEBY]: "0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
   },
   [TokenNames.REIGN]: {
-    [SupportedChainId.MAINNET]: "0xf34c55b03e4bd6c541786743e9c67ef1abd9ec67",
+    [SupportedChainId.MAINNET]: "0x17f59dd7fefc2f276509eed2ad6b65271458177e",
     [SupportedChainId.RINKEBY]: "0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
   },
 };
