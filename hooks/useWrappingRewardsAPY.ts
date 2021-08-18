@@ -1,8 +1,7 @@
 import { EPOCH_REWARDS } from "@/constants/numbers";
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import type { ERC20 } from "@/contracts/types";
-import { scaleBy } from "@/utils/bn";
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 import useSWR from "swr";
 import { useTokenContract } from "./useContract";
 import useReignPrice from "./useReignPrice";
@@ -13,7 +12,9 @@ function getWrappingRewardsAPY(sovToken: ERC20) {
   return async (_: string, sovPrice: number, reignPrice: number) => {
     const totalSupply = await sovToken.totalSupply();
 
-    const totalSupplyWithoutSeededSupply = totalSupply.sub(scaleBy(3000, 18));
+    const totalSupplyWithoutSeededSupply = totalSupply.sub(
+      parseUnits("3000", 18)
+    );
 
     const totalUSDValueSov =
       parseFloat(formatUnits(totalSupplyWithoutSeededSupply)) * sovPrice;
