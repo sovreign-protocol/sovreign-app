@@ -1,4 +1,4 @@
-import { SupportedChainId } from "@/constants";
+import { SupportedChainId } from "@/constants/chains";
 import { LPRewards, UniswapV2Pair } from "@/contracts/types";
 import UniswapV2Pair_ABI from "@/contracts/UniswapV2Pair.json";
 import { Contract } from "@ethersproject/contracts";

@@ -1,4 +1,4 @@
-import { DAO_THRESHOLD } from "@/constants";
+import { DAO_THRESHOLD } from "@/constants/numbers";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useVotingPower from "@/hooks/view/useVotingPower";

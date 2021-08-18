@@ -1,4 +1,4 @@
-import { __DEV__ } from "@/constants";
+import { __DEV__ } from "@/helpers";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import normalizeChainId from "@/utils/normalizeChainId";
 import detectEthereumProvider from "@metamask/detect-provider";

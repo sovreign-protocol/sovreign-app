@@ -1,9 +1,6 @@
-import {
-  CONTRACT_ADDRESSES,
-  MaxUint256,
-  MIN_INPUT_VALUE,
-  TOKEN_ADDRESSES,
-} from "@/constants";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
+import { CONTRACT_ADDRESSES } from "@/constants/contracts";
+import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
 import { useReignFacet, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";

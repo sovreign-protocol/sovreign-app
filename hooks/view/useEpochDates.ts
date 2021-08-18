@@ -1,4 +1,4 @@
-import { EPOCH_DURATION } from "@/constants";
+import { EPOCH_DURATION } from "@/constants/numbers";
 import type { GovRewards } from "@/contracts/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";

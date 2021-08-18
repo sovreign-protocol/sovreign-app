@@ -1,7 +1,8 @@
 import Button, { MaxButton } from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
-import { FarmingPool, LP_SYMBOL, MIN_INPUT_VALUE } from "@/constants";
+import { FarmingPool, FARMING_LP_SYMBOL } from "@/constants/farming";
+import { MIN_INPUT_VALUE } from "@/constants/numbers";
 import { useStaking } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -24,11 +25,11 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
 
   const { mutate: poolTokenBalanceMutate } = useTokenBalance(
     account,
-    pool?.address?.[chainId]
+    pool?.address
   );
 
   const { data: poolTokenBalanceLocked, mutate: poolTokenBalanceLockedMutate } =
-    useStakingBalanceLocked(account, pool?.address?.[chainId]);
+    useStakingBalanceLocked(account, pool?.address);
 
   const fmPoolTokenBalanceLocked = useFormattedBigNumber(
     poolTokenBalanceLocked
@@ -42,26 +43,29 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
     try {
       if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
         throw new Error(
-          `Minium Withdraw: ${MIN_INPUT_VALUE} ${LP_SYMBOL?.[chainId]}`
+          `Minium Withdraw: ${MIN_INPUT_VALUE} ${FARMING_LP_SYMBOL[chainId]}`
         );
       }
 
       const withdrawAmount = parseUnits(withdrawInput.value);
 
-      const transaction = await staking.withdraw(
-        pool?.address?.[chainId],
-        withdrawAmount
-      );
+      const transaction = await staking.withdraw(pool?.address, withdrawAmount);
 
-      toast.loading(`Withdraw ${withdrawInput.value} ${LP_SYMBOL?.[chainId]}`, {
-        id: _id,
-      });
+      toast.loading(
+        `Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        {
+          id: _id,
+        }
+      );
 
       await transaction.wait();
 
-      toast.success(`Withdraw ${withdrawInput.value} ${LP_SYMBOL?.[chainId]}`, {
-        id: _id,
-      });
+      toast.success(
+        `Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        {
+          id: _id,
+        }
+      );
 
       poolTokenBalanceMutate();
       poolTokenBalanceLockedMutate();
@@ -81,13 +85,11 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
     <form onSubmit={withdrawPoolToken} method="POST">
       <div className="space-y-4">
         <div className="flex justify-between">
-          <h2 className="font-medium leading-5">
-            Withdraw {pool?.name?.[chainId]}
-          </h2>
+          <h2 className="font-medium leading-5">Withdraw {pool?.name}</h2>
 
           {!!pool && (
             <a
-              href={pool.link?.[chainId]}
+              href={pool.link}
               target="_blank"
               rel="noopener noreferrer"
               className="block h-5 w-5 rounded focus:outline-none focus:ring-4"
@@ -99,11 +101,14 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
 
         <div>
           <div className="flex space-x-4 mb-2">
-            <TokenPair pairs={pool?.pairs} symbol={LP_SYMBOL?.[chainId]} />
+            <TokenPair
+              pairs={pool?.pairs}
+              symbol={FARMING_LP_SYMBOL[chainId]}
+            />
 
             <div className="flex-1">
               <label className="sr-only" htmlFor="withdraw">
-                {`Enter amount of ${LP_SYMBOL?.[chainId]} to withdraw`}
+                {`Enter amount of ${FARMING_LP_SYMBOL[chainId]} to withdraw`}
               </label>
 
               <NumericalInput
@@ -118,7 +123,7 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
           <p className="text-sm text-gray-300 h-5">
             {poolTokenBalanceLocked && fmPoolTokenBalanceLocked ? (
               <>
-                <span>{`Available: ${fmPoolTokenBalanceLocked} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
+                <span>{`Available: ${fmPoolTokenBalanceLocked} ${FARMING_LP_SYMBOL[chainId]}`}</span>{" "}
                 {!withdrawInputIsMax && <MaxButton onClick={setWithdrawMax} />}
               </>
             ) : null}

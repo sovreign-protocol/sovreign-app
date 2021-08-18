@@ -1,4 +1,4 @@
-import { SupportedChainId } from "@/constants";
+import { SupportedChainId } from "@/constants/chains";
 
 const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.MAINNET]: "",

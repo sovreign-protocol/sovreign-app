@@ -1,7 +1,7 @@
 import DepositPool from "@/components/farming/depositPool";
 import PoolSelect from "@/components/farming/poolSelect";
 import WithdrawPool from "@/components/farming/withdrawPool";
-import { FarmingPool } from "@/constants";
+import { FarmingPool } from "@/constants/farming";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import { TOKEN_ADDRESSES } from "@/constants";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import useENSName from "@/hooks/useENSName";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useTokenBalance from "@/hooks/view/useTokenBalance";

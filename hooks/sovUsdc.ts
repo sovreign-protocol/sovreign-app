@@ -1,8 +1,6 @@
-import {
-  CONTRACT_ADDRESSES,
-  LP_EPOCH_REWARDS,
-  SupportedChainId,
-} from "@/constants";
+import { CONTRACT_ADDRESSES } from "@/constants/contracts";
+import { SupportedChainId } from "@/constants/chains";
+import { LP_EPOCH_REWARDS } from "@/constants/numbers";
 import ERC20_ABI from "@/contracts/ERC20.json";
 import LPRewards_ABI from "@/contracts/LPRewards.json";
 import type {

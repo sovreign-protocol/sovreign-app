@@ -1,4 +1,4 @@
-import { ChainInfo, CHAIN_INFO, SupportedChainId } from "@/constants";
+import { ChainInfo, CHAIN_INFO, SupportedChainId } from "@/constants/chains";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import { useMemo } from "react";
 

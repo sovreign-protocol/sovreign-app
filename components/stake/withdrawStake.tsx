@@ -1,4 +1,5 @@
-import { MIN_INPUT_VALUE, TOKEN_ADDRESSES } from "@/constants";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
+import { MIN_INPUT_VALUE } from "@/constants/numbers";
 import { useReignFacet } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";

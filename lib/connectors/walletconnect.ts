@@ -1,4 +1,5 @@
-import { INFURA_ID, __DEV__ } from "@/constants";
+import { INFURA_ID } from "@/constants/chains";
+import { __DEV__ } from "@/helpers";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import normalizeChainId from "@/utils/normalizeChainId";
 import type WalletConnectProvider from "@walletconnect/web3-provider";

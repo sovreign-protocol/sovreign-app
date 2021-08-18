@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESSES } from "@/constants";
+import { CONTRACT_ADDRESSES } from "@/constants/contracts";
 import BasketBalancer_ABI from "@/contracts/BasketBalancer.json";
 import ERC20_ABI from "@/contracts/ERC20.json";
 import GovRewards_ABI from "@/contracts/GovRewards.json";

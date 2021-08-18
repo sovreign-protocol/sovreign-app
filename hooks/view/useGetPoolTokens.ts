@@ -1,4 +1,4 @@
-import { TOKEN_NAMES_BY_ADDRESS } from "@/constants";
+import { TOKEN_NAMES_BY_ADDRESS } from "@/constants/tokens";
 import type { PoolRouter } from "@/contracts/types";
 import useSWR from "swr";
 import { usePoolRouter } from "../useContract";

@@ -1,4 +1,4 @@
-import { TOKEN_COLORS } from "@/constants";
+import { TOKEN_COLORS } from "@/constants/tokens";
 import useContinuousTokenAllocation from "@/hooks/view/useContinuousTokenAllocation";
 import useEpochDates from "@/hooks/view/useEpochDates";
 import classNames from "classnames";

@@ -1,4 +1,5 @@
-import { EPOCH_REWARDS, TOKEN_ADDRESSES } from "@/constants";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
+import { EPOCH_REWARDS } from "@/constants/numbers";
 import type { ERC20 } from "@/contracts/types";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";

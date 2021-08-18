@@ -1,12 +1,8 @@
 import Button, { MaxButton } from "@/components/button";
 import NumericalInput from "@/components/numericalInput";
 import { TokenPair } from "@/components/tokenSelect";
-import {
-  FarmingPool,
-  LP_SYMBOL,
-  MaxUint256,
-  MIN_INPUT_VALUE,
-} from "@/constants";
+import { FarmingPool, FARMING_LP_SYMBOL } from "@/constants/farming";
+import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
 import { useStaking, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -29,17 +25,17 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
   const depositInput = useInput();
 
-  const poolTokenContract = useTokenContract(pool?.address?.[chainId]);
+  const poolTokenContract = useTokenContract(pool?.address);
 
   const { data: poolTokenBalance, mutate: poolTokenBalanceMutate } =
-    useTokenBalance(account, pool?.address?.[chainId]);
+    useTokenBalance(account, pool?.address);
 
   const { data: poolTokenAllowance, mutate: poolTokenAllowanceMutate } =
-    useTokenAllowance(pool?.address?.[chainId], account, staking?.address);
+    useTokenAllowance(pool?.address, account, staking?.address);
 
   const { mutate: poolTokenBalanceLockedMutate } = useStakingBalanceLocked(
     account,
-    pool?.address?.[chainId]
+    pool?.address
   );
 
   const poolTokenNeedsApproval = useMemo(() => {
@@ -61,11 +57,11 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
         MaxUint256
       );
 
-      toast.loading(`Approve ${LP_SYMBOL?.[chainId]}`, { id: _id });
+      toast.loading(`Approve ${FARMING_LP_SYMBOL[chainId]}`, { id: _id });
 
       await transaction.wait();
 
-      toast.success(`Approve ${LP_SYMBOL?.[chainId]}`, { id: _id });
+      toast.success(`Approve ${FARMING_LP_SYMBOL[chainId]}`, { id: _id });
 
       poolTokenAllowanceMutate();
     } catch (error) {
@@ -81,26 +77,29 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
     try {
       if (Number(depositInput.value) <= MIN_INPUT_VALUE) {
         throw new Error(
-          `Minium Deposit: ${MIN_INPUT_VALUE} ${LP_SYMBOL?.[chainId]}`
+          `Minium Deposit: ${MIN_INPUT_VALUE} ${FARMING_LP_SYMBOL[chainId]}`
         );
       }
 
       const depositAmount = parseUnits(depositInput.value);
 
-      const transaction = await staking.deposit(
-        pool?.address?.[chainId],
-        depositAmount
-      );
+      const transaction = await staking.deposit(pool?.address, depositAmount);
 
-      toast.loading(`Deposit ${depositInput.value} ${LP_SYMBOL?.[chainId]}`, {
-        id: _id,
-      });
+      toast.loading(
+        `Deposit ${depositInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        {
+          id: _id,
+        }
+      );
 
       await transaction.wait();
 
-      toast.success(`Deposit ${depositInput.value} ${LP_SYMBOL?.[chainId]}`, {
-        id: _id,
-      });
+      toast.success(
+        `Deposit ${depositInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        {
+          id: _id,
+        }
+      );
 
       poolTokenBalanceMutate();
       poolTokenBalanceLockedMutate();
@@ -119,13 +118,11 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
     <form onSubmit={depositPoolToken} method="POST">
       <div className="space-y-4">
         <div className="flex justify-between">
-          <h2 className="font-medium leading-5">
-            Deposit {pool?.name?.[chainId]}
-          </h2>
+          <h2 className="font-medium leading-5">Deposit {pool?.name}</h2>
 
           {!!pool && (
             <a
-              href={pool.link?.[chainId]}
+              href={pool.link}
               target="_blank"
               rel="noopener noreferrer"
               className="block h-5 w-5 rounded focus:outline-none focus:ring-4"
@@ -137,11 +134,14 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
         <div>
           <div className="flex space-x-4 mb-2">
-            <TokenPair pairs={pool?.pairs} symbol={LP_SYMBOL?.[chainId]} />
+            <TokenPair
+              pairs={pool?.pairs}
+              symbol={FARMING_LP_SYMBOL[chainId]}
+            />
 
             <div className="flex-1">
               <label className="sr-only" htmlFor="deposit">
-                {`Enter amount of ${LP_SYMBOL?.[chainId]} to deposit`}
+                {`Enter amount of ${FARMING_LP_SYMBOL[chainId]} to deposit`}
               </label>
 
               <NumericalInput
@@ -156,7 +156,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
           <p className="text-sm text-gray-300 h-5">
             {poolTokenBalance && fmPoolTokenBalance ? (
               <>
-                <span>{`Balance: ${fmPoolTokenBalance} ${LP_SYMBOL?.[chainId]}`}</span>{" "}
+                <span>{`Balance: ${fmPoolTokenBalance} ${FARMING_LP_SYMBOL[chainId]}`}</span>{" "}
                 {!depositInputIsMax && <MaxButton onClick={setDepositMax} />}
               </>
             ) : null}
@@ -166,7 +166,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
         <div className="space-y-4">
           {poolTokenNeedsApproval && (
             <Button onClick={approvePoolToken}>
-              {`Approve Sovreign To Spend Your ${LP_SYMBOL?.[chainId]}`}
+              {`Approve Sovreign To Spend Your ${FARMING_LP_SYMBOL[chainId]}`}
             </Button>
           )}
 

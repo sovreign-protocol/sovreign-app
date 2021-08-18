@@ -1,4 +1,4 @@
-import { TOKEN_COLORS } from "@/constants";
+import { TOKEN_COLORS } from "@/constants/tokens";
 import useTokenAllocation from "@/hooks/view/useTokenAllocation";
 import classNames from "classnames";
 

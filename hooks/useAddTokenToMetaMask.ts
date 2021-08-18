@@ -1,4 +1,4 @@
-import { Token, TokenNames, TOKEN_ASSETS } from "@/constants";
+import { Token, TokenNames, TOKEN_ASSETS } from "@/constants/tokens";
 import { useCallback, useState } from "react";
 import useWeb3Store from "./useWeb3Store";
 

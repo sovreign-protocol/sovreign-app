@@ -1,4 +1,4 @@
-import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants";
+import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants/tokens";
 import type { ERC20, PoolRouter } from "@/contracts/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import useSWR from "swr";
