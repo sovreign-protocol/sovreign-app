@@ -15,19 +15,23 @@ export default function Identicon({ address }: { address: string }) {
     loadJazzicon();
   }, []);
 
-  useEffect(() => {
-    if (typeof jazzicon.current === "undefined") {
-      return;
-    }
+  useEffect(
+    () => {
+      if (typeof jazzicon.current === "undefined") {
+        return;
+      }
 
-    if (address && ref.current) {
-      ref.current.innerHTML = "";
+      if (address && ref.current) {
+        ref.current.innerHTML = "";
 
-      ref.current.appendChild(
-        jazzicon.current(20, parseInt(address.slice(2, 10), 16))
-      );
-    }
-  }, [jazzicon.current, address]);
+        ref.current.appendChild(
+          jazzicon.current(20, parseInt(address.slice(2, 10), 16))
+        );
+      }
+    },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    [jazzicon.current, address]
+  );
 
   return <div className="h-5 w-5 rounded-full bg-primary-400" ref={ref} />;
 }
