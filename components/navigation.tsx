@@ -48,7 +48,7 @@ export default function Navigation() {
         </li>
 
         <li className="flex-1">
-          <ul className="md:ml-4 flex space-x-2 md:space-x-4">
+          <ul className="md:ml-4 flex space-x-2 xl:space-x-4">
             <li>
               <NavigationItem href="/invest" text="Invest" />
             </li>
@@ -72,7 +72,9 @@ export default function Navigation() {
 
         <li className="flex-1 flex justify-end md:space-x-4">
           <NetworkIndicator />
+
           <AddTokensToMetaMask />
+
           <Account />
         </li>
       </ul>
