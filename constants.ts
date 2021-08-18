@@ -159,7 +159,8 @@ const LPRewardsREIGNWETHPool: FarmingPool = {
   },
   pairs: ["REIGN", "ETH"],
   link: {
-    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.MAINNET]:
+      "https://app.sushi.com/add/0xF34c55B03e4BD6C541786743E9C67ef1abd9EC67/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     [SupportedChainId.RINKEBY]:
       "https://app.uniswap.org/#/add/v2/0xf65c93902ecc4c7979e92ed2cca01421e8021f77/0x64f8b3b0a2a16a2bdfa30568cb769ed5ba760fba",
   },
@@ -176,7 +177,8 @@ const LPRewardsSOVUSDCPool: FarmingPool = {
   },
   pairs: ["SOV", "USDC"],
   link: {
-    [SupportedChainId.MAINNET]: "TODO",
+    [SupportedChainId.MAINNET]:
+      "https://app.sushi.com/add/0x0aFEE744B6d9fF2B78f76Fe10b3E0199C413Fd34/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     [SupportedChainId.RINKEBY]:
       "https://app.uniswap.org/#/add/v2/0xf65C93902eCC4c7979E92ED2cca01421e8021F77/0xe0dfbdbeb6d599b9142d84f76a6c4ff964f3949d",
   },
@@ -205,3 +207,8 @@ export const EPOCH_REWARDS = 2403846.153;
  * @note Will be this value for the next two years as of August 16, 2021
  */
 export const LP_EPOCH_REWARDS = 96153.84;
+
+export const DAO_THRESHOLD = {
+  [SupportedChainId.MAINNET]: 15_000_000,
+  [SupportedChainId.RINKEBY]: 4_000_000,
+};

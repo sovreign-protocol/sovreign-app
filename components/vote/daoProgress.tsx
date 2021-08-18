@@ -1,11 +1,13 @@
+import { DAO_THRESHOLD } from "@/constants";
+import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
+import useWeb3Store from "@/hooks/useWeb3Store";
 import useVotingPower from "@/hooks/view/useVotingPower";
 import { commify, formatUnits } from "@ethersproject/units";
 import { useMemo } from "react";
-import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
-
-const THRESHOLD = 4_000_000;
 
 export default function DAOProgress() {
+  const chainId = useWeb3Store((state) => state.chainId);
+
   const { data: votingPower } = useVotingPower();
 
   const progress = useMemo(() => {
@@ -15,7 +17,7 @@ export default function DAOProgress() {
 
     const totalStaked = parseFloat(formatUnits(votingPower.reignStaked));
 
-    const percentage = (totalStaked / THRESHOLD) * 100;
+    const percentage = (totalStaked / DAO_THRESHOLD[chainId]) * 100;
 
     if (percentage > 100) {
       return 100;
@@ -38,7 +40,9 @@ export default function DAOProgress() {
         <p className="text-4xl leading-none font-semibold h-9">
           {fmTotal}{" "}
           <span className="text-xl leading-none text-gray-500">/</span>{" "}
-          <span className="text-xl leading-none">{commify(THRESHOLD)}</span>
+          <span className="text-xl leading-none">
+            {commify(DAO_THRESHOLD[chainId])}
+          </span>
         </p>
 
         <div
