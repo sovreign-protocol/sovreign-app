@@ -8,16 +8,16 @@ import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import handleError from "@/utils/handleError";
 import { BigNumber } from "@ethersproject/bignumber";
 import * as Slider from "@radix-ui/react-slider";
-import classNames from "classnames";
 import dayjs from "dayjs";
 import { FormEvent, useMemo } from "react";
 import toast from "react-hot-toast";
+import Button from "../button";
 import { TransactionToast } from "../customToast";
 
 export default function LockStake() {
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const lockupPeriod = useInput("1");
+  const lockupPeriod = useInput();
 
   const reignFacet = useReignFacetProxy();
 
@@ -198,13 +198,7 @@ export default function LockStake() {
         )}
 
         <div className="space-y-4">
-          <button
-            className={classNames(
-              "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-              isLockupPeriodAfterCurrentLockedTimestamp && lockupPeriod.hasValue
-                ? "bg-white text-primary"
-                : "bg-primary-300"
-            )}
+          <Button
             type="submit"
             disabled={
               !lockupPeriod.hasValue ||
@@ -212,7 +206,7 @@ export default function LockStake() {
             }
           >
             {lockupPeriod.hasValue ? "Lock up stake" : "Select number of days"}
-          </button>
+          </Button>
         </div>
       </div>
     </form>

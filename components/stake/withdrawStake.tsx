@@ -1,5 +1,5 @@
-import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { MIN_INPUT_VALUE } from "@/constants/numbers";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { useReignFacetProxy } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -8,12 +8,11 @@ import useReignStaked from "@/hooks/view/useReignStaked";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import classNames from "classnames";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
-import { MaxButton } from "../button";
+import Button, { MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import { TokenSingle } from "../tokenSelect";
@@ -124,16 +123,9 @@ export default function WithdrawStake() {
       </div>
 
       <div className="space-y-4">
-        <button
-          className={classNames(
-            "p-4 w-full rounded-md text-lg font-medium leading-5 focus:outline-none focus:ring-4",
-            withdrawInput.hasValue ? "bg-white text-primary" : "bg-primary-300"
-          )}
-          disabled={!withdrawInput.hasValue}
-          type="submit"
-        >
+        <Button type="submit" disabled={!withdrawInput.hasValue}>
           {withdrawInput.hasValue ? "Withdraw" : "Enter an amount"}
-        </button>
+        </Button>
       </div>
     </form>
   );
