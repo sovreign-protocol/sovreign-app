@@ -53,6 +53,8 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
 
       const transaction = await staking.withdraw(pool?.address, withdrawAmount);
 
+      withdrawInput.clear();
+
       toast.loading(
         <TransactionToast
           message={`Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`}

@@ -54,19 +54,19 @@ export default function Deposit() {
 
   const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
 
-  const depositAmountInput = useInput();
+  const depositInput = useInput();
 
   const depositTokenNeedsApproval = useMemo(() => {
-    if (!!depositTokenAllowance && depositAmountInput.hasValue) {
+    if (!!depositTokenAllowance && depositInput.hasValue) {
       return depositTokenAllowance.isZero();
     }
 
     return;
-  }, [depositTokenAllowance, depositAmountInput.hasValue]);
+  }, [depositTokenAllowance, depositInput.hasValue]);
 
   const { data: sovAmountOut } = useGetSovAmountOut(
     depositToken?.address,
-    depositAmountInput?.value
+    depositInput?.value
   );
 
   const formattedSovAmountOut = useFormattedBigNumber(sovAmountOut);
@@ -131,6 +131,8 @@ export default function Deposit() {
         liquidationFee
       );
 
+      depositInput.clear();
+
       toast.loading(
         <TransactionToast
           message={`Deposit ${values.depositAmount.value} ${depositToken.symbol}`}
@@ -181,10 +183,10 @@ export default function Deposit() {
 
   const inputIsMax =
     !!depositTokenBalance &&
-    depositAmountInput.value === formatUnits(depositTokenBalance);
+    depositInput.value === formatUnits(depositTokenBalance);
 
   const setMax = () => {
-    depositAmountInput.setValue(formatUnits(depositTokenBalance));
+    depositInput.setValue(formatUnits(depositTokenBalance));
   };
 
   return (
@@ -283,7 +285,7 @@ export default function Deposit() {
               name="depositAmount"
               id="depositAmount"
               required
-              {...depositAmountInput.valueBind}
+              {...depositInput.valueBind}
             />
           </div>
         </div>
@@ -318,11 +320,11 @@ export default function Deposit() {
         <Button
           type="submit"
           disabled={
-            !(depositAmountInput.hasValue && !!depositToken) ||
+            !(depositInput.hasValue && !!depositToken) ||
             depositTokenNeedsApproval
           }
         >
-          {depositAmountInput.hasValue && !!depositToken
+          {depositInput.hasValue && !!depositToken
             ? `Deposit`
             : `Enter an amount`}
         </Button>

@@ -86,6 +86,8 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
       const transaction = await staking.deposit(pool?.address, depositAmount);
 
+      depositInput.clear();
+
       toast.loading(
         <TransactionToast
           message={`Deposit ${depositInput.value} ${FARMING_LP_SYMBOL[chainId]}`}

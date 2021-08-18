@@ -63,6 +63,8 @@ export default function LockStake() {
         BigNumber.from(futureTimestamp)
       );
 
+      lockupPeriod.clear();
+
       toast.loading(
         <TransactionToast
           message={`Lock Stake For ${days} Days`}

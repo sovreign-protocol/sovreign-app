@@ -45,7 +45,7 @@ export default function Withdraw() {
 
   const [withdrawToken, withdrawTokenSet] = useState<Token>();
 
-  const withdrawAmountInput = useInput();
+  const withdrawInput = useInput();
 
   const withdrawTokenContract = useTokenContract(withdrawToken?.address);
 
@@ -54,30 +54,26 @@ export default function Withdraw() {
   const formattedTokenAmountOut = useFormattedBigNumber(tokenAmountOut);
 
   const sovNeedsApproval = useMemo(() => {
-    if (!!sovAllowance && withdrawAmountInput.hasValue) {
+    if (!!sovAllowance && withdrawInput.hasValue) {
       return sovAllowance.isZero();
     }
 
     return;
-  }, [sovAllowance, withdrawAmountInput.hasValue]);
+  }, [sovAllowance, withdrawInput.hasValue]);
 
   async function tokenWithdraw(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const _id = toast.loading("Waiting for confirmation");
 
-    const values = event.target as typeof event.target & {
-      withdrawAmount: { value: string };
-    };
-
     try {
-      if (Number(values.withdrawAmount.value) <= MIN_INPUT_VALUE) {
+      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
         throw new Error(
           `Minium Withdraw: ${MIN_INPUT_VALUE} ${withdrawToken.symbol}`
         );
       }
 
-      const minAmountOut = parseUnits(values.withdrawAmount.value);
+      const minAmountOut = parseUnits(withdrawInput.value);
 
       const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
         BALANCER_POOL_ADDRESS[chainId]
@@ -112,9 +108,11 @@ export default function Withdraw() {
         minAmountOut.mul(99).div(100)
       );
 
+      withdrawInput.clear();
+
       toast.loading(
         <TransactionToast
-          message={`Withdraw ${values.withdrawAmount.value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${withdrawInput.value} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -125,7 +123,7 @@ export default function Withdraw() {
 
       toast.success(
         <TransactionToast
-          message={`Withdraw ${values.withdrawAmount.value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${withdrawInput.value} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -160,11 +158,10 @@ export default function Withdraw() {
   }
 
   const inputIsMax =
-    !!tokenAmountOut &&
-    withdrawAmountInput.value === formatUnits(tokenAmountOut);
+    !!tokenAmountOut && withdrawInput.value === formatUnits(tokenAmountOut);
 
   const setMax = () => {
-    withdrawAmountInput.setValue(formatUnits(tokenAmountOut));
+    withdrawInput.setValue(formatUnits(tokenAmountOut));
   };
 
   return (
@@ -190,7 +187,7 @@ export default function Withdraw() {
               name="withdrawAmount"
               id="withdrawAmount"
               required
-              {...withdrawAmountInput.valueBind}
+              {...withdrawInput.valueBind}
             />
           </div>
         </div>
@@ -215,11 +212,10 @@ export default function Withdraw() {
         <Button
           type="submit"
           disabled={
-            !(withdrawAmountInput.hasValue && !!withdrawToken) ||
-            sovNeedsApproval
+            !(withdrawInput.hasValue && !!withdrawToken) || sovNeedsApproval
           }
         >
-          {withdrawAmountInput.hasValue && !!withdrawToken
+          {withdrawInput.hasValue && !!withdrawToken
             ? "Withdraw"
             : "Enter an amount"}
         </Button>

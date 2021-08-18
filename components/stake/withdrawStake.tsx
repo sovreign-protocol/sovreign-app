@@ -54,6 +54,8 @@ export default function WithdrawStake() {
 
       const transaction = await reignFacet.withdraw(amountToWithdraw);
 
+      withdrawInput.clear();
+
       toast.loading(
         <TransactionToast
           hash={transaction.hash}

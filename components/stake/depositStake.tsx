@@ -70,6 +70,8 @@ export default function DepositStake() {
 
       const transaction = await reignFacet.deposit(depositAmount);
 
+      depositInput.clear();
+
       toast.loading(
         <TransactionToast
           hash={transaction.hash}
