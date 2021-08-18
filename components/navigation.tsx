@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
+import AddTokensToMetaMask from "./addTokensToMetamask";
 import NetworkIndicator from "./network";
 import { Account } from "./web3";
 
@@ -71,6 +72,7 @@ export default function Navigation() {
 
         <li className="flex-1 flex justify-end md:space-x-4">
           <NetworkIndicator />
+          <AddTokensToMetaMask />
           <Account />
         </li>
       </ul>
