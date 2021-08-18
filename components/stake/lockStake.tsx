@@ -1,4 +1,4 @@
-import { useReignFacet } from "@/hooks/useContract";
+import { useReignFacetProxy } from "@/hooks/useContract";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
@@ -19,7 +19,7 @@ export default function LockStake() {
 
   const lockupPeriod = useInput("1");
 
-  const reignFacet = useReignFacet();
+  const reignFacet = useReignFacetProxy();
 
   const { data: userLockedUntil, mutate: userLockedUntilMutate } =
     useUserLockedUntil();

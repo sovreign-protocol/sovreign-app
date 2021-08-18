@@ -20,11 +20,6 @@ export const TOKEN_ADDRESSES: TokenAddresses = {
   },
 };
 
-export const POOL_ADDRESS: AddressMap = {
-  [SupportedChainId.MAINNET]: "0x3029c3763d4b61b255b5eea5a506cb2f080487a7",
-  [SupportedChainId.RINKEBY]: "0x1f4D666b204B0282fBe85EAb9231B13B50A03B91",
-};
-
 export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
   "0x712863c3ad98ef4319133b8646d51383700cb37b": "sCHF",
   "0x0f83287ff768d1c1e17a42f44d644d7f22e8ee1d": "sCHF",

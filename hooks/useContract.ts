@@ -111,11 +111,11 @@ export function useSovWrapper() {
   );
 }
 
-export function useReignFacet() {
+export function useReignFacetProxy() {
   const chainId = useWeb3Store(chainIdSelector);
 
   return useContract<ReignFacet>(
-    CONTRACT_ADDRESSES.ReignFacet[chainId],
+    CONTRACT_ADDRESSES.ReignFacetProxy[chainId],
     ReignFacet_ABI
   );
 }

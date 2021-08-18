@@ -1,5 +1,8 @@
-import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants/tokens";
-import { CONTRACT_ADDRESSES } from "@/constants/contracts";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
+import {
+  CONTRACT_ADDRESSES,
+  BALANCER_POOL_ADDRESS,
+} from "@/constants/contracts";
 import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
 import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
@@ -77,7 +80,7 @@ export default function Withdraw() {
       const minAmountOut = parseUnits(values.withdrawAmount.value);
 
       const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
-        POOL_ADDRESS[chainId]
+        BALANCER_POOL_ADDRESS[chainId]
       );
 
       const maxWithdraw = poolBalance.div(3);

@@ -1,6 +1,6 @@
 import type { BasketBalancer, ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import { useBasketBalancer, useReignFacet } from "../useContract";
+import { useBasketBalancer, useReignFacetProxy } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 const getVotingPower =
@@ -30,7 +30,7 @@ const getVotingPower =
 export default function useVotingPower() {
   const account = useWeb3Store((state) => state.account);
 
-  const reignFacet = useReignFacet();
+  const reignFacet = useReignFacetProxy();
 
   const basketBalancer = useBasketBalancer();
 

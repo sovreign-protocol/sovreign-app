@@ -1,6 +1,6 @@
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { MIN_INPUT_VALUE } from "@/constants/numbers";
-import { useReignFacet } from "@/hooks/useContract";
+import { useReignFacetProxy } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -31,7 +31,7 @@ export default function WithdrawStake() {
 
   const { data: reignStaked, mutate: reignStakedMutate } = useReignStaked();
 
-  const reignFacet = useReignFacet();
+  const reignFacet = useReignFacetProxy();
 
   const withdrawInput = useInput();
 

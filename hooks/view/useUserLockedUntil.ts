@@ -3,7 +3,7 @@ import calculateLockupMultiplier from "@/utils/calculateLockupMultiplier";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import useSWR from "swr";
-import { useReignFacet } from "../useContract";
+import { useReignFacetProxy } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 dayjs.extend(utc);
@@ -33,7 +33,7 @@ function getUserLockedUntil(contract: ReignFacet) {
 
 export default function useUserLockedUntil() {
   const account = useWeb3Store((state) => state.account);
-  const contract = useReignFacet();
+  const contract = useReignFacetProxy();
 
   const shouldFetch = !!contract && typeof account === "string";
 

@@ -1,4 +1,5 @@
-import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants/tokens";
+import { BALANCER_POOL_ADDRESS } from "@/constants/contracts";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import type { ERC20, PoolRouter } from "@/contracts/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import useSWR from "swr";
@@ -23,7 +24,7 @@ function getGetTokenAmountOut(
     );
 
     const poolBalance = await withdrawTokenContract.balanceOf(
-      POOL_ADDRESS[chainId]
+      BALANCER_POOL_ADDRESS[chainId]
     );
 
     const maxWithdraw = poolBalance.div(3);

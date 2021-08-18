@@ -1,6 +1,6 @@
 import type { ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import { useReignFacet } from "../useContract";
+import { useReignFacetProxy } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 function getReignStaked(contract: ReignFacet) {
@@ -14,7 +14,7 @@ function getReignStaked(contract: ReignFacet) {
 export default function useReignStaked() {
   const account = useWeb3Store((state) => state.account);
 
-  const contract = useReignFacet();
+  const contract = useReignFacetProxy();
 
   const shouldFetch = !!contract && typeof account === "string";
 

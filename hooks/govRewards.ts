@@ -1,6 +1,6 @@
 import { GovRewards, ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import { useGovRewards, useReignFacet } from "./useContract";
+import { useGovRewards, useReignFacetProxy } from "./useContract";
 
 function getGovRewardsExpectedRewards(
   reignFacet: ReignFacet,
@@ -18,7 +18,7 @@ function getGovRewardsExpectedRewards(
 }
 
 export default function useGovRewardsExpectedRewards(userAddress: string) {
-  const reignFacet = useReignFacet();
+  const reignFacet = useReignFacetProxy();
 
   const govRewards = useGovRewards();
 

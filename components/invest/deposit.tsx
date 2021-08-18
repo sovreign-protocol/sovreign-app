@@ -1,6 +1,9 @@
-import { POOL_ADDRESS, TOKEN_ADDRESSES } from "@/constants/tokens";
-import { CONTRACT_ADDRESSES } from "@/constants/contracts";
+import {
+  CONTRACT_ADDRESSES,
+  BALANCER_POOL_ADDRESS,
+} from "@/constants/contracts";
 import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
+import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -97,7 +100,7 @@ export default function Deposit() {
         : "1";
 
       const poolBalance: BigNumber = await depositTokenContract.balanceOf(
-        POOL_ADDRESS[chainId]
+        BALANCER_POOL_ADDRESS[chainId]
       );
 
       const maxDeposit = poolBalance.div(2);

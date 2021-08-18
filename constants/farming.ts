@@ -21,10 +21,10 @@ export const LP_FARMING_POOLS: Record<SupportedChainId, FarmingPool[]> = {
       link: "https://app.sushi.com/add/0x0aFEE744B6d9fF2B78f76Fe10b3E0199C413Fd34/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     },
     {
-      address: "0xa2DB17E3510dC323952Aa9a3A7ee7E2567d0096D",
+      address: "0xA2a0C3e53CCc6946E61949ADC46A713F601D645F",
       name: "SushiSwap REIGN/ETH LP",
       pairs: ["REIGN", "ETH"],
-      link: "https://app.sushi.com/add/0xF34c55B03e4BD6C541786743E9C67ef1abd9EC67/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      link: "https://app.sushi.com/add/0x17F59DD7fEfC2F276509EeD2Ad6B65271458177E/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     },
   ],
   [SupportedChainId.RINKEBY]: [

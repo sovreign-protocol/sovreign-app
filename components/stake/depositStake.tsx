@@ -1,7 +1,7 @@
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { CONTRACT_ADDRESSES } from "@/constants/contracts";
 import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
-import { useReignFacet, useTokenContract } from "@/hooks/useContract";
+import { useReignFacetProxy, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
@@ -22,7 +22,7 @@ export default function DepositStake() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
-  const reignFacet = useReignFacet();
+  const reignFacet = useReignFacetProxy();
 
   const { data: reignBalance, mutate: reignBalanceMutate } = useTokenBalance(
     account,
