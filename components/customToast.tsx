@@ -1,4 +1,5 @@
 import getExplorerLink, { ExplorerDataType } from "@/utils/getExplorerLink";
+import { ExternalLink } from "react-feather";
 
 export function TransactionToast({
   message,
@@ -14,19 +15,16 @@ export function TransactionToast({
   }
 
   return (
-    <div>
-      <p className="mb-1">{message}</p>
-
-      <div>
-        <a
-          href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-indigo-500 hover:underline"
-        >
-          View on Explorer
-        </a>
-      </div>
+    <div className="flex space-x-2 -mr-2">
+      <span>{message}</span>{" "}
+      <a
+        href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline text-indigo-500 hover:text-indigo-700"
+      >
+        <ExternalLink size={20} />
+      </a>
     </div>
   );
 }

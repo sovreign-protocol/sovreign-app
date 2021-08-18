@@ -14,6 +14,7 @@ import { formatUnits, parseUnits } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import { ExternalLink } from "react-feather";
 import toast from "react-hot-toast";
+import { TransactionToast } from "../customToast";
 
 export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
   const account = useWeb3Store((state) => state.account);
@@ -52,7 +53,11 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
       const transaction = await staking.withdraw(pool?.address, withdrawAmount);
 
       toast.loading(
-        `Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        <TransactionToast
+          message={`Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          hash={transaction.hash}
+          chainId={chainId}
+        />,
         {
           id: _id,
         }
@@ -61,7 +66,11 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
       await transaction.wait();
 
       toast.success(
-        `Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`,
+        <TransactionToast
+          message={`Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          hash={transaction.hash}
+          chainId={chainId}
+        />,
         {
           id: _id,
         }
