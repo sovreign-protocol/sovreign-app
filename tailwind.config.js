@@ -4,7 +4,7 @@ module.exports = {
     "./components/**/*.tsx",
     "./pages/**/*.tsx",
     "./views/**/*.tsx",
-    "./constants.ts",
+    "./constants/*.ts",
   ],
   darkMode: "media",
   theme: {
