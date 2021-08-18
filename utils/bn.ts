@@ -1,6 +1,6 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
-import { formatUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
+import { formatUnits } from "@ethersproject/units";
 
 export default function formatToFloat(value: BigNumberish, decimals = 18) {
   if (typeof value === "undefined") {
@@ -15,23 +15,27 @@ const ZERO = BigNumber.from(0);
 const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 
 export function scaleBy(
-  value: BigNumber,
+  value: BigNumberish,
   decimals?: number
 ): BigNumber | undefined {
   if (decimals === undefined) {
     return undefined;
   }
 
-  return value.mul(10 ** decimals);
+  value = BigNumber.from(value);
+
+  return value.mul(BigNumber.from(10).pow(decimals));
 }
 
 export function unscaleBy(
-  value: BigNumber,
+  value: BigNumberish,
   decimals?: number
 ): BigNumber | undefined {
   if (decimals === undefined) {
     return undefined;
   }
 
-  return value.div(10 ** decimals);
+  value = BigNumber.from(value);
+
+  return value.div(BigNumber.from(10).pow(decimals));
 }
