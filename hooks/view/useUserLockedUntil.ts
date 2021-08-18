@@ -1,4 +1,5 @@
 import type { ReignFacet } from "@/contracts/types";
+import calculateLockupMultiplier from "@/utils/calculateLockupMultiplier";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import useSWR from "swr";
@@ -17,9 +18,9 @@ function getUserLockedUntil(contract: ReignFacet) {
 
     const formatted = dayjs.unix(timestamp).format("MMM D, YYYY");
 
-    const multiplier = Number(
-      (dayjs.unix(timestamp).diff(dayjs(), "days") / (365 * 2)) * 0.5 + 1
-    ).toFixed(2);
+    const multiplier = calculateLockupMultiplier(
+      dayjs.unix(timestamp).diff(dayjs(), "days")
+    );
 
     return {
       timestamp,

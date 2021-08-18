@@ -4,6 +4,7 @@ import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
+import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
 import handleError from "@/utils/handleError";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -24,6 +25,8 @@ export default function GovRewardsHarvest() {
   );
 
   const { data: expectedRewards } = useGovRewardsExpectedRewards(account);
+
+  const { data: userLockedUntil } = useUserLockedUntil();
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
@@ -71,6 +74,11 @@ export default function GovRewardsHarvest() {
       onSubmit={harvestGovRewards}
       rewards={rewards}
       title="REIGN Staking Rewards"
+      slot={
+        userLockedUntil && (
+          <p className="font-semibold leading-5 text-indigo-500">{`${userLockedUntil.multiplier}x`}</p>
+        )
+      }
     />
   );
 }

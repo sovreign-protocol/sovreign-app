@@ -3,6 +3,7 @@ import useInput from "@/hooks/useInput";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useReignStaked from "@/hooks/view/useReignStaked";
 import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
+import calculateLockupMultiplier from "@/utils/calculateLockupMultiplier";
 import getFutureTimestamp from "@/utils/getFutureTimestamp";
 import handleError from "@/utils/handleError";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -88,9 +89,10 @@ export default function LockStake() {
     }
   }
 
-  const multiplier = useMemo(() => {
-    return ((Number(lockupPeriod.value) / (365 * 2)) * 0.5 + 1).toFixed(2);
-  }, [lockupPeriod.value]);
+  const lockupPeriodMultiplier = useMemo(
+    () => calculateLockupMultiplier(lockupPeriod.value),
+    [lockupPeriod.value]
+  );
 
   return (
     <form onSubmit={lockReign}>
@@ -176,7 +178,7 @@ export default function LockStake() {
           <div className="flex justify-between items-end">
             <p className="leading-none">Rewards Multiplier</p>
 
-            <p className="text-2xl leading-none font-semibold">{`${multiplier}x`}</p>
+            <p className="text-2xl leading-none font-semibold">{`${lockupPeriodMultiplier}x`}</p>
           </div>
         </div>
 
