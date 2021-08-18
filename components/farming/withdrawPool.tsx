@@ -33,7 +33,8 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
     useStakingBalanceLocked(account, pool?.address);
 
   const fmPoolTokenBalanceLocked = useFormattedBigNumber(
-    poolTokenBalanceLocked
+    poolTokenBalanceLocked,
+    4
   );
 
   async function withdrawPoolToken(event: FormEvent<HTMLFormElement>) {

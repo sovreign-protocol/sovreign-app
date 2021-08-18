@@ -47,7 +47,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
     return;
   }, [poolTokenAllowance, depositInput.hasValue]);
 
-  const fmPoolTokenBalance = useFormattedBigNumber(poolTokenBalance);
+  const fmPoolTokenBalance = useFormattedBigNumber(poolTokenBalance, 4);
 
   async function approvePoolToken() {
     const _id = toast.loading("Waiting for confirmation");
