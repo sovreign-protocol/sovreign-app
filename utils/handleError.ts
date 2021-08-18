@@ -4,12 +4,7 @@ import toast from "react-hot-toast";
 export default function handleError(error: any, id: string) {
   console.error(error);
 
-  const _error = serializeError(error, {
-    fallbackError: {
-      code: 0,
-      message: error?.message ?? "Something Went Wrong",
-    },
-  });
+  const _error = serializeError(error);
 
   console.error("Serialized Error:", _error);
 
