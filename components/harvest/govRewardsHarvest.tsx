@@ -70,7 +70,7 @@ export default function GovRewardsHarvest() {
       formattedRewards={formattedRewards}
       onSubmit={harvestGovRewards}
       rewards={rewards}
-      title="Governance Rewards"
+      title="REIGN Staking Rewards"
     />
   );
 }

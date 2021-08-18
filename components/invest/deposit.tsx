@@ -235,7 +235,7 @@ export default function Deposit() {
                     className="block text-sm mb-2 text-gray-300"
                     htmlFor="liquidationFee"
                   >
-                    Liquidation fee
+                    Liquidity Position Price
                   </label>
 
                   <div className="px-3 py-1 rounded-md bg-primary flex focus-within:ring-4">
