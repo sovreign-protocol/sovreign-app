@@ -3862,6 +3862,13 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
+jazzicon-ts@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/jazzicon-ts/-/jazzicon-ts-1.0.0.tgz#1d39907ecb82ac9801e8b32552ca8d3f53dd7769"
+  integrity sha512-ygxfXfHqFmOEZMd33H+4EHPDCrOJRiUyI/E9rbh2TeTqhd3wnSbrOIvhaGnZ/L+y0mF7xJL80nuV//6LWcOHUA==
+  dependencies:
+    mersenne-twister "^1.1.0"
+
 jest-worker@27.0.0-next.5:
   version "27.0.0-next.5"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-27.0.0-next.5.tgz#5985ee29b12a4e191f4aae4bb73b97971d86ec28"
