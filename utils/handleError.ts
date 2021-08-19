@@ -4,18 +4,23 @@ import toast from "react-hot-toast";
 export default function handleError(error: any, id: string) {
   console.error(error);
 
-  const _error = serializeError(error);
+  let errorMessage = error?.message ?? "Something Went Wrong";
 
-  console.error("Serialized Error:", _error);
+  if ("code" in error) {
+    const _error = serializeError(error);
 
-  if (_error.code === errorCodes.provider.userRejectedRequest) {
-    toast.dismiss(id);
+    console.error("Serialized Error:", _error);
 
-    return;
+    if (_error.code === errorCodes.provider.userRejectedRequest) {
+      toast.dismiss(id);
+
+      return;
+    } else {
+      errorMessage = getMessageFromCode(_error.code);
+
+      toast.error(errorMessage, { id });
+    }
+  } else {
+    toast.error(errorMessage, { id });
   }
-
-  const errorMessage =
-    _error.code === 0 ? error.message : getMessageFromCode(_error.code);
-
-  toast.error(errorMessage, { id });
 }
