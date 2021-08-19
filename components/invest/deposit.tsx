@@ -52,7 +52,7 @@ export default function Deposit() {
       CONTRACT_ADDRESSES.PoolRouter[chainId]
     );
 
-  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance);
+  const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance, 4);
 
   const depositInput = useInput();
 

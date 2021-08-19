@@ -51,7 +51,7 @@ export default function Withdraw() {
 
   const { data: tokenAmountOut } = useGetTokenAmountOut(withdrawToken?.address);
 
-  const formattedTokenAmountOut = useFormattedBigNumber(tokenAmountOut);
+  const formattedTokenAmountOut = useFormattedBigNumber(tokenAmountOut, 4);
 
   const sovNeedsApproval = useMemo(() => {
     if (!!sovAllowance && withdrawInput.hasValue) {
