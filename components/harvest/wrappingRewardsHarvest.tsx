@@ -89,7 +89,7 @@ export default function WrappingRewardsHarvest() {
           </Link>
         ))
       }
-      title="Deposit Rewards"
+      title="SOV Minter Rewards"
     />
   );
 }
