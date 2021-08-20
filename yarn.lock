@@ -4700,6 +4700,11 @@ object.values@^1.1.3, object.values@^1.1.4:
     define-properties "^1.1.3"
     es-abstract "^1.18.2"
 
+omit-ts@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/omit-ts/-/omit-ts-1.0.1.tgz#ab1704bb8d6a4d5a6bbc64fdd3c213a0e2eb9a20"
+  integrity sha512-Yht/tMFINWE6AYsiZyorX2JX+1kGvhk3yk/IHuDxDXeW1MORYHccFyC7V2U1owVlQyJjKfP6Xew2XpOTu1/LeQ==
+
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"

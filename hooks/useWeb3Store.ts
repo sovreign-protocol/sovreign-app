@@ -1,7 +1,7 @@
 import type MetaMaskConnector from "@/lib/connectors/metamask";
 import type WalletConnectConnector from "@/lib/connectors/walletconnect";
-import omit from "@/utils/omit";
 import type { Web3Provider } from "@ethersproject/providers";
+import { omit } from "omit-ts";
 import create from "zustand";
 
 export type State = {
@@ -20,7 +20,7 @@ const useWeb3Store = create<State>((set, get) => ({
     get()?.account !== undefined,
   reset: () =>
     set(
-      (state) => omit(state, "account", "chainId", "connector", "library"),
+      (state) => omit(state, ["account", "chainId", "connector", "library"]),
       true
     ),
 }));
