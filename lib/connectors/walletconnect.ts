@@ -2,7 +2,7 @@ import { INFURA_ID } from "@/constants/chains";
 import { __DEV__ } from "@/helpers";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import normalizeChainId from "@/utils/normalizeChainId";
-import type WalletConnectProvider from "@walletconnect/web3-provider";
+import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { UnsupportedChainIdError } from "./metamask";
 
 export default class WalletConnectConnector {
@@ -19,8 +19,9 @@ export default class WalletConnectConnector {
       console.log("[activate]");
     }
 
-    const WalletConnectProvider = (await import("@walletconnect/web3-provider"))
-      .default;
+    const WalletConnectProvider = (
+      await import("@walletconnect/ethereum-provider")
+    ).default;
 
     const provider = new WalletConnectProvider({
       infuraId: INFURA_ID,
@@ -102,12 +103,9 @@ export default class WalletConnectConnector {
       console.log("[deactivate]");
     }
 
-    (this.wc as any).removeListener("chainChanged", this.handleChainChanged);
-    (this.wc as any).removeListener(
-      "accountsChanged",
-      this.handleAccountsChanged
-    );
-    (this.wc as any).removeListener("disconnect", this.handleDisconnect);
+    this.wc.removeListener("chainChanged", this.handleChainChanged);
+    this.wc.removeListener("accountsChanged", this.handleAccountsChanged);
+    this.wc.removeListener("disconnect", this.handleDisconnect);
   };
 }
 
