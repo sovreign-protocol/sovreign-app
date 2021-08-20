@@ -1,4 +1,4 @@
-export const INFURA_ID = "TODO";
+export const INFURA_ID = "40300b5fcfca423884bed2a16903c92a";
 
 export enum SupportedChainId {
   MAINNET = 1,
