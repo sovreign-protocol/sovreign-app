@@ -43,21 +43,23 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
+      const withdrawAmount = withdrawInput.value;
+
+      if (Number(withdrawAmount) <= MIN_INPUT_VALUE) {
         throw new Error(
           `Minium Withdraw: ${MIN_INPUT_VALUE} ${FARMING_LP_SYMBOL[chainId]}`
         );
       }
 
-      const withdrawAmount = parseUnits(withdrawInput.value);
+      const amount = parseUnits(withdrawAmount);
 
-      const transaction = await staking.withdraw(pool?.address, withdrawAmount);
+      const transaction = await staking.withdraw(pool?.address, amount);
 
       withdrawInput.clear();
 
       toast.loading(
         <TransactionToast
-          message={`Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          message={`Withdraw ${withdrawAmount} ${FARMING_LP_SYMBOL[chainId]}`}
           hash={transaction.hash}
           chainId={chainId}
         />,
@@ -70,7 +72,7 @@ export default function WithdrawPool({ pool }: { pool: FarmingPool }) {
 
       toast.success(
         <TransactionToast
-          message={`Withdraw ${withdrawInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          message={`Withdraw ${withdrawAmount} ${FARMING_LP_SYMBOL[chainId]}`}
           hash={transaction.hash}
           chainId={chainId}
         />,

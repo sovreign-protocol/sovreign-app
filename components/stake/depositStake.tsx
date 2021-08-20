@@ -58,17 +58,19 @@ export default function DepositStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      if (Number(depositInput.value) <= MIN_INPUT_VALUE) {
+      const depositAmount = depositInput.value;
+
+      if (Number(depositAmount) <= MIN_INPUT_VALUE) {
         throw new Error(`Minium Deposit: ${MIN_INPUT_VALUE} REIGN`);
       }
 
-      const depositAmount = parseUnits(depositInput.value);
+      const amount = parseUnits(depositAmount);
 
-      if (depositAmount.gt(reignBalance)) {
+      if (amount.gt(reignBalance)) {
         throw new Error(`Maximum Deposit: ${formattedReignBalance} REIGN`);
       }
 
-      const transaction = await reignFacet.deposit(depositAmount);
+      const transaction = await reignFacet.deposit(amount);
 
       depositInput.clear();
 
@@ -76,7 +78,7 @@ export default function DepositStake() {
         <TransactionToast
           hash={transaction.hash}
           chainId={chainId}
-          message={`Deposit ${depositInput.value} REIGN`}
+          message={`Deposit ${depositAmount} REIGN`}
         />,
         { id: _id }
       );
@@ -87,7 +89,7 @@ export default function DepositStake() {
         <TransactionToast
           hash={transaction.hash}
           chainId={chainId}
-          message={`Deposit ${depositInput.value} REIGN`}
+          message={`Deposit ${depositAmount} REIGN`}
         />,
         { id: _id }
       );

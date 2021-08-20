@@ -42,17 +42,19 @@ export default function WithdrawStake() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
+      const withdrawAmount = withdrawInput.value;
+
+      if (Number(withdrawAmount) <= MIN_INPUT_VALUE) {
         throw new Error(`Minium Withdraw: ${MIN_INPUT_VALUE} REIGN`);
       }
 
-      const amountToWithdraw = parseUnits(withdrawInput.value);
+      const amount = parseUnits(withdrawAmount);
 
-      if (amountToWithdraw.gt(reignStaked)) {
+      if (amount.gt(reignStaked)) {
         throw new Error(`Maximum Withdraw: ${formattedReignStaked} REIGN`);
       }
 
-      const transaction = await reignFacet.withdraw(amountToWithdraw);
+      const transaction = await reignFacet.withdraw(amount);
 
       withdrawInput.clear();
 
@@ -60,7 +62,7 @@ export default function WithdrawStake() {
         <TransactionToast
           hash={transaction.hash}
           chainId={chainId}
-          message={`Withdraw ${withdrawInput.value} REIGN`}
+          message={`Withdraw ${withdrawAmount} REIGN`}
         />,
         { id: _id }
       );
@@ -71,7 +73,7 @@ export default function WithdrawStake() {
         <TransactionToast
           hash={transaction.hash}
           chainId={chainId}
-          message={`Withdraw ${withdrawInput.value} REIGN`}
+          message={`Withdraw ${withdrawAmount} REIGN`}
         />,
         { id: _id }
       );

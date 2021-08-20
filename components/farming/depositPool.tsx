@@ -76,21 +76,23 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      if (Number(depositInput.value) <= MIN_INPUT_VALUE) {
+      const depositAmount = depositInput.value;
+
+      if (Number(depositAmount) <= MIN_INPUT_VALUE) {
         throw new Error(
           `Minium Deposit: ${MIN_INPUT_VALUE} ${FARMING_LP_SYMBOL[chainId]}`
         );
       }
 
-      const depositAmount = parseUnits(depositInput.value);
+      const amount = parseUnits(depositAmount);
 
-      const transaction = await staking.deposit(pool?.address, depositAmount);
+      const transaction = await staking.deposit(pool?.address, amount);
 
       depositInput.clear();
 
       toast.loading(
         <TransactionToast
-          message={`Deposit ${depositInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          message={`Deposit ${depositAmount} ${FARMING_LP_SYMBOL[chainId]}`}
           hash={transaction.hash}
           chainId={chainId}
         />,
@@ -103,7 +105,7 @@ export default function DepositPool({ pool }: { pool: FarmingPool }) {
 
       toast.success(
         <TransactionToast
-          message={`Deposit ${depositInput.value} ${FARMING_LP_SYMBOL[chainId]}`}
+          message={`Deposit ${depositAmount} ${FARMING_LP_SYMBOL[chainId]}`}
           hash={transaction.hash}
           chainId={chainId}
         />,

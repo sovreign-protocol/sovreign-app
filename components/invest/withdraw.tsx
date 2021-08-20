@@ -67,13 +67,15 @@ export default function Withdraw() {
     const _id = toast.loading("Waiting for confirmation");
 
     try {
-      if (Number(withdrawInput.value) <= MIN_INPUT_VALUE) {
+      const withdrawAmount = withdrawInput.value;
+
+      if (Number(withdrawAmount) <= MIN_INPUT_VALUE) {
         throw new Error(
           `Minium Withdraw: ${MIN_INPUT_VALUE} ${withdrawToken.symbol}`
         );
       }
 
-      const minAmountOut = parseUnits(withdrawInput.value);
+      const minAmountOut = parseUnits(withdrawAmount);
 
       const poolBalance: BigNumber = await withdrawTokenContract.balanceOf(
         BALANCER_POOL_ADDRESS[chainId]
@@ -112,7 +114,7 @@ export default function Withdraw() {
 
       toast.loading(
         <TransactionToast
-          message={`Withdraw ${withdrawInput.value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${withdrawAmount} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -123,7 +125,7 @@ export default function Withdraw() {
 
       toast.success(
         <TransactionToast
-          message={`Withdraw ${withdrawInput.value} ${withdrawToken.symbol}`}
+          message={`Withdraw ${withdrawAmount} ${withdrawToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,

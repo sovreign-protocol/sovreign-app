@@ -1,6 +1,6 @@
 import {
-  CONTRACT_ADDRESSES,
   BALANCER_POOL_ADDRESS,
+  CONTRACT_ADDRESSES,
 } from "@/constants/contracts";
 import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
@@ -13,7 +13,6 @@ import useGetSovAmountOut from "@/hooks/view/useGetSovAmountOut";
 import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
-import hasValue from "@/utils/hasValue";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
@@ -55,6 +54,8 @@ export default function Deposit() {
   const formattedDepositBalance = useFormattedBigNumber(depositTokenBalance, 4);
 
   const depositInput = useInput();
+  const slippageInput = useInput();
+  const liquidationFeeInput = useInput();
 
   const depositTokenNeedsApproval = useMemo(() => {
     if (!!depositTokenAllowance && depositInput.hasValue) {
@@ -76,28 +77,22 @@ export default function Deposit() {
 
     const _id = toast.loading("Waiting for confirmation");
 
-    const values = event.target as typeof event.target & {
-      depositAmount: { value: string };
-      liquidationFee: { value: string };
-      slippage: { value: string };
-    };
-
     try {
-      if (Number(values.depositAmount.value) <= MIN_INPUT_VALUE) {
+      const depositAmount = depositInput.value;
+
+      if (Number(depositAmount) <= MIN_INPUT_VALUE) {
         throw new Error(
           `Minium Deposit: ${MIN_INPUT_VALUE} ${depositToken.symbol}`
         );
       }
 
-      const depositAmount = parseUnits(values.depositAmount.value);
+      const tokenAmountIn = parseUnits(depositAmount);
 
-      const liquidationFee = hasValue(values.liquidationFee?.value)
-        ? BigNumber.from(Number(values.liquidationFee.value) * 10000)
+      const liquidationFeeBigNumber = liquidationFeeInput.hasValue
+        ? BigNumber.from(Number(liquidationFeeInput.value) * 10000)
         : BigNumber.from(10 * 10000);
 
-      const slippage = hasValue(values.slippage?.value)
-        ? values.slippage.value
-        : "1";
+      const slippage = slippageInput.hasValue ? slippageInput.value : "1";
 
       const poolBalance: BigNumber = await depositTokenContract.balanceOf(
         BALANCER_POOL_ADDRESS[chainId]
@@ -105,7 +100,7 @@ export default function Deposit() {
 
       const maxDeposit = poolBalance.div(2);
 
-      if (depositAmount.gt(maxDeposit)) {
+      if (tokenAmountIn.gt(maxDeposit)) {
         const fmMaxDeposit = parseFloat(formatUnits(maxDeposit)).toFixed(2);
 
         throw new Error(
@@ -116,7 +111,7 @@ export default function Deposit() {
       const sovAmountOutSingle: BigNumber =
         await poolRouter.getSovAmountOutSingle(
           depositToken.address,
-          depositAmount,
+          tokenAmountIn,
           slippage
         );
 
@@ -126,16 +121,16 @@ export default function Deposit() {
 
       const transaction = await poolRouter.deposit(
         depositToken.address,
-        depositAmount,
+        tokenAmountIn,
         minPoolAmountOut,
-        liquidationFee
+        liquidationFeeBigNumber
       );
 
       depositInput.clear();
 
       toast.loading(
         <TransactionToast
-          message={`Deposit ${values.depositAmount.value} ${depositToken.symbol}`}
+          message={`Deposit ${depositAmount} ${depositToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -146,7 +141,7 @@ export default function Deposit() {
 
       toast.success(
         <TransactionToast
-          message={`Deposit ${values.depositAmount.value} ${depositToken.symbol}`}
+          message={`Deposit ${depositAmount} ${depositToken.symbol}`}
           chainId={chainId}
           hash={transaction.hash}
         />,
@@ -229,6 +224,7 @@ export default function Deposit() {
                       className="hide-number-input-arrows w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
                       spellCheck="false"
                       type="number"
+                      {...slippageInput.eventBind}
                     />
 
                     <span>%</span>
@@ -257,6 +253,7 @@ export default function Deposit() {
                       className="hide-number-input-arrows w-full text-right appearance-none bg-transparent focus:outline-none mr-0.5 text-white"
                       spellCheck="false"
                       type="number"
+                      {...slippageInput.eventBind}
                     />
 
                     <span>%</span>
