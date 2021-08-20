@@ -3,6 +3,7 @@ import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import AddTokensToMetaMask from "./addTokensToMetamask";
 import NetworkIndicator from "./network";
+import dynamic from "next/dynamic";
 import { Account } from "./web3";
 
 function NavigationItem({ text, href }: { text: string; href: string }) {
@@ -19,6 +20,10 @@ function NavigationItem({ text, href }: { text: string; href: string }) {
     </Link>
   );
 }
+
+const WalletModal = dynamic(() => import("../components/walletModal"), {
+  ssr: false,
+});
 
 export default function Navigation() {
   return (
@@ -78,6 +83,8 @@ export default function Navigation() {
           <Account />
         </li>
       </ul>
+
+      <WalletModal />
     </nav>
   );
 }

@@ -1,9 +1,8 @@
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import useENSName from "@/hooks/useENSName";
-import useMetaMaskOnboarding from "@/hooks/useMetaMaskOnboarding";
+import useWalletModal from "@/hooks/useWalletModal";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import { injected } from "@/lib/connectors/metamask";
 import WalletConnectConnector from "@/lib/connectors/walletconnect";
 import shortenAddress from "@/utils/shortenAddress";
 import { formatUnits } from "@ethersproject/units";
@@ -11,7 +10,6 @@ import { Menu } from "@headlessui/react";
 import cn from "classnames";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
-import toast from "react-hot-toast";
 import Identicon from "./identicon";
 
 function NextLink(props) {
@@ -33,8 +31,7 @@ export function Account() {
   const chainId = useWeb3Store((state) => state.chainId);
   const reset = useWeb3Store((state) => state.reset);
 
-  const { isMetaMaskInstalled, isWeb3Available, startOnboarding } =
-    useMetaMaskOnboarding();
+  const openWalletModal = useWalletModal((state) => state.open);
 
   const ENSName = useENSName(account);
 
@@ -57,16 +54,6 @@ export function Account() {
 
     reset();
   }, [connector, reset]);
-
-  async function connect() {
-    try {
-      await injected.activate();
-    } catch (error) {
-      console.error(error);
-
-      toast.error(error.message);
-    }
-  }
 
   if (account)
     return (
@@ -148,14 +135,10 @@ export function Account() {
 
   return (
     <button
-      className="bg-white text-primary rounded-lg block ml-auto px-4 py-3 text-sm font-medium"
-      onClick={isWeb3Available ? connect : startOnboarding}
+      className="bg-white text-primary rounded-lg block ml-auto px-4 py-3 text-sm font-medium focus:outline-none focus:ring-4"
+      onClick={openWalletModal}
     >
-      {isWeb3Available
-        ? isMetaMaskInstalled
-          ? `Connect with MetaMask`
-          : `Connect Wallet`
-        : `Install MetaMask`}
+      {`Connect Wallet`}
     </button>
   );
 }
