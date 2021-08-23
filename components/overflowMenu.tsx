@@ -33,7 +33,7 @@ export default function OverflowMenu() {
               rel="noopener noreferrer"
               className={cn(menuItemClassNames, active && "bg-white/[0.10]")}
             >
-              Buy SOV
+              Buy SOV on SushiSwap
             </a>
           )}
         </Menu.Item>
@@ -45,7 +45,7 @@ export default function OverflowMenu() {
               rel="noopener noreferrer"
               className={cn(menuItemClassNames, active && "bg-white/[0.10]")}
             >
-              Buy REIGN
+              Buy REIGN on SushiSwap
             </a>
           )}
         </Menu.Item>
