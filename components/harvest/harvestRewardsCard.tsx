@@ -1,4 +1,5 @@
 import type { BigNumber } from "@ethersproject/bignumber";
+import { commify } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import Button from "../button";
 
@@ -32,7 +33,9 @@ export default function HarvestRewardsCard({
         <div className="flex justify-between items-end">
           <p className="leading-none">APY</p>
 
-          <p className="leading-none">{`${apy ? apy.toFixed(2) : 0}%`}</p>
+          <p className="leading-none">{`${
+            apy ? commify(parseFloat(apy.toFixed(2))) : 0
+          }%`}</p>
         </div>
         <div className="flex justify-between items-end">
           <p className="leading-none">Harvestable Earnings</p>
