@@ -1,4 +1,5 @@
 import { GovRewards, ReignFacet } from "@/contracts/types";
+import { btof } from "@/utils/bn";
 import useSWR from "swr";
 import { useGovRewards, useReignFacetProxy } from "./useContract";
 
@@ -13,7 +14,10 @@ function getGovRewardsExpectedRewards(
 
     const rewardsForEpoch = await govRewards.getRewardsForEpoch();
 
-    return balanceOf.div(reignStaked).mul(rewardsForEpoch);
+    const expectedRewards =
+      (btof(balanceOf) / btof(reignStaked)) * btof(rewardsForEpoch);
+
+    return expectedRewards;
   };
 }
 

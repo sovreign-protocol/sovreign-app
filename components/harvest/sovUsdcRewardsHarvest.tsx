@@ -5,8 +5,8 @@ import useSOVUSDCLPRewardsExpectedRewards, {
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
+import formatNumber from "@/utils/formatNumber";
 import handleError from "@/utils/handleError";
-import { commify } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { TransactionToast } from "../customToast";
@@ -29,9 +29,7 @@ export default function SOVUSDCRewardsHarvest() {
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
-  const formattedExpectedRewards = expectedRewards
-    ? commify(Number(expectedRewards).toFixed(2))
-    : Number(0).toFixed(2);
+  const formattedExpectedRewards = formatNumber(expectedRewards);
 
   async function harvest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

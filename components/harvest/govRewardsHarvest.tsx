@@ -5,6 +5,7 @@ import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import useUserLockedUntil from "@/hooks/view/useUserLockedUntil";
+import formatNumber from "@/utils/formatNumber";
 import handleError from "@/utils/handleError";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -30,7 +31,7 @@ export default function GovRewardsHarvest() {
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
-  const formattedExpectedRewards = useFormattedBigNumber(expectedRewards);
+  const formattedExpectedRewards = formatNumber(expectedRewards);
 
   async function harvestGovRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

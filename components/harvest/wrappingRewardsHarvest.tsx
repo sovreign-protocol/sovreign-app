@@ -5,8 +5,8 @@ import useWrappingRewardsAPY from "@/hooks/useWrappingRewardsAPY";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import useIsBoosted from "@/hooks/view/useIsBoosted";
 import useWrappingRewardsExpectedRewards from "@/hooks/wrappingRewards";
+import formatNumber from "@/utils/formatNumber";
 import handleError from "@/utils/handleError";
-import { commify } from "@ethersproject/units";
 import Link from "next/link";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
@@ -32,9 +32,7 @@ export default function WrappingRewardsHarvest() {
 
   const formattedRewards = useFormattedBigNumber(rewards);
 
-  const formattedExpectedRewards = expectedRewards
-    ? commify(Number(expectedRewards).toFixed(2))
-    : Number(0).toFixed(2);
+  const formattedExpectedRewards = formatNumber(expectedRewards);
 
   async function harvestWrappingRewards(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
