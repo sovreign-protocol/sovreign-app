@@ -22,3 +22,5 @@ export const MaxUint256 = BigInt(
 );
 
 export const MIN_INPUT_VALUE = 0.00000000000000001;
+
+export const MAX_SOV_MINTABLE = 4_000_000;

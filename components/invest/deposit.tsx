@@ -2,11 +2,16 @@ import {
   BALANCER_POOL_ADDRESS,
   CONTRACT_ADDRESSES,
 } from "@/constants/contracts";
-import { MaxUint256, MIN_INPUT_VALUE } from "@/constants/numbers";
+import {
+  MaxUint256,
+  MAX_SOV_MINTABLE,
+  MIN_INPUT_VALUE,
+} from "@/constants/numbers";
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
 import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
+import useTotalSupply from "@/hooks/useTotalSupply";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useGetPoolTokens from "@/hooks/view/useGetPoolTokens";
 import useGetSovAmountOut from "@/hooks/view/useGetSovAmountOut";
@@ -14,7 +19,7 @@ import useTokenAllowance from "@/hooks/view/useTokenAllowance";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
 import handleError from "@/utils/handleError";
 import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { commify, formatUnits, parseUnits } from "@ethersproject/units";
 import { Popover } from "@headlessui/react";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
@@ -37,6 +42,10 @@ export default function Deposit() {
     account,
     TOKEN_ADDRESSES.SOV[chainId]
   );
+
+  const { data: totalSupply } = useTotalSupply(TOKEN_ADDRESSES.SOV[chainId]);
+
+  const formattedTotalSupply = useFormattedBigNumber(totalSupply, 0);
 
   const [depositToken, depositTokenSet] = useState<Token>();
 
@@ -305,6 +314,14 @@ export default function Deposit() {
         <p className="leading-none">
           {formattedSovAmountOut === "0.00" ? `-` : formattedSovAmountOut}
         </p>
+      </div>
+
+      <div className="flex justify-between">
+        <p className="leading-none">SOV Minted</p>
+
+        <p className="leading-none">{`${formattedTotalSupply} / ${commify(
+          MAX_SOV_MINTABLE
+        )}`}</p>
       </div>
 
       <div className="space-y-4">
