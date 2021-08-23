@@ -23,7 +23,6 @@ class MyDocument extends Document {
             href="/favicon-16x16.png"
           />
           <link rel="manifest" href="/site.webmanifest" />
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0c0f21" />
           <meta name="msapplication-TileColor" content="#0c0f21" />
           <meta name="theme-color" content="#0c0f21" />
         </Head>
