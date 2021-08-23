@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Sovreign</title>
+        <title>Sovreign Interface</title>
         <meta name="description" content="The future-looking SDR" />
       </Head>
 
