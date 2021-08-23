@@ -35,6 +35,32 @@ export default class MetaMaskConnector {
     this.supportedChainIds = supportedChainIds;
   }
 
+  private handleChainChanged = (chainId: ProviderChainId) => {
+    if (__DEV__) {
+      console.log("[handleChainChanged]", chainId);
+    }
+
+    window.location.reload();
+  };
+
+  private handleAccountsChanged = (accounts: ProviderAccounts) => {
+    if (__DEV__) {
+      console.log("[handleAccountsChanged]", accounts);
+    }
+
+    useWeb3Store.setState({
+      account: accounts[0],
+    });
+  };
+
+  private handleDisconnect = (error: ProviderRpcError) => {
+    if (__DEV__) {
+      console.log("[handleDisconnect]", error);
+    }
+
+    this.deactivate();
+  };
+
   public activate = async () => {
     if (__DEV__) {
       console.log("[activate]");
@@ -79,32 +105,6 @@ export default class MetaMaskConnector {
       provider.on("accountsChanged", this.handleAccountsChanged);
       provider.on("disconnect", this.handleDisconnect);
     }
-  };
-
-  private handleChainChanged = (chainId: ProviderChainId) => {
-    if (__DEV__) {
-      console.log("[handleChainChanged]", chainId);
-    }
-
-    window.location.reload();
-  };
-
-  private handleAccountsChanged = (accounts: ProviderAccounts) => {
-    if (__DEV__) {
-      console.log("[handleAccountsChanged]", accounts);
-    }
-
-    useWeb3Store.setState({
-      account: accounts[0],
-    });
-  };
-
-  private handleDisconnect = (error: ProviderRpcError) => {
-    if (__DEV__) {
-      console.log("[handleDisconnect]", error);
-    }
-
-    this.deactivate();
   };
 
   public deactivate = () => {

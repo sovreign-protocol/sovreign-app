@@ -14,6 +14,32 @@ export default class WalletConnectConnector {
     this.supportedChainIds = supportedChainIds;
   }
 
+  private handleChainChanged = (chainId: string | number) => {
+    if (__DEV__) {
+      console.log("[handleChainChanged]", chainId);
+    }
+
+    window.location.reload();
+  };
+
+  private handleAccountsChanged = (accounts: string[]) => {
+    if (__DEV__) {
+      console.log("[handleAccountsChanged]", accounts);
+    }
+
+    useWeb3Store.setState({
+      account: accounts[0],
+    });
+  };
+
+  private handleDisconnect = (code: number, reason: string) => {
+    if (__DEV__) {
+      console.log("[handleDisconnect]", code, reason);
+    }
+
+    this.deactivate();
+  };
+
   public activate = async () => {
     if (__DEV__) {
       console.log("[activate]");
@@ -60,32 +86,6 @@ export default class WalletConnectConnector {
       this.wc.on("accountsChanged", this.handleAccountsChanged);
       this.wc.on("disconnect", this.handleDisconnect);
     }
-  };
-
-  private handleChainChanged = (chainId: string | number) => {
-    if (__DEV__) {
-      console.log("[handleChainChanged]", chainId);
-    }
-
-    window.location.reload();
-  };
-
-  private handleAccountsChanged = (accounts: string[]) => {
-    if (__DEV__) {
-      console.log("[handleAccountsChanged]", accounts);
-    }
-
-    useWeb3Store.setState({
-      account: accounts[0],
-    });
-  };
-
-  private handleDisconnect = (code: number, reason: string) => {
-    if (__DEV__) {
-      console.log("[handleDisconnect]", code, reason);
-    }
-
-    this.deactivate();
   };
 
   public deactivate = () => {
