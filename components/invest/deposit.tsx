@@ -43,7 +43,9 @@ export default function Deposit() {
     TOKEN_ADDRESSES.SOV[chainId]
   );
 
-  const { data: totalSupply } = useTotalSupply(TOKEN_ADDRESSES.SOV[chainId]);
+  const { data: totalSupply, mutate: totalSupplyMutate } = useTotalSupply(
+    TOKEN_ADDRESSES.SOV[chainId]
+  );
 
   const formattedTotalSupply = useFormattedBigNumber(totalSupply, 0);
 
@@ -159,6 +161,7 @@ export default function Deposit() {
 
       sovBalanceMutate();
       depositTokenBalanceMutate();
+      totalSupplyMutate();
     } catch (error) {
       handleError(error, _id);
     }
