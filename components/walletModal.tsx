@@ -76,7 +76,7 @@ export default function WalletModal() {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full max-w-md p-4 my-8 overflow-hidden text-left align-middle transition-all transform bg-primary-400 ring-1 ring-white ring-opacity-10 shadow-xl rounded-2xl text-white">
+            <div className="inline-block w-full max-w-md p-4 my-8 overflow-hidden text-left align-middle transition-all transform bg-primary-400 ring-1 ring-inset ring-white ring-opacity-10 shadow-xl rounded-2xl text-white">
               <div className="flex justify-between">
                 <Dialog.Title as="h3" className="text-lg font-medium leading-6">
                   Connect Wallet
