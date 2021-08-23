@@ -88,3 +88,10 @@ export const TOKEN_ASSETS: Record<
     },
   },
 };
+
+export const SUSHI_SWAP_LINKS: Record<TokenNames, string> = {
+  [TokenNames.SOV]:
+    "https://app.sushi.com/swap?outputCurrency=0x0aFEE744B6d9fF2B78f76Fe10b3E0199C413Fd34",
+  [TokenNames.REIGN]:
+    "https://app.sushi.com/swap?outputCurrency=0x17F59DD7fEfC2F276509EeD2Ad6B65271458177E",
+};

@@ -5,6 +5,7 @@ import AddTokensToMetaMask from "./addTokensToMetamask";
 import NetworkIndicator from "./network";
 import dynamic from "next/dynamic";
 import { Account } from "./web3";
+import OverflowMenu from "./overflowMenu";
 
 function NavigationItem({ text, href }: { text: string; href: string }) {
   const { asPath } = useRouter();
@@ -80,7 +81,11 @@ export default function Navigation() {
 
           <AddTokensToMetaMask />
 
-          <Account />
+          <div className="flex space-x-2">
+            <Account />
+
+            <OverflowMenu />
+          </div>
         </li>
       </ul>
 
