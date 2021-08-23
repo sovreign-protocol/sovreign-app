@@ -317,7 +317,7 @@ export default function Deposit() {
       </div>
 
       <div className="flex justify-between">
-        <p className="leading-none">SOV Minted</p>
+        <p className="leading-none">SOV Supply</p>
 
         <p className="leading-none">{`${formattedTotalSupply} / ${commify(
           MAX_SOV_MINTABLE
