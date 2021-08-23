@@ -3,7 +3,7 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import normalizeChainId from "@/utils/normalizeChainId";
 import detectEthereumProvider from "@metamask/detect-provider";
 import type {
-  EIP1193Provider,
+  IEthereumProvider,
   ProviderAccounts,
   ProviderChainId,
   ProviderRpcError,
@@ -40,9 +40,7 @@ export default class MetaMaskConnector {
       console.log("[activate]");
     }
 
-    const provider = (await detectEthereumProvider({
-      timeout: 1000,
-    })) as EIP1193Provider;
+    const provider = (await detectEthereumProvider()) as IEthereumProvider;
 
     if (!provider) {
       throw new NoEthereumProviderError();
@@ -136,7 +134,7 @@ export default class MetaMaskConnector {
     }
 
     try {
-      const provider = (await detectEthereumProvider()) as EIP1193Provider;
+      const provider = (await detectEthereumProvider()) as IEthereumProvider;
 
       return await provider
         .request({

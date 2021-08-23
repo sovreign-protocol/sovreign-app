@@ -88,24 +88,17 @@ export default class WalletConnectConnector {
     this.deactivate();
   };
 
-  public disconnect = () => {
-    if (__DEV__) {
-      console.log("[disconnect]");
-    }
-
-    if (this.wc) {
-      this.wc.disconnect();
-    }
-  };
-
   public deactivate = () => {
     if (__DEV__) {
       console.log("[deactivate]");
     }
 
-    this.wc.removeListener("chainChanged", this.handleChainChanged);
-    this.wc.removeListener("accountsChanged", this.handleAccountsChanged);
-    this.wc.removeListener("disconnect", this.handleDisconnect);
+    if (this.wc) {
+      this.wc.removeListener("disconnect", this.handleDisconnect);
+      this.wc.removeListener("chainChanged", this.handleChainChanged);
+      this.wc.removeListener("accountsChanged", this.handleAccountsChanged);
+      this.wc.disconnect();
+    }
   };
 }
 

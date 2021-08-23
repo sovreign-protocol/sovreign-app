@@ -3,7 +3,6 @@ import useENSName from "@/hooks/useENSName";
 import useWalletModal from "@/hooks/useWalletModal";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useTokenBalance from "@/hooks/view/useTokenBalance";
-import WalletConnectConnector from "@/lib/connectors/walletconnect";
 import shortenAddress from "@/utils/shortenAddress";
 import { formatUnits } from "@ethersproject/units";
 import { Menu } from "@headlessui/react";
@@ -46,10 +45,6 @@ export function Account() {
   );
 
   const disconnect = useCallback(() => {
-    if (connector instanceof WalletConnectConnector) {
-      connector.disconnect();
-    }
-
     connector?.deactivate();
 
     reset();
