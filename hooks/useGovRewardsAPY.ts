@@ -13,8 +13,8 @@ function getGovRewardsAPY(contract: GovRewards) {
     const totalRewards = rewardsForEpoch.mul(52);
 
     const apy =
-      (parseFloat(formatUnits(totalStake)) /
-        parseFloat(formatUnits(totalRewards))) *
+      (parseFloat(formatUnits(totalRewards)) /
+        parseFloat(formatUnits(totalStake))) *
       100;
 
     return apy;
