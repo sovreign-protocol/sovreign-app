@@ -35,12 +35,11 @@ export default function useContract<T extends Contract = Contract>(
   address: string,
   ABI: any
 ): T | null {
-  const chainId = useWeb3Store(chainIdSelector);
   const account = useWeb3Store(accountSelector);
   const library = useWeb3Store(librarySelector);
 
   return useMemo(() => {
-    if (!address || !ABI || !library || !chainId) {
+    if (!address || !ABI || !library) {
       return null;
     }
 
