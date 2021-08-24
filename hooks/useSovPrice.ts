@@ -5,7 +5,7 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import { useSOVUSDCRewards } from "./sovUsdc";
+import { useSOVUSDCRewards } from "./useContract";
 import useWeb3Store from "./useWeb3Store";
 
 function getSovPrice(lpRewards: LPRewards, library: Web3Provider) {
