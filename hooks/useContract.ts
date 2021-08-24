@@ -2,6 +2,7 @@ import { CONTRACT_ADDRESSES } from "@/constants/contracts";
 import BasketBalancer_ABI from "@/contracts/BasketBalancer.json";
 import ERC20_ABI from "@/contracts/ERC20.json";
 import GovRewards_ABI from "@/contracts/GovRewards.json";
+import LPRewards_ABI from "@/contracts/LPRewards.json";
 import PoolRouter_ABI from "@/contracts/PoolRouter.json";
 import ReignDAO_ABI from "@/contracts/ReignDAO.json";
 import ReignFacet_ABI from "@/contracts/ReignFacet.json";
@@ -11,6 +12,7 @@ import type {
   BasketBalancer,
   ERC20,
   GovRewards,
+  LPRewards,
   PoolRouter,
   ReignDAO,
   ReignFacet,
@@ -126,5 +128,23 @@ export function useReignDAO() {
   return useContract<ReignDAO>(
     CONTRACT_ADDRESSES.ReignDAO[chainId],
     ReignDAO_ABI
+  );
+}
+
+export function useSOVUSDCRewards() {
+  const chainId = useWeb3Store(chainIdSelector);
+
+  return useContract<LPRewards>(
+    CONTRACT_ADDRESSES.LPRewardsSOVUSDC[chainId],
+    LPRewards_ABI
+  );
+}
+
+export function useREIGNWETHRewards() {
+  const chainId = useWeb3Store(chainIdSelector);
+
+  return useContract<LPRewards>(
+    CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId],
+    LPRewards_ABI
   );
 }
