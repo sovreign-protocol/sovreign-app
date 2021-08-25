@@ -6,7 +6,7 @@ import VotingPower from "@/components/rebalance/votingPower";
 
 function RebalanceView() {
   return (
-    <section className="sm:pt-8 md:pt-16 pb-8">
+    <section className="sm:pt-8 md:pt-16 pb-8 text-white">
       <div className="px-5 max-w-4xl mx-auto mb-4">
         <div className="space-y-4 md:space-y-0 md:flex md:space-x-4">
           <VotingPower />

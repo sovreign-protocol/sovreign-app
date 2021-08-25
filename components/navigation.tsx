@@ -29,7 +29,7 @@ const WalletModal = dynamic(() => import("../components/walletModal"), {
 
 export default function Navigation() {
   return (
-    <nav className="px-5 md:px-8 py-4">
+    <nav className="px-5 md:px-8 py-4 text-white">
       <ul className="flex items-center justify-between">
         <li className="flex-shrink-0">
           <div className="flex items-center">

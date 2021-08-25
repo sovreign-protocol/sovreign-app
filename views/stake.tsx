@@ -25,7 +25,7 @@ const tabClassNames = ({ selected }: { selected: boolean }) =>
 
 function StakeView() {
   return (
-    <section className="sm:pt-8 md:pt-16 pb-8">
+    <section className="sm:pt-8 md:pt-16 pb-8 text-white">
       <div className="px-5 max-w-lg mx-auto">
         <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10">

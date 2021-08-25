@@ -27,7 +27,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#0c0f21" />
         </Head>
 
-        <body className="bg-primary antialiased text-white">
+        <body className="bg-primary antialiased">
           <Main />
 
           <NextScript />
