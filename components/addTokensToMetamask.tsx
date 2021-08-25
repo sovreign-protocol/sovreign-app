@@ -1,4 +1,3 @@
-import { TokenNames } from "@/constants/tokens";
 import useAddTokenToMetaMask from "@/hooks/useAddTokenToMetaMask";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import MetaMaskOutline from "@/svgs/MetaMaskOutline";
@@ -13,7 +12,7 @@ export default function AddTokensToMetaMask() {
       <button
         onClick={addToken}
         aria-label="Add Tokens To MetaMask"
-        className="px-3 py-[10px] bg-primary-400 ring-1 ring-inset ring-white ring-opacity-10 text-sm rounded-xl hidden sm:flex items-center space-x-2 flex-shrink-0 focus:ring-opacity-20 hover:ring-opacity-20 focus:outline-none"
+        className="px-3 py-[10px] bg-primary-400 ring-1 ring-inset ring-white ring-opacity-10 text-sm rounded-xl hidden xl:flex items-center space-x-2 flex-shrink-0 focus:ring-opacity-20 hover:ring-opacity-20 focus:outline-none"
       >
         <MetaMaskOutline size={20} />
 

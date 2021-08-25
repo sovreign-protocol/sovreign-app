@@ -26,7 +26,7 @@ function FarmingView() {
   const [pool, poolSet] = useState<FarmingPool>();
 
   return (
-    <section className="pt-8 md:pt-16 pb-8">
+    <section className="sm:pt-8 md:pt-16 pb-8">
       <div className="px-5 max-w-lg mx-auto mb-4">
         <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10">
           <div className="p-2">
