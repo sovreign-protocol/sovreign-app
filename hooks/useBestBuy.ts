@@ -24,5 +24,7 @@ function getBestBuy() {
 export default function useBestBuy() {
   const shouldFetch = true;
 
-  return useSWR(shouldFetch ? ["BestBuy"] : null, getBestBuy());
+  return useSWR(shouldFetch ? ["BestBuy"] : null, getBestBuy(), {
+    shouldRetryOnError: false,
+  });
 }

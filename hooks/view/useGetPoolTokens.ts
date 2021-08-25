@@ -6,19 +6,28 @@ import useBestBuy from "../useBestBuy";
 import { usePoolRouter } from "../useContract";
 
 function getPoolTokens(contract: PoolRouter) {
-  return async (_: string, bestBuy: Record<string, bigint>) => {
+  return async (_: string, bestBuy?: Record<string, bigint>) => {
     const values = await contract.getPoolTokens();
 
-    const formatted: Token[] = values
+    let formatted: Token[] = values
       .map((addr) => addr.toLowerCase())
       .map((address) => {
         return {
           address: address,
           symbol: TOKEN_NAMES_BY_ADDRESS[address],
-          out: bestBuy[address],
         };
-      })
-      .sort((a, b) => (a.out < b.out ? -1 : a.out > b.out ? 1 : 0));
+      });
+
+    if (bestBuy) {
+      formatted = formatted
+        .map((poolToken) => {
+          return {
+            ...poolToken,
+            out: bestBuy[poolToken.address],
+          };
+        })
+        .sort((a, b) => (a.out < b.out ? -1 : a.out > b.out ? 1 : 0));
+    }
 
     return formatted;
   };
@@ -29,7 +38,7 @@ export default function useGetPoolTokens() {
 
   const contract = usePoolRouter();
 
-  const shouldFetch = !!contract && !!bestBuy;
+  const shouldFetch = !!contract;
 
   return useSWR(
     shouldFetch ? ["GetPoolTokens", bestBuy] : null,

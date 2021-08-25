@@ -7,7 +7,7 @@ import { ChevronDown } from "react-feather";
 export type Token = {
   symbol: keyof typeof TokenNames;
   address: string;
-  out: bigint;
+  out?: bigint;
 };
 
 type TokenSelectProps = {
@@ -97,7 +97,7 @@ export default function TokenSelect({
                     </span>
                   </div>
 
-                  {tokenIndex === 0 && (
+                  {tokenIndex === 0 && typeof token.out === "bigint" && (
                     <div className="py-1 px-1.5 rounded-md bg-indigo-500 text-white whitespace-nowrap text-xs leading-none font-medium">
                       <span>Best Returns</span>
                     </div>
