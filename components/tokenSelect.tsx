@@ -19,13 +19,23 @@ type TokenSelectProps = {
     }>
   >;
   tokens: Token[];
+  order: "ASC" | "DESC";
 };
 
 export default function TokenSelect({
   value,
   onChange,
   tokens,
+  order,
 }: TokenSelectProps) {
+  const sortTokens = (a: Token, b: Token) => {
+    if (order === "ASC") {
+      return a.out < b.out ? -1 : a.out > b.out ? 1 : 0;
+    } else {
+      return a.out > b.out ? -1 : a.out < b.out ? 1 : 0;
+    }
+  };
+
   return (
     <Listbox value={value} onChange={onChange}>
       <div className="relative">
@@ -57,7 +67,7 @@ export default function TokenSelect({
         </Listbox.Button>
 
         <Listbox.Options className="absolute max-h-60 w-48 mt-2 overflow-auto bg-primary-300 ring-1 ring-inset ring-white ring-opacity-20 rounded-lg focus:outline-none p-1">
-          {tokens?.map((token, tokenIndex) => (
+          {tokens?.sort(sortTokens)?.map((token, tokenIndex) => (
             <Listbox.Option
               key={tokenIndex}
               className={({ active }) =>

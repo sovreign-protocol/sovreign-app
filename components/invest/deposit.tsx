@@ -283,6 +283,7 @@ export default function Deposit() {
             value={depositToken}
             onChange={depositTokenSet}
             tokens={poolTokens}
+            order="DESC"
           />
 
           <div className="flex-1">

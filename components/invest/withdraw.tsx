@@ -178,6 +178,7 @@ export default function Withdraw() {
             value={withdrawToken}
             onChange={withdrawTokenSet}
             tokens={poolTokens}
+            order="ASC"
           />
 
           <div className="flex-1">

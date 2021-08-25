@@ -9,25 +9,15 @@ function getPoolTokens(contract: PoolRouter) {
   return async (_: string, bestBuy?: Record<string, bigint>) => {
     const values = await contract.getPoolTokens();
 
-    let formatted: Token[] = values
+    const formatted: Token[] = values
       .map((addr) => addr.toLowerCase())
       .map((address) => {
         return {
           address: address,
           symbol: TOKEN_NAMES_BY_ADDRESS[address],
+          out: BigInt(bestBuy?.[address] ?? 0),
         };
       });
-
-    if (bestBuy) {
-      formatted = formatted
-        .map((poolToken) => {
-          return {
-            ...poolToken,
-            out: bestBuy[poolToken.address],
-          };
-        })
-        .sort((a, b) => (a.out < b.out ? -1 : a.out > b.out ? 1 : 0));
-    }
 
     return formatted;
   };

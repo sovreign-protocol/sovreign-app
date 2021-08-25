@@ -8,7 +8,6 @@ function getBestBuy() {
   return async (): Promise<Data> => {
     const r = await fetch(BASE, {
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
       },
     });
