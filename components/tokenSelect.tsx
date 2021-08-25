@@ -56,13 +56,13 @@ export default function TokenSelect({
           </span>
         </Listbox.Button>
 
-        <Listbox.Options className="absolute w-full max-h-60 mt-2 overflow-auto bg-primary-300 ring-1 ring-inset ring-white ring-opacity-20 rounded-lg focus:outline-none p-1">
+        <Listbox.Options className="absolute max-h-60 w-48 mt-2 overflow-auto bg-primary-300 ring-1 ring-inset ring-white ring-opacity-20 rounded-lg focus:outline-none p-1">
           {tokens?.map((token, tokenIndex) => (
             <Listbox.Option
               key={tokenIndex}
               className={({ active }) =>
                 classNames(
-                  "cursor-default select-none relative p-2 rounded text-white",
+                  "cursor-default select-none p-2 rounded text-white",
                   active ? "bg-white/[0.10]" : ""
                 )
               }
@@ -76,7 +76,7 @@ export default function TokenSelect({
                     selected ? "opacity-50" : ""
                   )}
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex-shrink-0 flex items-center space-x-2">
                     <img
                       alt={token.symbol}
                       className="rounded-full bg-primary h-5 w-5"
@@ -97,8 +97,11 @@ export default function TokenSelect({
                     </span>
                   </div>
 
-                  {/* Add In Showing Balances Later */}
-                  {/* <span className="font-mono font-medium leading-5">{"0"}</span> */}
+                  {tokenIndex === 0 && (
+                    <div className="py-1 px-1.5 rounded-md bg-indigo-500 text-white whitespace-nowrap text-xs leading-none font-medium">
+                      <span>Best Returns</span>
+                    </div>
+                  )}
                 </div>
               )}
             </Listbox.Option>
