@@ -1,11 +1,13 @@
+import { TokenNames } from "@/constants/tokens";
 import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
 import type { Dispatch, SetStateAction } from "react";
 import { ChevronDown } from "react-feather";
 
 export type Token = {
-  symbol: string;
+  symbol: keyof typeof TokenNames;
   address: string;
+  out: bigint;
 };
 
 type TokenSelectProps = {
