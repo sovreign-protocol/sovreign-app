@@ -2,6 +2,7 @@ import { Token } from "@/components/tokenSelect";
 import { TOKEN_NAMES_BY_ADDRESS } from "@/constants/tokens";
 import type { PoolRouter } from "@/contracts/types";
 import useSWR from "swr";
+import useBestBuy from "../useBestBuy";
 import { usePoolRouter } from "../useContract";
 
 const TOKEN_LIST = {
@@ -33,6 +34,10 @@ function getPoolTokens(contract: PoolRouter) {
 }
 
 export default function useGetPoolTokens() {
+  const { data: bestBuy, error } = useBestBuy();
+
+  console.log(bestBuy, error);
+
   const contract = usePoolRouter();
 
   const shouldFetch = !!contract;
