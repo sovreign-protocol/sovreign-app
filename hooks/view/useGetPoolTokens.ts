@@ -15,7 +15,7 @@ const TOKEN_LIST = {
 };
 
 function getPoolTokens(contract: PoolRouter) {
-  return async (_: string) => {
+  return async (_: string, bestBuy: Record<string, bigint>) => {
     const values = await contract.getPoolTokens();
 
     const formatted: Token[] = values
@@ -34,16 +34,14 @@ function getPoolTokens(contract: PoolRouter) {
 }
 
 export default function useGetPoolTokens() {
-  const { data: bestBuy, error } = useBestBuy();
-
-  console.log(bestBuy, error);
+  const { data: bestBuy } = useBestBuy();
 
   const contract = usePoolRouter();
 
-  const shouldFetch = !!contract;
+  const shouldFetch = !!contract && !!bestBuy;
 
   return useSWR(
-    shouldFetch ? ["GetPoolTokens"] : null,
+    shouldFetch ? ["GetPoolTokens", bestBuy] : null,
     getPoolTokens(contract)
   );
 }
