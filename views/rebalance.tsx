@@ -3,6 +3,7 @@ import AllocationAdjustment from "@/components/rebalance/allocationAdjustment";
 import ContinuousTokenAllocation from "@/components/rebalance/continuousTokenAllocation";
 import TokenAllocation from "@/components/rebalance/tokenAllocation";
 import VotingPower from "@/components/rebalance/votingPower";
+import Panel from "@/components/panel";
 
 function RebalanceView() {
   return (
@@ -16,7 +17,7 @@ function RebalanceView() {
       </div>
 
       <div className="px-5 max-w-4xl mx-auto mb-4">
-        <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+        <Panel>
           <div className="space-y-4">
             <TokenAllocation />
 
@@ -28,7 +29,7 @@ function RebalanceView() {
 
             <AllocationAdjustment />
           </div>
-        </div>
+        </Panel>
       </div>
     </section>
   );

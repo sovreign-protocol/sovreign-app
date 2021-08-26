@@ -2,6 +2,7 @@ import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useVotingPower from "@/hooks/view/useVotingPower";
 import Link from "next/link";
 import { Plus } from "react-feather";
+import Panel from "../panel";
 
 export default function VotingPower() {
   const { data: votingPower } = useVotingPower();
@@ -22,7 +23,7 @@ export default function VotingPower() {
 
   return (
     <>
-      <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+      <Panel className="flex-1">
         <div className="flex justify-between mb-4">
           <h2 className="font-medium leading-5">Next epoch’s voting power</h2>
 
@@ -38,9 +39,9 @@ export default function VotingPower() {
           <br />
           <span className="text-lg leading-none">{`${fmReignStaked} votes`}</span>
         </p>
-      </div>
+      </Panel>
 
-      <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+      <Panel className="flex-1">
         <div className="flex justify-between mb-4">
           <h2 className="font-medium leading-5">This epoch’s voting power</h2>
         </div>
@@ -50,7 +51,7 @@ export default function VotingPower() {
           <br />
           <span className="text-lg leading-none">{`${fmReignStakedAtTs} votes`}</span>
         </p>
-      </div>
+      </Panel>
     </>
   );
 }

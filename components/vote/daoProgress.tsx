@@ -4,6 +4,7 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useVotingPower from "@/hooks/view/useVotingPower";
 import { commify, formatUnits } from "@ethersproject/units";
 import { useMemo } from "react";
+import Panel from "../panel";
 
 export default function DAOProgress() {
   const chainId = useWeb3Store((state) => state.chainId);
@@ -29,7 +30,7 @@ export default function DAOProgress() {
   const fmTotal = useFormattedBigNumber(votingPower?.reignStaked, 0);
 
   return (
-    <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+    <Panel>
       <div className="space-y-4">
         <div>
           <p className="font-medium leading-5 mb-1">DAO Progress</p>
@@ -65,7 +66,7 @@ export default function DAOProgress() {
             />
           </div>
         </div>
-      </div>{" "}
-    </div>
+      </div>
+    </Panel>
   );
 }
