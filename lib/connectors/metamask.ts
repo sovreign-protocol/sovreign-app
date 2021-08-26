@@ -28,6 +28,22 @@ export class UnsupportedChainIdError extends Error {
   }
 }
 
+export class UserRejectedRequestError extends Error {
+  public constructor() {
+    super();
+    this.name = this.constructor.name;
+    this.message = "The user rejected the request.";
+  }
+}
+
+export class UnsupportedProviderError extends Error {
+  public constructor() {
+    super();
+    this.name = this.constructor.name;
+    this.message = "This provider is not supported.";
+  }
+}
+
 export default class MetaMaskConnector {
   readonly supportedChainIds: number[];
 
@@ -72,13 +88,56 @@ export default class MetaMaskConnector {
       throw new NoEthereumProviderError();
     }
 
-    const accounts = await provider.request({
-      method: "eth_requestAccounts",
-    });
+    let accounts: ProviderAccounts;
+
+    try {
+      accounts = (await provider.request({
+        method: "eth_requestAccounts",
+      })) as ProviderAccounts;
+    } catch (error) {
+      if ((error as any).code === 4001) {
+        throw new UserRejectedRequestError();
+      }
+
+      console.log(
+        "eth_requestAccounts was unsuccessful, falling back to enable"
+      );
+    }
+
+    if (!accounts) {
+      try {
+        accounts = await provider.enable();
+      } catch (error) {
+        if ((error as any).code === 4001) {
+          throw new UserRejectedRequestError();
+        }
+
+        console.log("enable was unsuccessful");
+
+        throw new UnsupportedProviderError();
+      }
+    }
 
     const account = accounts[0];
 
-    const _chainId = await provider.request({ method: "eth_chainId" });
+    let _chainId: string;
+
+    try {
+      _chainId = (await provider.request({ method: "eth_chainId" })) as string;
+    } catch {
+      console.log("eth_chainId was unsuccessful, falling back to net_version");
+    }
+
+    if (!_chainId) {
+      try {
+        _chainId = (provider as any).send({ method: "net_version" })
+          ?.result as string;
+      } catch {
+        console.log("net_version v2 was unsuccessful");
+
+        throw new UnsupportedProviderError();
+      }
+    }
 
     const chainId = normalizeChainId(_chainId as string);
 
