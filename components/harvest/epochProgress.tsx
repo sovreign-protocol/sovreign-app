@@ -1,5 +1,6 @@
 import useTimer from "@/hooks/useTimer";
 import useEpochDates from "@/hooks/view/useEpochDates";
+import Panel from "../panel";
 
 export default function EpochProgress() {
   const { data: epochDates } = useEpochDates();
@@ -7,7 +8,7 @@ export default function EpochProgress() {
   const timer = useTimer(epochDates?.endDate * 1000);
 
   return (
-    <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+    <Panel>
       <div className="mb-4">
         <p className="font-medium leading-5 mb-1">Time until next epoch</p>
 
@@ -49,7 +50,7 @@ export default function EpochProgress() {
           />
         </div>
       </div>
-    </div>
+    </Panel>
   );
 }
 
@@ -59,7 +60,7 @@ export function EpochProgressShort() {
   const timer = useTimer(epochDates?.endDate * 1000);
 
   return (
-    <div className="flex-1 bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+    <Panel className="flex-1">
       <p className="font-medium leading-5 mb-4">Time until next epoch</p>
 
       <div className="h-12">
@@ -97,6 +98,6 @@ export function EpochProgressShort() {
           </div>
         </div>
       </div>
-    </div>
+    </Panel>
   );
 }

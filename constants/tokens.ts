@@ -3,11 +3,17 @@ import { SupportedChainId } from "./chains";
 export enum TokenNames {
   SOV = "SOV",
   REIGN = "REIGN",
+  sETH = "sETH",
+  sBTC = "sBTC",
+  sUSD = "sUSD",
+  sCHF = "sCHF",
+  sXAU = "sXAU",
+  sXAG = "sXAG",
 }
 
 type AddressMap = Record<SupportedChainId, string>;
 
-type TokenAddresses = Record<TokenNames, AddressMap>;
+type TokenAddresses = Partial<Record<TokenNames, AddressMap>>;
 
 export const TOKEN_ADDRESSES: TokenAddresses = {
   [TokenNames.SOV]: {
@@ -20,7 +26,7 @@ export const TOKEN_ADDRESSES: TokenAddresses = {
   },
 };
 
-export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
+export const TOKEN_NAMES_BY_ADDRESS: Record<string, keyof typeof TokenNames> = {
   "0x712863c3ad98ef4319133b8646d51383700cb37b": "sCHF",
   "0x0f83287ff768d1c1e17a42f44d644d7f22e8ee1d": "sCHF",
   "0xf65c93902ecc4c7979e92ed2cca01421e8021f77": "sBTC",
@@ -32,16 +38,17 @@ export const TOKEN_NAMES_BY_ADDRESS: Record<string, string> = {
   "0x6a22e5e94388464181578aa7a6b869e00fe27846": "sXAG",
 };
 
-export const TOKEN_CATEGORY_BY_SYMBOL: Record<
-  string,
-  "CURRENCY" | "CRYPTO" | "COMMODITY"
-> = {
-  sCHF: "CURRENCY",
-  sUSD: "CURRENCY",
-  sBTC: "CRYPTO",
-  sETH: "CRYPTO",
-  sXAU: "COMMODITY",
-  sXAG: "COMMODITY",
+type TokenCategories = Partial<
+  Record<TokenNames, "CURRENCY" | "CRYPTO" | "COMMODITY">
+>;
+
+export const TOKEN_CATEGORY_BY_SYMBOL: TokenCategories = {
+  [TokenNames.sCHF]: "CURRENCY",
+  [TokenNames.sUSD]: "CURRENCY",
+  [TokenNames.sBTC]: "CRYPTO",
+  [TokenNames.sETH]: "CRYPTO",
+  [TokenNames.sXAU]: "COMMODITY",
+  [TokenNames.sXAG]: "COMMODITY",
 };
 
 export const TOKEN_COLORS = [
@@ -53,16 +60,17 @@ export const TOKEN_COLORS = [
   "bg-pink-500",
 ];
 
-export type Token = {
+export type TokenAsset = {
   address: string;
   decimals: number;
   symbol: string;
 };
 
-export const TOKEN_ASSETS: Record<
-  TokenNames,
-  Record<SupportedChainId, Token>
-> = {
+type TokenAssets = Partial<
+  Record<TokenNames, Record<SupportedChainId, TokenAsset>>
+>;
+
+export const TOKEN_ASSETS: TokenAssets = {
   [TokenNames.REIGN]: {
     [SupportedChainId.MAINNET]: {
       address: TOKEN_ADDRESSES[TokenNames.REIGN][SupportedChainId.MAINNET],
@@ -89,9 +97,18 @@ export const TOKEN_ASSETS: Record<
   },
 };
 
-export const SUSHI_SWAP_LINKS: Record<TokenNames, string> = {
+export const SUSHI_SWAP_LINKS: Partial<Record<TokenNames, string>> = {
   [TokenNames.SOV]:
     "https://app.sushi.com/swap?outputCurrency=0x0aFEE744B6d9fF2B78f76Fe10b3E0199C413Fd34",
   [TokenNames.REIGN]:
     "https://app.sushi.com/swap?outputCurrency=0x17F59DD7fEfC2F276509EeD2Ad6B65271458177E",
+};
+
+export const TOKEN_BUY_LINKS: Partial<Record<TokenNames, string>> = {
+  [TokenNames.sETH]: "https://curve.fi/seth",
+  [TokenNames.sBTC]: "https://curve.fi/sbtc",
+  [TokenNames.sUSD]: "https://curve.fi/susdv2/",
+  [TokenNames.sCHF]: "https://kwenta.io/exchange/sCHF",
+  [TokenNames.sXAU]: "https://kwenta.io/exchange/sXAU",
+  [TokenNames.sXAG]: "https://kwenta.io/exchange/sXAG",
 };

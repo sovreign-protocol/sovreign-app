@@ -1,7 +1,6 @@
 import { CONTRACT_ADDRESSES } from "@/constants/contracts";
 import { LP_EPOCH_REWARDS } from "@/constants/numbers";
 import ERC20_ABI from "@/contracts/ERC20.json";
-import LPRewards_ABI from "@/contracts/LPRewards.json";
 import type {
   ERC20,
   LPRewards,
@@ -14,20 +13,9 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
 import useSWR from "swr";
-import useContract, { useStaking } from "./useContract";
+import { useREIGNWETHRewards, useStaking } from "./useContract";
 import useReignPrice from "./useReignPrice";
-import useWeb3Store, { State } from "./useWeb3Store";
-
-const selector = (state: State) => state.chainId;
-
-export function useREIGNWETHRewards() {
-  const chainId = useWeb3Store(selector);
-
-  return useContract<LPRewards>(
-    CONTRACT_ADDRESSES.LPRewardsREIGNWETH[chainId],
-    LPRewards_ABI
-  );
-}
+import useWeb3Store from "./useWeb3Store";
 
 function getREIGNWETHLPPrice(lpRewards: LPRewards, library: Web3Provider) {
   return async () => {

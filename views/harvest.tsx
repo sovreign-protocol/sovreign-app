@@ -6,7 +6,7 @@ import WrappingRewardsHarvest from "@/components/harvest/wrappingRewardsHarvest"
 
 function HarvestView() {
   return (
-    <section className="pt-8 md:pt-16 pb-8">
+    <section className="sm:pt-8 md:pt-16 pb-8 text-white">
       <div className="px-5 max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-4">
           <div className="md:col-span-2">

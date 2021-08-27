@@ -1,4 +1,4 @@
-import useGovRewardsExpectedRewards from "@/hooks/govRewards";
+import useGovRewardsExpectedRewards from "@/hooks/useGovRewardsExpectedRewards";
 import { useGovRewards } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useGovRewardsAPY from "@/hooks/useGovRewardsAPY";

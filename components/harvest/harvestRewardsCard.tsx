@@ -2,6 +2,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import { commify } from "@ethersproject/units";
 import type { FormEvent } from "react";
 import Button from "../button";
+import Panel from "../panel";
 
 type HarvestRewardsCardProps = {
   apy: number;
@@ -23,7 +24,7 @@ export default function HarvestRewardsCard({
   title,
 }: HarvestRewardsCardProps) {
   return (
-    <div className="bg-primary-400 rounded-xl ring-1 ring-inset ring-white ring-opacity-10 p-4">
+    <Panel>
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="flex justify-between">
           <h2 className="font-medium leading-5">{title}</h2>
@@ -63,6 +64,6 @@ export default function HarvestRewardsCard({
           </Button>
         </div>
       </form>
-    </div>
+    </Panel>
   );
 }

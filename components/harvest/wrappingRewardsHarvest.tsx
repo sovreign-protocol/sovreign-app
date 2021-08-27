@@ -4,7 +4,7 @@ import useWeb3Store from "@/hooks/useWeb3Store";
 import useWrappingRewardsAPY from "@/hooks/useWrappingRewardsAPY";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";
 import useIsBoosted from "@/hooks/view/useIsBoosted";
-import useWrappingRewardsExpectedRewards from "@/hooks/wrappingRewards";
+import useWrappingRewardsExpectedRewards from "@/hooks/useWrappingRewardsExpectedRewards";
 import formatNumber from "@/utils/formatNumber";
 import handleError from "@/utils/handleError";
 import Link from "next/link";

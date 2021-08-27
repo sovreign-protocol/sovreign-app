@@ -1,7 +1,7 @@
 import useREIGNWETHLPRewardsExpectedRewards, {
   useREIGNWETHLPRewardsAPY,
-  useREIGNWETHRewards,
 } from "@/hooks/reignWeth";
+import { useREIGNWETHRewards } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useWeb3Store from "@/hooks/useWeb3Store";
 import useHarvestableUserRewards from "@/hooks/view/useHarvestableUserRewards";

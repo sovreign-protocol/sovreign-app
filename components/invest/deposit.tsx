@@ -25,7 +25,7 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Settings } from "react-feather";
 import toast from "react-hot-toast";
-import Button, { MaxButton } from "../button";
+import Button, { BuyLink, MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
@@ -283,6 +283,7 @@ export default function Deposit() {
             value={depositToken}
             onChange={depositTokenSet}
             tokens={poolTokens}
+            order="DESC"
           />
 
           <div className="flex-1">
@@ -303,7 +304,12 @@ export default function Deposit() {
           {!!depositToken && depositTokenBalance && formattedDepositBalance ? (
             <>
               <span>{`Balance: ${formattedDepositBalance} ${depositToken.symbol}`}</span>{" "}
-              {!inputIsMax && <MaxButton onClick={setMax} />}
+              {!inputIsMax && !depositTokenBalance.isZero() && (
+                <MaxButton onClick={setMax} />
+              )}
+              {depositTokenBalance.isZero() && (
+                <BuyLink tokenSymbol={depositToken.symbol} />
+              )}
             </>
           ) : null}
         </p>

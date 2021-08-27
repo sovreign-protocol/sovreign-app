@@ -1,3 +1,4 @@
+import { TokenNames, TOKEN_BUY_LINKS } from "@/constants/tokens";
 import classNames from "classnames";
 
 type ButtonProps = {
@@ -52,5 +53,38 @@ export function MaxButton({
     <button type={type} className={cachedClassNames} {...rest}>
       {`(Max)`}
     </button>
+  );
+}
+
+type BuyLinkProps = {
+  tokenSymbol: keyof typeof TokenNames;
+} & React.DetailedHTMLProps<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  HTMLAnchorElement
+>;
+
+export function BuyLink({
+  tokenSymbol,
+  type = "button",
+  className = "",
+  ...rest
+}: BuyLinkProps) {
+  const cachedClassNames = classNames(
+    className,
+    "text-indigo-500 focus:outline-none focus:underline hover:underline"
+  );
+
+  const href = TOKEN_BUY_LINKS[tokenSymbol as keyof typeof TokenNames];
+
+  return (
+    <a
+      className={cachedClassNames}
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+      {...rest}
+    >
+      {`(Buy)`}
+    </a>
   );
 }
