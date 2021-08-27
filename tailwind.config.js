@@ -1,9 +1,9 @@
 module.exports = {
   mode: "jit",
   purge: [
-    "./components/**/*.{tsx, ts}",
-    "./pages/**/*.{tsx, ts}",
-    "./views/**/*.{tsx, ts}",
+    "./components/**/*.{tsx,ts}",
+    "./pages/**/*.{tsx,ts}",
+    "./views/**/*.{tsx,ts}",
     "./constants/*.ts",
   ],
   darkMode: "media",

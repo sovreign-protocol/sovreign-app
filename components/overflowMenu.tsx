@@ -2,7 +2,7 @@ import { SUSHI_SWAP_LINKS } from "@/constants/tokens";
 import { Menu } from "@headlessui/react";
 import cn from "classnames";
 import Link from "next/link";
-import { Menu as MenuIcon, MoreHorizontal } from "react-feather";
+import { MoreHorizontal } from "react-feather";
 
 function NextLink(props) {
   let { href, children, ...rest } = props;
