@@ -104,7 +104,7 @@ export default function WalletModal() {
                         : `Install MetaMask`}
                     </p>
 
-                    {isMetaMaskInstalled && <MetaMaskOutline />}
+                    <MetaMaskOutline />
                   </div>
                 </button>
 
