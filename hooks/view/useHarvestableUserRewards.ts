@@ -10,21 +10,22 @@ function getHarvestableUserRewards(contract: LPRewards) {
 
     const currentEpoch = await contract.getCurrentEpoch();
 
-    if (lastEpochIdHarvested.toNumber() === currentEpoch.toNumber()) {
-      return BigNumber.from(0);
+    async function* epochToHarvestGenerator() {
+      let i = lastEpochIdHarvested.toNumber();
+      while (i < currentEpoch.toNumber()) {
+        yield i++;
+      }
     }
 
-    const promises = await Promise.all(
-      new Array(currentEpoch.toNumber() - 1).fill("").map(async (_, index) => {
-        const userRewardsForEpoch = await contract.getUserRewardsForEpoch(
-          index + 1
-        );
+    let total = BigNumber.from(0);
 
-        return userRewardsForEpoch;
-      })
-    );
+    for await (let epochId of epochToHarvestGenerator()) {
+      const rewards = await contract.getUserRewardsForEpoch(epochId);
 
-    return promises.reduce((prev, curr) => prev.add(curr));
+      total = total.add(rewards);
+    }
+
+    return total;
   };
 }
 
