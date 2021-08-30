@@ -10,25 +10,21 @@ function getHarvestableUserRewards(contract: LPRewards) {
 
     const currentEpoch = await contract.getCurrentEpoch();
 
-    const getTotalRewards = async () => {
-      let _total = BigNumber.from(0);
+    if (lastEpochIdHarvested.toNumber() === currentEpoch.toNumber()) {
+      return BigNumber.from(0);
+    }
 
-      for (
-        let index = lastEpochIdHarvested.toNumber();
-        index < currentEpoch.toNumber();
-        index++
-      ) {
+    const promises = await Promise.all(
+      new Array(currentEpoch.toNumber() - 1).fill("").map(async (_, index) => {
         const userRewardsForEpoch = await contract.getUserRewardsForEpoch(
-          index
+          index + 1
         );
 
-        _total.add(userRewardsForEpoch);
-      }
+        return userRewardsForEpoch;
+      })
+    );
 
-      return _total;
-    };
-
-    return getTotalRewards();
+    return promises.reduce((prev, curr) => prev.add(curr));
   };
 }
 
