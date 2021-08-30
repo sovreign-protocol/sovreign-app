@@ -12,7 +12,7 @@ function getHarvestableUserRewards(contract: LPRewards) {
 
     let total = BigNumber.from(0);
 
-    if (lastEpochIdHarvested.toNumber() === currentEpoch.toNumber()) {
+    if (lastEpochIdHarvested.toNumber() === currentEpoch.toNumber() - 1) {
       return total;
     }
 
