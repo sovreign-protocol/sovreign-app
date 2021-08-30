@@ -61,7 +61,7 @@ export default function AllocationAdjustment() {
     useIsEpochInitialized();
 
   const canUpdate =
-    isEpochInitialized && !reignStaked.isZero() && !hasVotedInEpoch;
+    isEpochInitialized && !reignStaked?.isZero() && !hasVotedInEpoch;
 
   async function updateAllocationVote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

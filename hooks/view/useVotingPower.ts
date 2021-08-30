@@ -1,23 +1,22 @@
-import type { BasketBalancer, ReignFacet } from "@/contracts/types";
+import type { ReignFacet } from "@/contracts/types";
 import useSWR from "swr";
-import { useBasketBalancer, useReignFacetProxy } from "../useContract";
+import { useReignFacetProxy } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
-const getVotingPower =
-  (reignFacet: ReignFacet, basketBalancer: BasketBalancer) =>
-  async (_: string, userAddress: string) => {
-    const lastEpochEnd = await basketBalancer.lastEpochEnd();
+function getVotingPower(reignFacet: ReignFacet) {
+  return async (_: string, userAddress: string) => {
+    const timestamp = Date.now();
 
     const votingPowerAtTs = await reignFacet.votingPowerAtTs(
       userAddress,
-      lastEpochEnd
+      timestamp
     );
 
     const votingPower = await reignFacet.votingPower(userAddress);
 
     const reignStaked = await reignFacet.reignStaked();
 
-    const reignStakedAtTs = await reignFacet.reignStakedAtTs(lastEpochEnd);
+    const reignStakedAtTs = await reignFacet.reignStakedAtTs(timestamp);
 
     return {
       votingPowerAtTs,
@@ -26,19 +25,17 @@ const getVotingPower =
       reignStakedAtTs,
     };
   };
+}
 
 export default function useVotingPower() {
   const account = useWeb3Store((state) => state.account);
 
   const reignFacet = useReignFacetProxy();
 
-  const basketBalancer = useBasketBalancer();
-
-  const shouldFetch =
-    !!reignFacet && !!basketBalancer && typeof account === "string";
+  const shouldFetch = !!reignFacet && typeof account === "string";
 
   return useSWR(
     shouldFetch ? ["VotingPower", account] : null,
-    getVotingPower(reignFacet, basketBalancer)
+    getVotingPower(reignFacet)
   );
 }
