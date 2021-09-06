@@ -1,16 +1,20 @@
-import type { ReignFacet } from "@/contracts/types";
-import calculateLockupMultiplier from "@/utils/calculateLockupMultiplier";
+import type { GovRewards, ReignFacet } from "@/contracts/types";
+import { btof } from "@/utils/bn";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import useSWR from "swr";
-import { useReignFacetProxy } from "../useContract";
+import { useGovRewards, useReignFacetProxy } from "../useContract";
 import useWeb3Store from "../useWeb3Store";
 
 dayjs.extend(utc);
 
-function getUserLockedUntil(contract: ReignFacet) {
+function getUserLockedUntil(reignFacet: ReignFacet, govRewards: GovRewards) {
   return async (_: string, address: string) => {
-    const lockedUntilTimestamp = await contract.userLockedUntil(address);
+    const lockedUntilTimestamp = await reignFacet.userLockedUntil(address);
+
+    const currentEpoch = await govRewards.getCurrentEpoch();
+
+    const boost = await govRewards.getBoost(address, currentEpoch);
 
     const timestamp = lockedUntilTimestamp.toNumber();
 
@@ -18,9 +22,7 @@ function getUserLockedUntil(contract: ReignFacet) {
 
     const formatted = dayjs.unix(timestamp).format("MMM D, YYYY");
 
-    const multiplier = calculateLockupMultiplier(
-      dayjs.unix(timestamp).diff(dayjs(), "days")
-    );
+    const multiplier = btof(boost).toFixed(2);
 
     return {
       timestamp,
@@ -33,12 +35,14 @@ function getUserLockedUntil(contract: ReignFacet) {
 
 export default function useUserLockedUntil() {
   const account = useWeb3Store((state) => state.account);
-  const contract = useReignFacetProxy();
+  const reignFacet = useReignFacetProxy();
+  const govRewards = useGovRewards();
 
-  const shouldFetch = !!contract && typeof account === "string";
+  const shouldFetch =
+    !!reignFacet && !!govRewards && typeof account === "string";
 
   return useSWR(
     shouldFetch ? ["UserLockedUntil", account] : null,
-    getUserLockedUntil(contract)
+    getUserLockedUntil(reignFacet, govRewards)
   );
 }
