@@ -17,7 +17,7 @@ function getHarvestableUserRewards(contract: LPRewards) {
     }
 
     async function* epochToHarvestGenerator() {
-      let i = lastEpochIdHarvested.toNumber();
+      let i = lastEpochIdHarvested.toNumber() + 1;
       while (i < currentEpoch.toNumber()) {
         yield i++;
       }
