@@ -38,12 +38,16 @@ export default function AllocationAdjustment() {
     tokenAllocation &&
     tokenAllocation
       .map((token) => token.allocation)
-      .reduce((prev, cur) => cur + prev);
+      .reduce((prev, cur) => cur + prev)
+      .toFixed(2);
 
   const [inputObject, inputObjectSet] = useState<Record<string, number>>();
 
   const total =
-    inputObject && Object.values(inputObject).reduce((prev, cur) => prev + cur);
+    inputObject &&
+    Object.values(inputObject)
+      .reduce((prev, cur) => prev + cur)
+      .toFixed(2);
 
   useEffect(() => {
     if (typeof tokenAllocation === "undefined") {
