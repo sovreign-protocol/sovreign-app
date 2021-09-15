@@ -22,12 +22,15 @@ import Button, { MaxButton } from "../button";
 import { TransactionToast } from "../customToast";
 import NumericalInput from "../numericalInput";
 import TokenSelect, { Token } from "../tokenSelect";
+import useBestBuy from "@/hooks/useBestBuy";
 
 export default function Withdraw() {
   const account = useWeb3Store((state) => state.account);
   const chainId = useWeb3Store((state) => state.chainId);
 
   const poolRouter = usePoolRouter();
+
+  const { mutate: bestBuyMutate } = useBestBuy();
 
   const { data: poolTokens } = useGetPoolTokens();
 
@@ -133,6 +136,7 @@ export default function Withdraw() {
       );
 
       sovBalanceMutate();
+      bestBuyMutate();
     } catch (error) {
       handleError(error, _id);
     }
