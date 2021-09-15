@@ -109,7 +109,7 @@ export default function Deposit() {
         BALANCER_POOL_ADDRESS[chainId]
       );
 
-      const maxDeposit = poolBalance.div(2);
+      const maxDeposit = poolBalance.div(3);
 
       if (tokenAmountIn.gt(maxDeposit)) {
         const fmMaxDeposit = parseFloat(formatUnits(maxDeposit)).toFixed(2);
