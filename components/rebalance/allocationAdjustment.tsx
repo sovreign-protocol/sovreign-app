@@ -34,12 +34,12 @@ export default function AllocationAdjustment() {
   const { mutate: continuousTokenAllocationMutate } =
     useContinuousTokenAllocation();
 
-  const totalAllocation =
-    tokenAllocation &&
-    tokenAllocation
-      .map((token) => token.allocation)
-      .reduce((prev, cur) => cur + prev)
-      .toFixed(2);
+  // const totalAllocation =
+  //   tokenAllocation &&
+  //   tokenAllocation
+  //     .map((token) => token.allocation)
+  //     .reduce((prev, cur) => cur + prev)
+  //     .toFixed(2);
 
   const [inputObject, inputObjectSet] = useState<Record<string, number>>();
 
@@ -49,17 +49,17 @@ export default function AllocationAdjustment() {
       .reduce((prev, cur) => prev + cur)
       .toFixed(2);
 
-  useEffect(() => {
-    if (typeof tokenAllocation === "undefined") {
-      return;
-    }
+  // useEffect(() => {
+  //   if (typeof tokenAllocation === "undefined") {
+  //     return;
+  //   }
 
-    inputObjectSet(
-      Object.fromEntries(
-        tokenAllocation.map((el) => [el.address, el.allocation])
-      )
-    );
-  }, [tokenAllocation]);
+  //   inputObjectSet(
+  //     Object.fromEntries(
+  //       tokenAllocation.map((el) => [el.address, el.allocation])
+  //     )
+  //   );
+  // }, [tokenAllocation]);
 
   const { data: isEpochInitialized, mutate: isEpochInitializedMutate } =
     useIsEpochInitialized();
@@ -142,15 +142,15 @@ export default function AllocationAdjustment() {
       <div className="flex justify-between items-start mb-4">
         <h2 className="font-medium leading-5">Adjust Token Allocation</h2>
 
-        <p className="leading-none text-right">
+        {/* <p className="leading-none text-right">
           <span className="font-semibold">Total Allocation:</span>{" "}
           <span>
             {totalAllocation ? `${total} / ${totalAllocation}` : "..."}
           </span>
-        </p>
+        </p> */}
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <ul className="grid md:grid-cols-2 gap-4">
           {inputObject &&
             tokenAllocation &&
@@ -248,9 +248,9 @@ export default function AllocationAdjustment() {
               );
             })}
         </ul>
-      </div>
+      </div> */}
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         {!isEpochInitialized && (
           <Button small onClick={enableVoting}>
             {`Enable voting for this epoch`}
@@ -264,7 +264,7 @@ export default function AllocationAdjustment() {
               : `Total allocation must be ${totalAllocation}`
             : `Cast vote`}
         </Button>
-      </div>
+      </div> */}
     </form>
   );
 }

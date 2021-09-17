@@ -8,7 +8,6 @@ import {
   MIN_INPUT_VALUE,
 } from "@/constants/numbers";
 import { TOKEN_ADDRESSES } from "@/constants/tokens";
-import useBestBuy from "@/hooks/useBestBuy";
 import { usePoolRouter, useTokenContract } from "@/hooks/useContract";
 import useFormattedBigNumber from "@/hooks/useFormattedBigNumber";
 import useInput from "@/hooks/useInput";
@@ -36,8 +35,6 @@ export default function Deposit() {
   const chainId = useWeb3Store((state) => state.chainId);
 
   const poolRouter = usePoolRouter();
-
-  const { mutate: bestBuyMutate } = useBestBuy();
 
   const { data: poolTokens } = useGetPoolTokens();
 
@@ -112,7 +109,7 @@ export default function Deposit() {
         BALANCER_POOL_ADDRESS[chainId]
       );
 
-      const maxDeposit = poolBalance.div(3);
+      const maxDeposit = poolBalance.div(2);
 
       if (tokenAmountIn.gt(maxDeposit)) {
         const fmMaxDeposit = parseFloat(formatUnits(maxDeposit)).toFixed(2);
@@ -165,7 +162,6 @@ export default function Deposit() {
       sovBalanceMutate();
       depositTokenBalanceMutate();
       totalSupplyMutate();
-      bestBuyMutate();
     } catch (error) {
       handleError(error, _id);
     }

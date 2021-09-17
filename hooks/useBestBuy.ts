@@ -25,6 +25,5 @@ export default function useBestBuy() {
 
   return useSWR(shouldFetch ? ["BestBuy"] : null, getBestBuy(), {
     shouldRetryOnError: false,
-    refreshInterval: 10 * 1000,
   });
 }
